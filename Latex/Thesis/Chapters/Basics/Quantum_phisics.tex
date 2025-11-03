@@ -1,0 +1,784 @@
+\chapter{Quantum Mechanics}
+In this chapter we will explore the basics of quantum mechanics in order to understand what we can or cannot do with a quantum computer. The reference architecture for this work is the quantum gate-based quantum computer. In the next pages we will try to justify why the algorithms that run on this hardware need to be reversible.
+
+The chapter starts from the very beginning with the definition of a quantum system and presents the basis to understand the evolution of a quantum system, trying to justify why every evolution needs to be reversible and what exactly reversibility means. At the end of the chapter we will put all of our new knowledge together to derive the famous Schrödinger equation.
+
+With all this work we will be able to imagine the function of a quantum gate and understand the limitations that are imposed when we develop an algorithm for a quantum computer.
+
+
+\section{Experiments}
+We start our introduction to quantum mechanics with an experiment. Experiments are not only an excuse to introduce the topic, but the essential key of physics, both classical and modern.
+
+Theory and models need to adapt to the experiments, and when the experimental results are in contradiction with the actual model it means that the model needs to be changed to respect the behavior of the world.
+
+\subsection{Spin}\label{sec:spin}
+We analyze the experiment of an electron in a magnetic field. An electron is an electrically charged particle; when some electrons are shot in an electric field all of them are influenced by Coulomb's law; if all electrons have the same initial velocity the beam of electrons remains intact.
+
+\begin{wrapfigure}[11]{r}{.4\linewidth}
+	\centering
+	\vspace{-.25cm}
+	\includegraphics[width=.85\linewidth]{path6}
+	\caption{Experiment's schema}
+\end{wrapfigure}
+What happens to the same beam in a magnetic field? Again electrons are deflected by a force, but this time the beam splits. If the initial velocity was parallel to the $x$ axis and the magnetic field is oriented along the $z$ axis some electrons are deflected upward, some downward, but the intensity of the deflection is the same for all the electrons. This means that no electrons are deflected less or more than the others and the beam splits exactly into two parts.
+
+Starting from this experiment we can make a measuring instrument: this apparatus $\mathcal{A}$ can be oriented along an arbitrary axis, and in the previous configuration $\mathcal{A}$ displays $+1$ if the electron is deflected upward, $-1$ otherwise. We call this number the spin of the electron.
+
+If \marginpar{Repeatability of measure} we measure the spin of an electron and $\mathcal{A}$ displays $+1$, we can confirm the experiment's results by measuring the spin again and we obtain spin $+1$ every time. This means that the measurements are repeatable (an essential property to construct models and make predictions). We can think, and it will be clear later why it is useful, that the first experiment prepares the spin $+1$ and the others confirm this result.
+
+Spin is a quantum property and all the visual representations such as the rotation of the electron around its axis would lead to misrepresentation. Spin and rotation, however, have some similarities. Let's analyze what would happen if we consider a charged sphere in a magnetic field with the laws of classical physics. We consider a sphere rotating around its axis, and this axis is parallel to the $z$ axis. The $x$ or $y$ component of the angular momentum is zero. Measuring the component along a generic axis, oriented like the versor $\hat{n}$\footnote{A versor is a vector of magnitude $1$ (unit vector), it is normally used to specify a direction.}, we would obtain a result proportional to the projection of $\hat{z}$ on $\hat{n}$. This projection can be found with the scalar product $\hat{z}\cdot\hat{n} = \cos{\theta}$\footnote{We can use directly the angle because we are considering versors.}, where $\theta$ is the angle between the axes.
+
+Now we consider the quantum version of this phenomenon. Let’s start by measuring the $z$ component of the spin and assume that the result is $\sigma_z = +1$; if we rotate the apparatus $\mathcal{A}$ around, for example, the $x$ axis, we can measure $\sigma_x$. This component would not be zero, and $\mathcal{A}$ keeps displaying only $+1$ or $-1$. The single result is not helpful, but we can repeat the experiment, namely:
+\begin{enumerate}
+	\item orienting $\mathcal{A}$ along the $z$ axis and preparing a spin $\sigma_z = +1$
+	\item rotating $\mathcal{A}$ around $x$
+	\item measuring the $x$ component of the spin
+\end{enumerate}
+statistically we would observe the same number of $\sigma_x = +1$ and $\sigma_x = -1$.
+
+If we start the experiments with a spin prepared as $\sigma_z = +1$ and then orient $\mathcal{A}$ along a generic axis $\hat{n}$ each measure would be binary and unpredictable, but the mean of the measures tends to $\hat{z}\cdot\hat{n}=\cos\theta$ where $\theta$ is the angle between $\hat{z}$ and $\hat{n}$. In the most general case we can start with the apparatus oriented like $m$ and prepare the spin $\sigma_m = +1$, then we rotate $\mathcal{A}$ around $\hat{n}$ without interfering with the spin and measure again; we would obtain the statistical result $\Braket{\sigma_n} = \hat{m}\cdot\hat{n}$\footnote{The Dirac bracket $\braket{\ }$ denotes the statistical mean of a quantity. We call that expectation value.}.
+
+The result of a single measure is non deterministic, but we can make predictions over the mean values of the measures: the expected values behave as the single results of the classic experiment.
+
+Considering\marginpar{Invasive experiment} now a sequence of three measures: starting with $\mathcal{A}$ oriented along $z$ we prepare the spin $\sigma_z=+1$, then we rotate $\mathcal{A}$ to measure $\sigma_x$ obtaining, let's say, $+1$ (the reasoning is the same if we obtain $-1$); lastly returning with $\mathcal{A}$ parallel to $z$ we cannot make any prediction on the single result, the initial configuration (with $\sigma_z=+1$) is lost forever, the only result we can predict is that $\Braket{\sigma_z} = 0$.
+
+\subsection{Qbit}
+We have introduced the spin referring to electrons in a magnetic field. However, we can study the spin without examining the associated electron; we have isolated a simple physical system, the simplest we can study.
+
+Spin belongs to a class of simple physical systems called \emph{qbit}; in all of these systems the result of a measure is binary. We will see that, even if the result of a measure is equal to the classical \emph{bit}, the \emph{qbit} system is described in a very different way compared to its classical alter ego.
+
+\subsection{Boolean Logic}
+In this paragraph we try to understand why we need two different ways to describe a classical and a quantum state space. To do so we analyze the results of some logical propositions, both basic and composed via logical connectives.
+
+Starting with the classical case we consider a bag of colored and numbered balls. We can construct the state space by enumerating all states, namely taking each ball from the bag and annotating the pair number–color. The basic propositions we analyze are:
+\begin{itemize}
+	\item The extracted ball is red.
+	\item The number on the extracted ball is even.
+\end{itemize}
+
+If we consider a particular state we can say if a proposition is true or false; we can also define two subsets of balls, the first with all the red balls (for this subset the first proposition is true), the second one with the balls that show an even number (subset that makes the second proposition true). Considering now disjunction and conjunction:
+\begin{itemize}
+	\item The extracted ball is red \emph{or} even.
+	\item The extracted ball is red \emph{and} even.
+\end{itemize}
+Again it is simple to associate a truth value to these propositions if we consider a single state; also we can construct two subsets that satisfy the propositions from the subsets we defined before: the new subsets are respectively the union and intersection of the old ones.
+
+In the quantum world the situation is very different. Let's start from propositions that can be verified with a simple experiment:
+\begin{itemize}
+	\item The $z$ component of the spin is $+1$.
+	\item The $x$ component of the spin is $+1$.
+\end{itemize}
+If we want to check the first proposition we can orient the apparatus $\mathcal{A}$ along $z$ and make a measurement; the same procedure can be followed for the second proposition. The disjunction and conjunction of these propositions are:
+\begin{itemize}
+	\item The $z$ component of the spin is $+1$ \emph{or} the $x$ component is $+1$.
+	\item The $z$ component of the spin is $+1$ \emph{and} the $x$ component is $+1$.
+\end{itemize}
+
+Starting with the disjunction. Considering a state prepared, without our knowledge, with $\sigma_z = +1$. If our first measure is along the $z$ axis, $\mathcal{A}$ will always display $+1$ and we can immediately conclude that the proposition is true. If we start measuring the $x$ component, we have a $50\%$ chance that $\mathcal{A}$ displays $+1$ or $-1$; also this measurement destroys the initial state and the measure of $\sigma_z$ becomes non predictable. In this scenario we have a $25\%$ chance of deducing that the proposition is false; figure \ref{fig:tree_dis} shows all the possible measurement results in this case. The\marginpar{The disjunction is not commutative} logical value of a proposition depends on the order in which we perform the measurements.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.7\linewidth]{tree_or}
+	\caption{The apparatus $\mathcal{A}$ is represented as a box, the arrow represents the direction along which the apparatus is oriented, the display (ellipse) shows the result of measurement. We have highlighted in green the cases in witch we can immediately conclude that the disjunction of the propositions is true}
+	\label{fig:tree_dis}
+\end{figure}
+
+The conjunction is even worse: no matter the order of the measurements, the second one destroys the result of the first. The disjunction is true if at least one of the sub-propositions is true, and if we find a spin component that is $+1$ we can always confirm this result with another measurement. In the conjunction the two sub-propositions must be true \emph{at the same time}, but with the second measurement we lose all the knowledge of the first one. We\marginpar{The conjunction loses its meaning} can never conclude that the conjunction is true.
+
+\section{Quantum states}
+In the previous section we have understood that a state space of a quantum system cannot be represented in the same way as a classical state space. Now we present a formal mathematical model to describe the state space for spin.
+
+\begin{axiom} 
+	The state space for a quantum system is a complex vector space.
+\end{axiom}
+
+This is a physical axiom, which means that it is true because there are a lot of experiments that confirm this model and none that shows a contradiction.
+
+\subsection{Vector Spaces}
+A vector space is a mathematical and abstract construction that can have multiple dimensions (even infinite) and has, as components, integers, real or complex numbers, or other elements. An example that shows well how abstract a vector space can be is the complex-valued continuous function of variable $x$; the set of these functions generates a vector space.
+
+In\marginpar{Hilbert space} quantum mechanics the state space is described by a vector space having as element $\Ket{A}$ called \emph{ket}. The properties of this space are:
+
+\begin{itemize}
+	\item the sum of two kets is a ket;
+	\item addition is commutative;
+	\item addition is associative;
+	\item existence of identity element for addition;
+	\item existence of inverse elements for addition;
+	\item existence of identity element for scalar multiplication;
+	\item linearity property.
+\end{itemize}
+
+\subsection{Bra and Ket}
+An example of ket that we will find often is the column vector of two dimensions:
+\[
+\Ket{A} = 
+\begin{pmatrix}
+	\alpha_1 \\
+	\alpha_2
+\end{pmatrix}
+\]
+where $\alpha_1$ and $\alpha_2$ are complex numbers. With this simple example of ket it is easy to verify the validity of all previously described properties.
+
+If, for complex numbers, exists the complex conjugate, for every ket there exists a \emph{bra}. The set of bra generates a dual conjugate space with respect to the state space of ket. We denote a bra as $\Bra{A}$. If $\Ket{A}$ is the ket of the previous example the corresponding bra is a row vector having as elements the complex conjugate of $\Ket{A}$:
+\[
+\Bra{A}= \left(\alpha_1^*, \alpha_2^*\right).
+\]
+
+Name\marginpar{Inner product} and symbol associated with elements of Hilbert spaces become clear when we define the product \emph{bra-ket}, this is the corresponding scalar product of an ordinary vector and is called inner product. Considering bra and ket of two dimensions we can evaluate the inner product by adding the products of corresponding components:
+\[
+\Braket{A|B}=\left(\alpha_1^*, \alpha_2^*\right)\cdot 
+\begin{pmatrix}
+	\beta_1 \\
+	\beta_2
+\end{pmatrix}
+= \alpha_1^*\beta_1 + \alpha_2^*\beta_2.
+\]
+
+Having the inner product we can define:
+\begin{description}
+	\item [Versor] normalized vector $\Ket{A}$ in which $\Braket{A|A} = 1$;
+	\item[Orthogonal vector] vectors that have a null inner product: $\Braket{A|B} = 0$.
+\end{description}
+
+We are familiar with these concepts in two and three dimensions, the first one is a vector of length one, the second is the right angle between two vectors. This representation is misleading in our case, we cannot imagine a ket like an arrow and the state space is completely abstract even if there are properties and operations in common between this space and the 3D space that we are familiar with.
+
+We have lost the geometric interpretation, and it seems that we have defined two completely abstract and useless concepts, we will see next that these are key concepts in the description of quantum systems and have a precise and important physical meaning.
+
+By having\marginpar{Orthonormal basis} a vector space is possible to build a set of orthogonal versors that generates all vectors in the given space. This set is called orthonormal basis and the cardinality of the set is equal to the dimension of the space.
+
+Formally having a basis $\mathscr{B} = \Set{\Ket{i_1}, \Ket{i_2}, \dots, \Ket{i_N}}$ of a space with $N$ dimensions, we can write a generic vector in that space as
+\begin{equation}
+	\Ket{A}=\sum_{n=1}^{N} \alpha_n \Ket{i_n} = \sum_{n=1}^{N} \Ket{i_n} \Braket{i_n|A}
+\end{equation}
+this is the linear combination of the basis versors; where kets $\Ket{i_n}$ are the versors in the basis and $\alpha_n$ are the vector components. We can obtain those components with the inner product between the vector $\Ket{A}$ and the basis versors:
+\begin{equation}
+	\label{eqn:decomp}
+	\alpha_i = \Braket{i|A}.
+\end{equation}
+
+\subsection{Hidden variables}
+In a classical system we can measure all the variables associated to a physical system and then make a deterministic prediction of the evolution of that system. From the experiments described in the first section we have learned that a quantum system is not completely predictable even if we can make all the measurements that we want\footnote{We remember that a measure along one axis destroys our knowledge about the result along another axis.}. We can ask ourselves if our measurements aren't enough, if there are other variables that can make the prediction completely deterministic. About that topic we don't have any experimental proof, the opinion of physicists is divided in two main visions:
+\begin{description}
+	\item[Opinion One]: there are hidden variables and, if we manage to measure them, the prediction of results become deterministic. These variables can be 
+	\begin{itemize}
+		\item very difficult to measure
+		\item unknowable to us because also we are constituted by quantum material.
+	\end{itemize}
+	\item[Opinion Two]: hidden variables don't exist, we already know all the information about a given system and quantum mechanics is intrinsically non deterministic.
+\end{description}
+
+Probably\marginpar{No hidden variables} no experiment could determine which vision is correct, but this doubt doesn't worsen our comprehension of the physical world. We can simply choose one vision and build our model coherently. We choose the simpler one, without hidden variables, all that we have to model are the quantities that we can measure and the measurements allow us to know all the information about a given system.
+
+Even if we have lost complete determinism, knowing the state of a system gives us some information about the system and the successive measurements. In the next section we will see what we can deduce about spin.
+
+\subsection{Spin states}
+Let's start enumerating all possible spin states along the coordinate axes. If we rotate the apparatus $\mathcal{A}$ around $z$, we can obtain $\sigma_z = \pm 1$; we call these states \emph{up} and \emph{down} and label them with kets $\Ket{u}$ and $\Ket{d}$. Orienting $\mathcal{A}$ along $x$, we obtain \emph{left} $\Ket{l}$ and \emph{right} $\Ket{r}$. Lastly, along the $y$ axis, we measure the states \emph{in} $\Ket{i}$ and \emph{out} $\Ket{o}$.
+
+The hypothesis\marginpar{Spin space states have two dimensions} that there aren't hidden variables allows us to represent the space state in a simple way: each spin state can be represented as a ket in a two-dimensional complex vector space.
+
+To express a vector we need a basis; we choose $\mathscr{B}=\Set{\Ket{u}, \Ket{d}}$\footnote{We will show that these vectors are in fact orthogonal and why they need to be.} and try to obtain all states as a linear combination (\emph{superposition}) of the basis vectors. A generic state $\Ket{A}$ can be expressed as:
+\[
+\Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}
+\]
+where $\alpha_u$ and $\alpha_d$ are the components of $\Ket{A}$ along $\Ket{u}$ and $\Ket{d}$, and can be obtained by projection: $\alpha_u = \Braket{u|A}$ and $\alpha_d = \Braket{d|A}$ (as in equation \ref{eqn:decomp}).
+
+$\Ket{A}$\marginpar{Probability amplitudes} components are complex numbers and their physical meaning is: having a spin prepared in the state $\Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}$\footnote{From now on we use \say{prepared} or \say{measured} as synonyms: every measurement is invasive and can change the spin state, so no matter what was the previous state, after a measurement the state is the one we have measured.}; $\alpha_u^*\alpha_u$ is the probability of measuring $\sigma_z = +1$, while $\alpha_d^*\alpha_d$ is the probability that a measurement of $\sigma_z$ will yield $-1$. Formally we can denote the probability of measuring $+1$ and $-1$ as $P_u$ and $P_d$ respectively and write:
+\begin{align}
+	\label{eqn:prob_state}
+	P_u &= \Braket{A|u}\Braket{u|A} \notag\\ 
+	P_d &= \Braket{A|d}\Braket{d|A}.
+\end{align}
+
+Components $\alpha_u$ and $\alpha_d$ are called probability amplitudes, and their physical meaning is given by the square of the magnitude. This is the actual probability, and we want the sum of all probabilities to be one. This is equivalent to requiring that $\Ket{A}$ is normalized: $\Braket{A|A} = 1$.
+
+Now we will show why $\Ket{u}$ and $\Ket{d}$ have to be orthogonal:
+\begin{align*}
+	\Braket{u|d}&= 0\\
+	\Braket{d|u}&= 0.
+\end{align*}
+We try to give an idea with a \textit{reductio ad absurdum}: if $\Ket{u}$ and $\Ket{d}$ were not orthogonal, the projection of one on the other would not be null. This means that if we orient $\mathcal{A}$ along $z$ and measure $\sigma_z = +1 = \Ket{u}$, we would have $\alpha_d = \Braket{d|u} \neq 0$, which is a contradiction to experimental results. If $\alpha_d \neq 0$, then $\alpha_d^*\alpha_d > 0$; we started with a state prepared as $\sigma_z = +1$ and ended with a nonzero probability of measuring $\sigma_z = -1$: this is absurd.
+
+We \marginpar{Orthogonal states are mutually exclusive} can extend the reasoning to a general and key concept of quantum mechanics: two orthogonal states are distinct and mutually exclusive. If the system is in the first state, the probability of finding it in the second is zero.
+
+Now we are ready to express spin states as linear combinations of the basis vectors $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$. The representation of the basis vectors themselves is naturally easy:
+\begin{align}
+	\Ket{u} &= \begin{pmatrix}
+		1 \\
+		0
+	\end{pmatrix}\\
+	\Ket{d} &= \begin{pmatrix}
+		0 \\
+		1
+	\end{pmatrix}.
+\end{align}
+
+To construct vector \emph{right}, let's consider a spin prepared in the state $\Ket{r}$. If we measure $\sigma_z$, we have a $50\%$ chance of obtaining $+1$ (and $50\%$ for $-1$); this means that for $\Ket{r}$ we have $\alpha_u^*\alpha_u = \alpha_d^*\alpha_d = \sfrac{1}{2}$. A vector that satisfies this constraint is:
+\begin{equation}
+	\Ket{r} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_r}
+\end{equation}
+
+The reasoning is the same for state \emph{left}; we also add the constraint that a state \emph{left} cannot be \emph{right} and vice versa: $\Braket{r|l} = \Braket{l|r} = 0$. We can express \emph{left} as:
+
+\begin{equation}
+	\Ket{l} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		-\frac{1}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_l}
+\end{equation}
+
+Lastly, the constraints to find explicit forms for \emph{in} and \emph{out} are:
+\begin{itemize}
+	\item states must be orthogonal: $\Braket{i|o} = \Braket{o|i} = 0$;
+	\item if we have a spin prepared as \emph{in} or \emph{out}:
+	\begin{itemize}
+		\item equiprobability of measuring $\sigma_z = +1$ and $\sigma_z = -1$;
+		\item equiprobability of measuring $\sigma_x = +1$ and $\sigma_x = -1$.
+	\end{itemize}
+\end{itemize}
+
+Two vectors that satisfy these constraints are:
+\begin{gather}
+	\Ket{i} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		\frac{i}{\sqrt{2}}
+	\end{pmatrix}
+	\label{eqn:ket_i}\\
+	\Ket{o} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		-\frac{i}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_o}
+\end{gather}
+This last derivation shows why it is important that the state space is complex: if we only accepted real components for our vectors, the system of equations we have implicitly defined would not have any solution\footnote{To avoid confusion, we point out that $\Ket{i}$ is the ket of state \emph{in}. $i$, instead, is the imaginary unit.}.
+
+\section{Observables}
+We have learned that in classical mechanics we can trust our intuition, and we can do one or more measurements to know exactly the state of a system: a measurement does not perturb the state, which is the same before, during, and after the measurement.
+
+In quantum mechanics the situation is more complex; our intuition is misleading, and we need mathematical tools to describe what we can measure: the observables. These tools are mathematical operators called \emph{machines} ($\mathbf{M}$) and have as both input and output state vectors.
+
+\begin{axiom}
+	Machines associated with observables are described by linear operators.
+\end{axiom}
+
+We will show that machines are Hermitian operators, so let's start defining these operators and describing their properties\footnote{The reason why we need this kind of operator will be clear in \ref{sec:principles}.}.
+
+\subsection{Hermitian operator}
+\noindent Formally, machines modify a state vector in this way:
+\[
+\mathbf{M} \Ket{A} = \Ket{B}
+\]
+The linearity of machines implies that:
+\[
+\mathbf{M} \Ket{A} = \Ket{B} \Rightarrow \mathbf{M} z\Ket{A} = z\Ket{B}
+\]
+and:
+\[
+\mathbf{M}(\Ket{A}+\Ket{B}) = \mathbf{M}\Ket{A} + \mathbf{M}\Ket{B}.
+\]
+
+If we choose a basis to represent machines and state vectors, we can write explicitly the linear operator as an $N\times N$ matrix, where $N$ is the dimension of the vector space of the state vectors. A generic machine that transforms spins can be expressed as:
+\[
+\mathbf{M} = \begin{pmatrix}
+	m_{11} &  m_{12}\\
+	m_{21} &  m_{22}
+\end{pmatrix}.
+\]
+
+When we fix a basis, we are forced to express all state vectors and operators in that basis, but now we have a set of rules to define the application of the operator to a state vector, i.e. the matrix multiplication:
+
+\[
+\mathbf{M} \Ket{A} = 
+\begin{pmatrix}
+	m_{11} &  m_{12}\\
+	m_{21} &  m_{22}
+\end{pmatrix}
+\times
+\begin{pmatrix}
+	\alpha_{1}\\
+	\alpha_{2}
+\end{pmatrix}
+=
+\begin{pmatrix}
+	\beta_{1}\\
+	\beta_{2}
+\end{pmatrix}
+=\Ket{B}
+\]
+
+When\marginpar{Eigenvalues and\\ eigenvectors} we consider a linear operator, we can search for eigenvalues and eigenvectors (if they exist). Eigenvectors are vectors that don't change their direction when multiplied by the operator; their magnitude is scaled by a constant factor called the eigenvalue. Formally:
+\[
+\mathbf{M}\Ket{\lambda} = \lambda\Ket{\lambda}
+\]
+where $\Ket{\lambda}$ is the eigenvector and $\lambda$ the eigenvalue.
+
+Considering the transformation between ket $\Ket{A}$ and $\Ket{B}$: $\mathbf{M} \Ket{A} = \Ket{B}$, taking into account the dual space of bras and searching for a machine that transforms the bra $\Bra{A}$ into $\Bra{B}$, we cannot simply use the matrix having as elements the complex conjugate of $\mathbf{M}$; the correct operator is the \emph{Hermitian conjugate} of $\mathbf{M}$, which is the transpose of the matrix having as elements the complex conjugates of $\mathbf{M}$. We denote the Hermitian conjugate with the dagger $\dagger$:
+\[
+\mathbf{M}^\dagger =  [\mathbf{M}^*]^T = [\mathbf{M}^T]^*.
+\]
+
+We can now write:
+\[
+\mathbf{M}\Ket{A} = \Ket{B} \Rightarrow \Bra{A}\mathbf{M}^\dagger = \Bra{B}.
+\]
+
+An operator that is equal to its Hermitian conjugate is called a \emph{Hermitian operator}. Formally, $\mathbf{M}$ is Hermitian if and only if
+\[
+\mathbf{M} = \mathbf{M}^\dagger.
+\]
+
+Hermitian operators have some important properties:
+\begin{itemize}
+	\item all eigenvalues are real;
+	\item eigenvectors form a \emph{complete set}: all vectors obtained with the application of the operator can be expressed as a linear combination of eigenvectors;
+	\item if $\lambda_1$ and $\lambda_2$ are different eigenvalues, the associated eigenvectors are orthogonal;
+	\item if two eigenvalues are equal (\emph{degeneracy}), it is always possible to find two associated eigenvectors that are orthogonal.
+\end{itemize}
+
+The\marginpar{Fundamental theorem} last three properties can be summed up in the following way:
+\begin{theorem}
+	The eigenvectors of a Hermitian operator form an orthonormal basis.
+\end{theorem} 
+
+\subsection{Principles of quantum mechanics}\label{sec:principles}
+Let's introduce the first four principles of quantum mechanics, the ones about observables\footnote{The fifth, and last one, concerns the temporal evolution. It will be discussed later on (\ref{sec:temp_evol}).}.
+\begin{principles}
+	Observables in quantum mechanics are described by linear operators $\mathbf{L}$.
+\end{principles}
+$\mathbf{L}$ must also be a Hermitian operator: we can consider this proposition an axiom itself or deduce it from the other principles.
+
+\begin{principles}
+	The results of a measurement can only be the eigenvalues associated with the observable operator.
+\end{principles}                                                                                                         
+Calling $\lambda_i$ a generic eigenvalue and $\Ket{\lambda_i}$ the associated eigenvector, if the system is in the \emph{eigenstate} $\Ket{\lambda_i}$, the measurement always returns $\lambda_i$. Since all $\lambda_i$ must be physical quantities they must be real, a peculiar property of Hermitian operators.
+
+\begin{principles}
+	Unambiguously distinguishable states are represented by orthogonal vectors.
+\end{principles}
+Distinguishable states can be separated without ambiguity by a measurement. For example, if we want to distinguish between $\Ket{u}$ and $\Ket{d}$, we measure $\sigma_z$: \emph{up} and \emph{down} are distinct. We cannot, instead, say if a certain system is in state \emph{up} or \emph{right}, because even if the system is in the state $\Ket{u}$ we can still measure $\sigma_x$ and find (with $50\%$ chance) that the system is in state $\Ket{r}$.
+
+The \marginpar{Overlap} inner product is a measure of how much two states are indistinguishable; for that reason it is also called overlap. Two states are physically distinct if the overlap is zero.
+\begin{align*}
+	\Braket{u|d} &= 0\\
+	\Braket{u|r} &\neq 0
+\end{align*}
+
+\begin{principles}
+	If the system is in state $\Ket{A}$ and we measure the observable $\mathbf{L}$, the probability of obtaining $\lambda_i$ is:
+	\[
+	P(\lambda_i) = \Braket{A|\lambda_i}\Braket{\lambda_i|A}.
+	\]
+	\emph{where $\lambda_i$ is a generic eigenvalue of $\mathbf{L}$ and $\Bra{\lambda_i}$, $\Ket{\lambda_i}$ are the bra and ket associated with that eigenvalue (eigenvector of $\lambda_i$).}
+\end{principles}
+
+\subsection{Spin Operator}
+The principles tell us what properties a machine must have to represent an observable. Let's construct the spin operator $\sigma$.
+
+Until now, we have measured spins with the apparatus $\mathcal{A}$, orienting $\mathcal{A}$ along the component of our interest. $\sigma$ is a mathematical tool that allows us to make predictions about the result of a measurement with $\mathcal{A}$ (fourth principle); as we can rotate $\mathcal{A}$, we must also rotate $\sigma$ (mathematically). For this spatial property, $\sigma$ is called a \emph{3-vector operator}.
+
+\paragraph{Operator $\boldsymbol{\sigma_z}$:} Let's start with the simplest operator\footnote{This is because we have chosen $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$ as the basis.}. The second principle says that all eigenvectors of $\sigma_z$ are $\Ket{u}$ and $\Ket{d}$, with associated eigenvalues $+1$ and $-1$. We can write this assertion as equations:
+\begin{gather*}
+	\sigma_z \Ket{u} = \Ket{u}  \\
+	\sigma_z \Ket{d} = -\Ket{d}.
+\end{gather*}
+In matrix form:
+\begin{align*}
+	\begin{pmatrix}
+		(\sigma_z)_{11} &  (\sigma_z)_{12}\\
+		(\sigma_z)_{21} &  (\sigma_z)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		1\\
+		0
+	\end{pmatrix} &= 
+	\begin{pmatrix}
+		1\\
+		0
+	\end{pmatrix}\\
+	\begin{pmatrix}
+		(\sigma_z)_{11} &  (\sigma_z)_{12}\\
+		(\sigma_z)_{21} &  (\sigma_z)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		0\\
+		1
+	\end{pmatrix} &= -
+	\begin{pmatrix}
+		0\\
+		1
+	\end{pmatrix}.
+\end{align*}
+The solution of this system is\footnote{It is easy to verify that this operator is also linear.}:
+\[
+\sigma_z = 
+\begin{pmatrix}
+	1 & 0\\
+	0 & -1
+\end{pmatrix}.
+\]
+
+\paragraph{Operator $\boldsymbol{\sigma_x}$:} With the same reasoning, we can construct the operator along the $x$ axis. We have already deduced the representations of \emph{right} and \emph{left} in equations \ref{eqn:ket_r} and \vref{eqn:ket_l}. The equations that allow us to construct $\sigma_x$ are:
+\begin{align*}
+	\begin{pmatrix}
+		(\sigma_x)_{11} &(\sigma_x)_{12}\\
+		(\sigma_x)_{21} &  (\sigma_x)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix} &= 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix} \\
+	\begin{pmatrix}
+		(\sigma_x)_{11} &  (\sigma_x)_{12}\\
+		(\sigma_x)_{21} &  (\sigma_x)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{-1}{\sqrt{2}}
+	\end{pmatrix} &= -
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{-1}{\sqrt{2}}
+	\end{pmatrix}.
+\end{align*}
+The solution of this system is:
+\[
+\sigma_x = 
+\begin{pmatrix}
+	0 & 1\\
+	1 & 0
+\end{pmatrix}.
+\]
+
+\paragraph{Operator $\boldsymbol{\sigma_y}$:} The last direction is along the $y$ axis. Considering the expressions for \emph{in} and \emph{out} given in equations \ref{eqn:ket_i} and \vref{eqn:ket_o}, and following the second principle, we can write:
+\begin{gather*}
+	\sigma_y \Ket{i} = \Ket{i}\\
+	\sigma_y \Ket{o} = -\Ket{o}.
+\end{gather*}
+We can rewrite this in matrix form, and the solution we would obtain is:
+\[
+\sigma_y = 
+\begin{pmatrix}
+	0 & -i\\
+	i & 0
+\end{pmatrix}.
+\]
+
+We\marginpar{Pauli matrices} have obtained a matrix representation of the three spin operators $\sigma_z$, $\sigma_x$, and $\sigma_y$:
+\begin{equation}
+	\sigma_z = 
+	\begin{pmatrix}
+		1 & 0\\
+		0 & -1
+	\end{pmatrix} \quad\quad
+	\sigma_x = 
+	\begin{pmatrix}
+		0 & 1\\
+		1 & 0
+	\end{pmatrix} \quad\quad
+	\sigma_y = 
+	\begin{pmatrix}
+		0 & -i\\
+		i & 0
+	\end{pmatrix}.
+\end{equation}
+These famous and important matrices are named after their inventor, Wolfgang Ernst Pauli.
+
+\subsection{Theory and experiments}
+Thanks to the operators $\sigma_z$, $\sigma_x$, and $\sigma_y$, if we know the state vector, we can statistically predict the result of a measurement of the spin along one of the three coordinate axes. What can we say about a measurement taken by orienting the apparatus $\mathcal{A}$ along a generic direction?
+
+Considering $\mathcal{A}$ oriented along the unit vector $\hat{n}$, if $\sigma$ behaves as a 3-vector, in order to obtain $\sigma_n$ we only need the inner product:
+\[
+\sigma_n = \vec{\sigma} \cdot \hat{n}
+\]
+Expanding the components:
+\[
+\sigma_n = \sigma_xn_x+\sigma_yn_y+\sigma_zn_z.
+\]
+
+If we choose the basis $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$, we can use the Pauli matrices to express in matrix form the expression for $\sigma_n$:
+\begin{equation*}
+	\sigma_n = n_x
+	\begin{pmatrix}
+		0 & 1\\
+		1 & 0
+	\end{pmatrix}
+	+ n_y
+	\begin{pmatrix}
+		0 & -i\\
+		i & 0
+	\end{pmatrix}
+	+ n_z
+	\begin{pmatrix}
+		1 & 0\\
+		0 & -1
+	\end{pmatrix} 	
+	= 
+	\begin{pmatrix}
+		n_z & n_x - in_y\\
+		n_x + in_y & -n_z
+	\end{pmatrix}.
+\end{equation*}
+
+Given a direction (expressed by the unit vector $\hat{n}$), we can construct the matrix we have now made explicit, and then, after finding eigenvalues and eigenvectors, we can know all possible results of a measurement and obtain the probability associated with each result. For example, considering a direction in the $x\textendash z$ plane, the operator $\sigma_n$ would be:
+\[
+\sigma_n = 
+\begin{pmatrix}
+	\cos\theta & \sin\theta\\
+	\sin\theta & -\cos\theta
+\end{pmatrix} 	
+\]
+where $\theta$ is the angle between $\hat{n}$ and $z$. For this matrix, the eigenvalues and eigenvectors are:
+\[
+\lambda_1 = 1 \quad\quad\ \  \Ket{\lambda_1}=
+\begin{pmatrix}
+	\cos\frac{\theta}{2}\\
+	\sin\frac{\theta}{2}
+\end{pmatrix} \quad
+\]
+and
+\[
+\lambda_2 = -1 \quad\quad \Ket{\lambda_2}=
+\begin{pmatrix}
+	-\sin\frac{\theta}{2}\\
+	\cos\frac{\theta}{2}
+\end{pmatrix}.
+\]
+
+It should be pointed out that the theory is in agreement with experimental results\footnote{If not, we must abandon this model and build another one.}. Eigenvalues are $+1$ and $-1$, exactly the only results that the apparatus $\mathcal{A}$ can retrieve. The probability of obtaining a certain result can be evaluated as:
+\begin{gather*}
+	P(+1) = |\Braket{u|\lambda_1}|^2 = \cos^2\frac{\theta}{2}\\
+	P(-1) = |\Braket{u|\lambda_2}|^2 = \sin^2\frac{\theta}{2}
+\end{gather*}
+
+Lastly,\marginpar{Expectation value} let's calculate the average value for the measurement $\sigma_n$. From the first experiment we have seen in \ref{sec:spin}, we already know that the result of repeated measurements with $\mathcal{A}$ is $\cos\theta$. Let's verify if our model is coherent with the world.
+
+Expected values are obtained as:
+\[
+\Braket{L} = \sum_{i}\lambda_iP(\lambda_i)
+\]
+Specifically:
+\[
+\Braket{\sigma_n} = (+1)\cos^2\frac{\theta}{2} + (-1)\sin^2\frac{\theta}{2} = \cos\theta.
+\]
+
+This is in complete agreement with the experimental results.
+
+Before going on, we present, without proof, a useful theorem about expectation values:
+\begin{theorem}
+	To know the expectation value of an observable, we can simply place the operator associated with the observable between the bra and ket of the state vector:
+	\begin{equation}
+		\label{eqn:exp}
+		\Braket{\mathbf{L}} = \Braket{A|\mathbf{L}|A}
+	\end{equation}
+	\emph{where $\mathbf{L}$ is an observable, $\Ket{A}$ is a state vector, and $\Bra{A}$ is the corresponding bra.}
+\end{theorem}
+
+%\paragraph{Interpretazione geometrica:} Se conosciamo il vettore di stato espresso nella base $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$ siamo immediatamente in grado di ricavare la probabilità di ottenere un certo risultato misurando $\sigma_z$, lo stesso potremmo dire se abbiamo un vettore di stato espresso nella base $\mathscr{B} = \Set{\Ket{r}, \Ket{l}}$ e vogliamo conoscere $\sigma_x$.
+%
+%Gli operatori $\sigma$ ci consentono di partire da un vettore di stato in ua certa base (nella nostra costruzione $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$) e di conoscere i valori di aspettazione $\Braket{\sigma_n}$ dato un $\hat{n}$ arbitrario. 
+%
+%Potremmo\marginpar{cambiamenti di base e rotazioni} dire che gli operatori $\sigma$ ci permettono di effettuare un cambio di base del vettore di stato, per descriverlo nella base della componente che ci interessa misurare\footnote{Non è esattamente un cambiamento di base, infatti il nuovo vettore è espresso ancora nella base di partenza}. Si può vedere il cambiamento di base anche come una rotazione del vettore di stato, in effetti le matrici di Pauli unite alla matrice identità sono dette \emph{quaternioni}, strutture matematiche che si usano, a esempio, in computer grafica proprio per effettuare rotazioni di oggetti.
+\subsection{Operator and Measure}
+Operators allow us to know the probability of measuring a certain spin given the direction of the measurement and the state vector. This probability is expressed by the state vector that we obtain when we apply the operator $\sigma$ to the initial state.
+
+It is important not to confuse the measurement act with the application of a machine that represents the observables. The spin state after the measurement is not the same as the one we obtain after the application of the operator. The operator is only an abstract mathematical construct that allows us to make statistical predictions about results, but doesn't have physical implications.
+
+Let's consider an example to clarify the previous assertion. Having a spin prepared in the \emph{up} state, its state vector is $\Ket{u} = \left(\begin{smallmatrix}1\\0\end{smallmatrix}\right)$. If we apply the operator $\sigma_z$, we would obtain again $\left(\begin{smallmatrix}1\\0\end{smallmatrix}\right)$, and if we measure the spin with $\mathcal{A}$ oriented along $z$, it will always display $+1$, and we conclude that the state after the measurement is $\Ket{u}$.
+
+Consider now a spin prepared \emph{right}, i.e. $\Ket{r}= {1}/{\sqrt{2}}\Ket{u} + {1}/{\sqrt{2}}\Ket{d}$. Applying again the operator $\sigma_z$, the new state vector is ${1}/{\sqrt{2}}\Ket{u} - {1}/{\sqrt{2}}\Ket{d}$. This vector tells us the probability of measuring $\sigma_z = +1$ ($50\%$), but it is not the spin state after the measurement. Using the apparatus $\mathcal{A}$, we could measure:
+\begin{itemize}
+	\item $+1$: the final state will be \emph{up};
+	\item $-1$: the final state will be \emph{down}.
+\end{itemize} 
+No matter the result of the measurement, the final state will be different from the one we obtained by applying the operator.
+
+\section{Temporal Evolution}\label{sec:temp_evol}
+Let's explore the laws that describe the temporal evolution of a quantum system. In particular, we will see how the state vector can evolve over time.
+
+\subsection{Unitarity}
+In classical mechanics we are used to having a motion law that links different states of our system deterministically; this means being able to know precisely the following state given the previous one. A good law, however, doesn't allow us only to know the future, but also the past states that brought the system to the current state\footnote{For example, if we observe a ball in free fall touching the floor with a certain speed and at a certain time, we can know exactly when and from what height the ball started its fall.}. 
+
+In\marginpar{Reversibility} other words, we want physical transformations to be reversible. This requirement is so important that we call this property the \emph{minus first law}, because it underlies everything else. If we think about the system states as nodes in an oriented graph, reversibility imposes that each node has exactly one input edge and one output edge. This fundamental law is also true in quantum mechanics and is called \emph{unitarity}\footnote{We will see in the next paragraph the reason for this name}, and it assures us that no information is lost. The unitarity law can be expressed as:
+
+\begin{axiom}
+	If two identical isolated systems are in different states, they stay in different states, and they were in different states in the past.
+\end{axiom}
+
+\subsection{Time-Development Operator}
+Considering a system in the state $\Ket{\Psi(t)}$, where the $t$ indicates that the state vector evolves over time, quantum motion equations allow us to obtain the state at time $t$ given the initial state:
+\begin{equation}
+	\label{eqn:evol}
+	\Ket{\Psi(t)} = \mathbf{U}(t)\Ket{\Psi(0)}.
+\end{equation}
+
+Thanks\marginpar{Determinism} to the operator $\mathbf{U}(t)$ we can know exactly the state vector $\Ket{\Psi(t)}$ at time $t$, given $\Ket{\Psi(0)}$. This assertion can be rephrased as:
+
+\begin{axiom}
+	The temporal evolution of the state vector is deterministic.
+\end{axiom}
+
+Quantum mechanics is still non-deterministic, because knowing the state vector doesn't mean knowing the result of a measurement.
+
+In order for $\mathbf{U}(t)$ to behave as we want, it has to:
+\begin{itemize}
+	\item be a linear operator;
+	\item respect reversibility.
+\end{itemize}
+
+The second constraint allows us to define the mathematical properties of $\mathbf{U}(t)$. Considering two initially different states $\Ket{\Psi(0)}$ and $\Ket{\Phi(0)}$, since there exists an experiment capable of certainly distinguishing the states, $\Ket{\Psi(0)}$ and $\Ket{\Phi(0)}$ must be orthogonal:
+\[
+\Braket{\Psi(0)|\Phi(0)} = 0.
+\]
+The\marginpar{Conservation of Distinctions} minus first law assures that during the entire temporal evolution of the two systems, the state vectors $\Ket{\Psi(t)}$ and $\Ket{\Phi(t)}$ will continue to be distinguishable (orthogonal):
+\[
+\Braket{\Psi(t)|\Phi(t)} = 0 \qquad\qquad\forall t \geq 0.
+\]
+If we rewrite this equation using formula \ref{eqn:evol}, we obtain:
+\[
+\Bra{\Psi(0)}\mathbf{U}^\dagger(t) \mathbf{U}(t)\Ket{\Phi(0)} = 0.
+\]
+From this we can see that $\mathbf{U}^\dagger(t) \mathbf{U}(t)$ must behave as the identity operator, that is:
+\begin{equation}
+	\label{eqn:unit}
+	\mathbf{U}^\dagger(t) \mathbf{U}(t) = \mathbf{I}.
+\end{equation}
+
+An operator that behaves as $\mathbf{U}$ is \emph{unitary}.
+\begin{principles}
+	The temporal evolution of state vectors is unitary. 
+\end{principles}
+
+From the unitarity of $\mathbf{U}$ descends the \emph{conservation of overlaps}: the overlap between two states (their inner product), subjected to the same temporal-development operator, is preserved over time.
+
+\subsection{The Hamiltonian}
+Often, in classical physics, a motion law is the result of a differential equation where we have exchanged a finite time interval with an infinite number of infinitesimal intervals. 
+
+In\marginpar{Continuity} quantum mechanics we can follow the same path and consider time intervals $\epsilon$ close to zero. In this scenario, after an $\epsilon$ amount of time, the state vector will change slightly and \say{smoothly}, and the operator $\mathbf{U}(\epsilon)$ will be very similar to the identity. We can rewrite $\mathbf{U}(\epsilon)$ in order to highlight the difference with the identity $\mathbf{I}$ as:
+\begin{equation}
+	\label{eqn:u_eps}
+	\mathbf{U}(\epsilon) = \mathbf{I} - i\epsilon \mathbf{H}.
+\end{equation}
+For now, $i$ is a mere scale factor that later will help us recognize in $\mathbf{H}$ the quantum version of the classical Hamiltonian.
+
+We can now express the infinitesimal evolution of a quantum system by combining equations \ref{eqn:evol} and \ref{eqn:u_eps}:
+\[
+\Ket{\Psi(\epsilon)} = \Ket{\Psi(0)} - i \epsilon\mathbf{H}\Ket{\Psi(0)}.
+\]
+Bringing to the left the time interval:
+\[
+\frac{\Ket{\Psi(\epsilon)} - \Ket{\Psi(0)}}{\epsilon} =  - i\mathbf{H}\Ket{\Psi(0)}.
+\]
+Now considering the limit for $\epsilon \to 0$, we can see in the left member the time derivative of the state vector:
+\[
+\frac{\partial\Ket{\Psi(t)}}{\partial t} = - i \mathbf{H}\Ket{\Psi(0)}.
+\]
+
+Before using $\mathbf{H}$ as the quantum Hamiltonian, we have to verify the dimensional correctness. As in classical mechanics, the Hamiltonian is the mathematical construct that represents the energy. In our formula, however, ignoring the state vector, we have the inverse of time on the left and the energy on the right. To resolve this problem, let's introduce an important physical constant: the reduced Planck constant, $\hbar$.
+
+The equation becomes:\marginpar{\\ \  \\Time-dependent \\ Schrödinger equation}
+\begin{equation}
+	\label{eqn:shro}
+	\hbar\frac{\partial\Ket{\Psi}}{\partial t} = - i \mathbf{H}\Ket{\Psi}
+	\qquad \text{or} \qquad
+	\frac{\partial\Ket{\Psi}}{\partial t} = \frac{- i \mathbf{H}\Ket{\Psi}}{\hbar}.
+\end{equation}
+The constant $\hbar$ has units of $\sfrac{kg\cdot m^2}{s}$ and resolves the incompatibility between the two members. This equation is fundamental and is called the \emph{generalized Schrödinger equation}, or time-dependent Schrödinger equation. If we know the Hamiltonian of an undisturbed system, we can know the evolution of the state vector.
+
+If $\mathbf{H}$ represents the energy of the system, we should be able to measure it, so $\mathbf{H}$ has to be an observable. If $\mathbf{H}$ is an observable, it must be a Hermitian operator; let's verify it. Starting from \ref{eqn:unit} and substituting $\mathbf{U}$ with \ref{eqn:u_eps}, we obtain:
+\[
+(\mathbf{I} + i\epsilon\mathbf{H}^\dagger) (\mathbf{I} - i\epsilon\mathbf{H}) = \mathbf{I}.
+\]
+Expanding to first order in $\epsilon$, we find:
+\[
+\mathbf{H}^\dagger - \mathbf{H} = 0 \Rightarrow \mathbf{H}^\dagger = \mathbf{H}.
+\]
+
+We have concluded that $\mathbf{H}$\marginpar{Quantum Hamiltonian} is an Hermitian operator that represents an observable: the energy of the system. Eigenvalues of $\mathbf{H}$ are the results of all possible direct measurements of the energy of the system. 
+
+\subsection{Commutators}
+In a system that evolves with time, we expect that the expectation values for a certain observable $\mathbf{L}$ will also change. Thanks to equation \vref{eqn:exp}, we can write explicitly the time dependence of expectation values:
+\[
+\Braket{\mathbf{L}} = \Braket{\Psi(t)|\mathbf{L}|\Psi(t)}.
+\]
+The time derivative\footnote{Derivative of a product: $\mathbf{L}$ doesn't depend on time and the dot denotes the time derivative (Newton notation).} is:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \Braket{\dot{\Psi}(t)|\mathbf{L}|\Psi(t)} + \Braket{\Psi(t)|\mathbf{L}|\dot{\Psi}(t)}.
+\]
+
+Substituting bra and ket with the time-dependent Schrödinger equation~\ref{eqn:shro} (namely $\Ket{\dot{\Psi}(t)} = \frac{- i}{\hbar}\mathbf{H}\Ket{\Psi(t)}$), we obtain:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \frac{i}{\hbar}\Braket{\Psi(t)|\mathbf{H}\mathbf{L}|\Psi(t)} - \frac{i}{\hbar} \Braket{\Psi(t)|\mathbf{L}\mathbf{H}|\Psi(t)}.
+\]
+That can be rewritten as:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \frac{i}{\hbar}\Braket{\Psi(t)|[\mathbf{H}, \mathbf{L}]|\Psi(t)}.
+\]
+
+The quantity $\mathbf{H}\mathbf{L} - \mathbf{L}\mathbf{H}$ is called the \emph{commutator}, and since, in general, the product between operators (matrices) is not commutative, the commutator is not zero (when it is zero, we say that $\mathbf{H}$ and $\mathbf{L}$ commute). Commutators are important in physic, and the commutator between two operators, in this case $\mathbf{H}$ and $\mathbf{L}$, is denoted by:
+\[
+\mathbf{H}\mathbf{L} - \mathbf{L}\mathbf{H} = [\mathbf{H},\mathbf{L}].
+\]
+
+With the commutator we can express concisely the derivative of the expectation value for the observable $\mathbf{L}$:
+\begin{equation}
+	\frac{d}{dt} \Braket{\mathbf{L}} = \frac{i}{\hbar}\Braket{[\mathbf{H},\mathbf{L}]}
+\end{equation}
+or equivalently:
+\begin{equation}
+	\label{eqn:d_exp}
+	\frac{d}{dt} \Braket{\mathbf{L}} = -\frac{i}{\hbar}\Braket{[\mathbf{L},\mathbf{H}]}.
+\end{equation}
+
+This equation links variations of the expectation values of an observable ($\mathbf{L}$) to the expectation values of another physical observable  ($-\frac{i}{\hbar}[\mathbf{L},\mathbf{H}]$)\footnote{It is possible to demonstrate that if $\mathbf{L}$ and $\mathbf{H}$ are Hermitian, then $[\mathbf{L}, \mathbf{H}]$ is also Hermitian.}.
+
+\subsection{Conservation of Energy}
+In quantum mechanics, when we say that a quantity is conserved, we mean that the expectation value of that quantity doesn't change. If we look at equation \ref{eqn:d_exp}, the condition for the expectation value not to change is that the commutator between this quantity and the Hamiltonian is zero. It is possible to demonstrate that:
+\begin{theorem}
+	Having an observable $\mathbf{Q}$, if $[\mathbf{Q},\mathbf{H}]=0$, then every power satisfies $[\mathbf{Q}^n,\mathbf{H}] = 0$. This means that the expectation value $\Braket{Q}$ is conserved, and any power of the expectation value $\Braket{Q^n}$ does not change with time.
+\end{theorem}
+
+The most obvious quantity that is conserved is the Hamiltonian $\mathbf{H}$ and, since every operator commutes with itself, we always have:
+\[
+[\mathbf{H},\mathbf{H}] = 0.
+\]
+
+We can conclude that, under very general conditions, energy is conserved in quantum mechanics.
+
+%\subsection{Spin nel campo magnetico}
+%
+%\subsection{Equazione di Schrödinger}
+%
+%\subsection{Sovrapposizione e collasso}
+%
+\section{Conclusions}
+We conclude this chapter with a recap of what we have discovered in these pages, trying to put everything together to answer the question that opened this chapter: what are the physical limits of quantum computing, and why must our algorithms be reversible?
+
+We started the chapter with an experiment that shows that quantum mechanics is not deterministic. We can, however, make some predictions if we consider the expectation value of a measurement instead of a single result.
+
+We have built state vectors and understood their mathematical meaning, focusing on the fact that knowing the state vector doesn't allow us to know the result of a measurement. We have defined the inner product between state vectors, observed that it is a measure of the overlap between states, and concluded that two distinguishable states must be orthogonal.
+
+We have linked a state vector to the result of a measurement \textendash{}to be precise, to the average of the results of multiple measurements\textendash{} with machines, Hermitian operators that represent observables. We have built the spin operator and used it to predict the result of a simple experiment, showing how the theory we have built so far is in accordance with experimental results.
+
+Our introduction continues with the analysis of the temporal evolution of a quantum system. We have described the evolution of a state vector with an unitary operator; the application of this operator to a state vector produces the new state in which the system will be. We understood that the temporal evolution of the state vector is deterministic and that indeterminacy is caused only by the act of measuring.
+
+Considering infinitesimal time intervals, we have deduced the time-dependent Schrödinger equation and, thanks to this equation, we have shown how to describe the temporal evolution of expectation values for a certain observable. During this analysis, we also introduced the Hamiltonian of the system, a Hermitian operator that describes the energy of the system. 
+
+The discussion ends with a comforting result: as in classical physics, the energy of a closed system is conserved. We have obtained this result by presenting the commutator and linking the temporal evolution of an observable with the commutator between the observable and the Hamiltonian (energy) of the system. The commutator of the Hamiltonian with itself is trivially zero, so the expectation value for the energy doesn't change.
+
+All the information that we have learned allows us to understand the constraint of writing only reversible algorithms for quantum-gate-based quantum computers. Quantum gates operate on \emph{qubits} through physical transformations\footnote{Here we don't need to understand exactly how.}. These transformations, like all transformations in quantum mechanics, are described by unitary operators that are intrinsically reversible. This means that all quantum gates are reversible.
+
+In other words, we can build only quantum gates that, having as input different (distinguishable) states, return orthogonal states; also, due to the conservation of overlaps, the inner product between input states is conserved during the quantum gate transformation.
+
+Reversibility doesn't mean that we can go forward and backward in time as we please, but that all quantum gates express injective functions: if we know the output, we can know the input, or in more physical terms, if we know the final state of \emph{qubits}\footnote{This is a complex system (composed of more than one \emph{qubit}); to fully understand these systems, we should take into account entanglement. Since our discussion is already quite long, and the temporal evolution of an entangled system is still unitary (reversible), we exclude entanglement from our introduction.} and the transformations applied to this system (i.e., those implemented by the quantum gates), we can determine the initial state.
+
+Since every quantum algorithm has to be implemented as a path through quantum gates, and every quantum gate is reversible, the algorithms as a whole must also be reversible.
+
