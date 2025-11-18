@@ -1,0 +1,71 @@
+\chapter{Setting Up}
+
+In this chapter we describe the environment we use to do our test, the tool
+
+\section{Python environment}
+The language used to interface with quantum computer is usually python, in this section we create a virtual environment in python in order to communicate with the IBM quantum Computer and the D-Wave quantum computer.
+
+For our test we manage pyton environments with \mintinline{sh}|conda|, let's start creating the virtual env named \mintinline{sh}|quantum| and activate it with:
+\begin{minted}{sh}
+conda create --name quantum
+conda activate quantum
+\end{minted}
+For our test and to follow the various example presented both by IBM and D-Wave is also useful to been able of running a Jupyter notebook. We can install Jupyter with:
+\begin{minted}{sh}
+pip install jupyter
+\end{minted}
+
+\section{IBM Qiskit}
+To program an architecture gate based and to access IBM quantum computer we use the \emph{Qiskit} software stack. The name Qiskit is a general term referring to a collection of software for executing programs on quantum computers.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.95\linewidth]{overview-image}
+	\label{fig:qiskit_overview}
+	\caption{Qiskit software stack}
+\end{figure}
+
+The core components are \emph{Qiskit SDK} and \emph{Qiskit Runtime}, the first one is completely open source and allows the developer to define his circuit; the second one is a cloud-based service for executing quantum computations on IBM quantum computer.
+
+\subsection{Hello World}
+Following the IBM documentation\footnote{https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit} we can install the SDK and the Runtime with:
+\begin{minted}{sh}
+pip install qiskit matplotlib qiskit[visualization]
+pip install qiskit-ibm-runtime
+\end{minted}
+
+If the setup had success we are now able to run a small test to build a Bell state (two entangled qubits). The following code assemble the gates, show the final circuit and use a sampler to simulate on the CPU the result of $1024$ runs of the program.
+
+\begin{minted}{py}
+from qiskit import QuantumCircuit
+from qiskit.primitives import StatevectorSampler
+
+qc = QuantumCircuit(2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure_all()
+
+sampler = StatevectorSampler()
+result = sampler.run([qc], shots=1024).result()
+print(result[0].data.meas.get_counts())
+qc.draw("mpl")
+\end{minted}
+
+\subsection{Transpilation}
+Each Quantum Processing Unit (QPU) has a specific topology, we need to rewrite our quantum circuit in order to match the topology of the selected device on witch we want to run our program. This phase of rewriting, followed by an optimization, is called transpilation. 
+
+Considering, for now, a fake hardware (so we don't need an API key) we can transpile the quantum circuit \mintinline{py}|qc|, from the code above, to match the topology of a precise QPU:
+\begin{minted}{py}
+from qiskit_ibm_runtime.fake_provider import FakeWashingtonV2
+from qiskit.transpiler import generate_preset_pass_manager
+
+backend = FakeWashingtonV2()
+pass_manager = generate_preset_pass_manager(backend=backend)
+
+transpiled = pass_manager.run(qc)
+transpiled.draw("mpl")
+\end{minted}
+
+\subsection{Execution}
+
+\subsection{A complete example on real hardware}
+

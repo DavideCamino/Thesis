@@ -1,0 +1,35 @@
+% ********************************************************************
+% Personal commands
+% ******************************************************************** 
+\newcommand{\myName}{Davide Camino}
+\newcommand{\myTitle}{Quantum computing for logical inference}
+\newcommand{\mySubTitle}{Subtitle}
+ 
+\newcommand{\mail}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+
+% ********************************************************************
+% Graphics
+% ********************************************************************
+\graphicspath{{Graphics/}}
+
+\numberwithin{equation}{chapter}
+
+\bibliography{Bibliography}
+
+\theoremstyle{plain}
+\newtheorem{assioma}{Assioma}
+\newtheorem{axiom}{Axiom}
+\newtheorem{principio}{Principio}
+\newtheorem{principles}{Principles}
+\newtheorem{teorema}{Teorema}
+\newtheorem{theorem}{Theorem}
+
+\definecolor{bg}{rgb}{.9, .9, .9}
+\setminted{
+	bgcolor=bg,
+	linenos,
+	tabsize=2,
+	breaklines=true,
+	fontsize=\small
+}
