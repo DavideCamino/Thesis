@@ -7,7 +7,7 @@ The language used to interface with quantum computer is usually python, in this 
 
 For our test we manage pyton environments with \mintinline{sh}|conda|, let's start creating the virtual env named \mintinline{sh}|quantum| and activate it with:
 \begin{minted}{sh}
-conda create --name quantum
+conda create --name quantum python=3.12 pip
 conda activate quantum
 \end{minted}
 For our test and to follow the various example presented both by IBM and D-Wave is also useful to been able of running a Jupyter notebook. We can install Jupyter with:
@@ -31,11 +31,17 @@ Following the IBM documentation\footnote{https://quantum.cloud.ibm.com/docs/en/g
 \begin{minted}{sh}
 pip install qiskit matplotlib qiskit[visualization]
 pip install qiskit-ibm-runtime
+pip install qiskit-aer
 \end{minted}
+
+Line $3$ install Aer, that is a high performance simulator for quantum circuits written in Qiskit. Aer includes realistic noise models, and we will use later to test our circuit.
+
+Sometimes the Qiskit stack suffer from incompatibility between the various software that compose the environment. At the moment of writing the latest package seem to work without any problem. For our test we will use \mintinline{py}|qiskit: 2.2.3|, \mintinline{py}|qiskit-ibm-runtime: 0.43.1| and \mintinline{py}|qiskit-aer: 0.17.2|.
 
 If the setup had success we are now able to run a small test to build a Bell state (two entangled qubits). The following code assemble the gates, show the final circuit and use a sampler to simulate on the CPU the result of $1024$ runs of the program.
 
-\begin{minted}{py}
+\begin{listing}[H]
+	\begin{minted}{py}
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
 
@@ -48,13 +54,17 @@ sampler = StatevectorSampler()
 result = sampler.run([qc], shots=1024).result()
 print(result[0].data.meas.get_counts())
 qc.draw("mpl")
-\end{minted}
+	\end{minted}
+	\label{lst:hello_qiskit}
+	\caption{hello qiskit}
+\end{listing}
 
 \subsection{Transpilation}
 Each Quantum Processing Unit (QPU) has a specific topology, we need to rewrite our quantum circuit in order to match the topology of the selected device on witch we want to run our program. This phase of rewriting, followed by an optimization, is called transpilation. 
 
 Considering, for now, a fake hardware (so we don't need an API key) we can transpile the quantum circuit \mintinline{py}|qc|, from the code above, to match the topology of a precise QPU:
-\begin{minted}{py}
+\begin{listing}[H]
+	\begin{minted}{py}
 from qiskit_ibm_runtime.fake_provider import FakeWashingtonV2
 from qiskit.transpiler import generate_preset_pass_manager
 
@@ -63,9 +73,58 @@ pass_manager = generate_preset_pass_manager(backend=backend)
 
 transpiled = pass_manager.run(qc)
 transpiled.draw("mpl")
-\end{minted}
+	\end{minted}
+	\label{lst:transpilation}
+	\caption{Transpilation}
+\end{listing}
+The following picture show (\ref{fig:qc_orig}) the quantum circuit that build a Bell state, and (\ref{fig:qc_trans}) the transpiled version where the Hadamard gate is replaced to match the actual topology of the QPU.
+\begin{figure}[h]
+	\centering
+	\subfloat[Original circuit]
+	{\label{fig:qc_orig}
+		\includegraphics[height=2.8cm]{bell_1}} \quad
+	\subfloat[Transpiled circuit]
+	{\label{fig:qc_trans}%
+		\includegraphics[height=2.8cm]{bell_2}} \\
+	\label{fig:qc_transpilation}
+	\caption{Transpilation example}
+\end{figure}
+
 
 \subsection{Execution}
+To test our transpiled circuit we use Aer that allow us to simulate also the noise of a real quantum hardware. We can execute our program with:
+\begin{listing}[H]
+	\begin{minted}{py}
+from qiskit_aer.primitives import SamplerV2
+
+sampler = SamplerV2.from_backend(backend)
+job = sampler.run([transpiled], shots=1024)
+result = job.result()
+print(f"counts for Bell circuit : {result[0].data.meas.get_counts()}")
+	\end{minted}
+	\label{lst:execution}
+	\caption{Simulated execution}
+\end{listing}
+
+If we look at the results of the execution we could observe that some answers present non entangled qbit, this is caused by the (simulated) noise of the quantum device. A typical output of the execution could be:
+\begin{minted}{text}
+> counts for Bell circuit : {'00': 504, '11': 503, '01': 10, '10': 7}
+\end{minted}
+Where state \mintinline{text}|01| and \mintinline{text}|10| should not be present in an ideal execution with no errors.
 
 \subsection{A complete example on real hardware}
 
+\section{D-Wave Ocean}
+To define an optimization problem that can be resolved on a D-Wave quantum computer we use the Ocean software stack. Ocean, also, allow us  to interact with D-Wave hardware, submit a problem and to simulate the execution on a classical CPU.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.95\linewidth]{ocean_stack}
+	\label{fig:ocean_overview}
+	\caption{Ocean software stack}
+\end{figure}
+All tools that implement the steps needed to solve your problem on a CPU, a D-Wave quantum computer, or a quantum-classical hybrid solver can be installed with:
+\begin{minted}{sh}
+pip install dwave-ocean-sdk
+\end{minted}
+After the installation running the command \mintinline{sh}|dwave setup| will start an interactive prompt that guide us through a full setup.
+\subsection{Hello World}
