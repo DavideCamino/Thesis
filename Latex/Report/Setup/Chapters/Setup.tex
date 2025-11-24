@@ -1,6 +1,7 @@
 \chapter{Setting Up}
+In this chapter we describe the environment we use to execute our test and what library and tool we use.
 
-In this chapter we describe the environment we use to do our test, the tool
+In the following sections we install the SDKs to develop and interact with quantum computer from IBM and D-Wave. We also present other two useful tools to write easily optimization problem.
 
 \section{Python environment}
 The language used to interface with quantum computer is usually python, in this section we create a virtual environment in python in order to communicate with the IBM quantum Computer and the D-Wave quantum computer.
@@ -17,11 +18,11 @@ pip install jupyter
 
 \section{IBM Qiskit}
 To program an architecture gate based and to access IBM quantum computer we use the \emph{Qiskit} software stack. The name Qiskit is a general term referring to a collection of software for executing programs on quantum computers.
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{overview-image}
-	\label{fig:qiskit_overview}
 	\caption{Qiskit software stack}
+	\label{fig:qiskit_overview}
 \end{figure}
 
 The core components are \emph{Qiskit SDK} and \emph{Qiskit Runtime}, the first one is completely open source and allows the developer to define his circuit; the second one is a cloud-based service for executing quantum computations on IBM quantum computer.
@@ -86,8 +87,8 @@ The following picture show (\ref{fig:qc_orig}) the quantum circuit that build a 
 	\subfloat[Transpiled circuit]
 	{\label{fig:qc_trans}%
 		\includegraphics[height=2.8cm]{bell_2}} \\
-	\label{fig:qc_transpilation}
 	\caption{Transpilation example}
+	\label{fig:qc_transpilation}
 \end{figure}
 
 
@@ -102,8 +103,8 @@ job = sampler.run([transpiled], shots=1024)
 result = job.result()
 print(f"counts for Bell circuit : {result[0].data.meas.get_counts()}")
 	\end{minted}
-	\label{lst:execution}
 	\caption{Simulated execution}
+	\label{lst:execution}
 \end{listing}
 
 If we look at the results of the execution we could observe that some answers present non entangled qbit, this is caused by the (simulated) noise of the quantum device. A typical output of the execution could be:
@@ -185,8 +186,8 @@ The figure shows an example graph (\ref{fig:ising_ex_gr}) and the corresponding 
 				};
 			\end{tikzpicture}
 		}
-	\label{fig:ising_ex}
 	\caption{Ising formulation}
+	\label{fig:ising_ex}
 \end{figure}
 
 The following code present a possible implementation of the Ising model described above. We have defined two dictionary to memorize the matrix coefficient. The last line of code founds ten possible answers to the problem using the simulated annealing function implemented by D-Wave.
@@ -198,8 +199,8 @@ quadratic = {('B', 'C'): 2, ('B', 'F'): 2, ('C', 'A'): 2, ('D', 'A'): 2, ('E', '
 sampler = SimulatedAnnealingSampler()
 result = sampler.sample_ising(linear, quadratic, num_reads=10)
 	\end{minted}
-	\label{lst:ising_ex}
 	\caption{Ising example}
+	\label{lst:ising_ex}
 \end{listing}
 If we print the results with: \mintinline{py}|print(result.aggregate())| we could observe something similar to this:
 \begin{minted}{text}
@@ -214,10 +215,96 @@ The two different results represent the two correct answer to our particular ins
 
 \subsection{Minor embedding}
 
-\section{PyQubo and QuboVert}
-In listing \ref{lst:ising_ex} we have manually built the matrix representing the function that we want to minimize. It can be useful to have some tools that allow us working at higher level defining the function like:
-\[
-	cost = objective + \lambda \cdot penalty
-\]
+\section{PyQUBO and qubovert}
+In listing \ref{lst:ising_ex} we have manually built the matrix representing the function that we want to minimize. It can be useful to have some tools that allow us working at higher level defining the cost functions like \ref{asd} that we have defined in the section about quantum annealing(\ref{asd}).
 
+Considering again the MVC problem the objective function tent to minimize the number of node in our subset, the penalty increment the cost if we left out some edges. This interpretation allow us to transform the Ising model in the more familiar \textemdash{}from the point of view of a computer scientist\textemdash{} QUBO model, where all variables $x_i \in \set{0, 1}$. Let's see how PyQUBO and qubovert help us in this task.
 
+\subsection{PyQUBO}
+Reading from the documentation on PyQUBO site\footnote{\url{https://pyqubo.readthedocs.io/en/latest/}}, PyQUBO allows us to create QUBOs or Ising models from flexible mathematical expressions easily. Some of the features of PyQUBO are:
+\begin{itemize}
+	\item Python based (C++ backend);
+	\item Fully integrated with Ocean SDK;
+	\item Automatic validation of constraints;
+	\item Placeholder for parameter tuning.
+\end{itemize}
+
+We can install PyQUBO with \mintinline{py}|pip install pyqubo| and rewrite our MVC problem defining the Hamiltonian that we want to minimize. 
+\begin{listing}[H]
+	\begin{minted}{py}
+from pyqubo import Binary, Placeholder, Constraint
+from dwave.samplers import SimulatedAnnealingSampler
+
+A, B, C, D, E, F  = Binary('A'), Binary('B'), Binary('C'), Binary('D'), Binary('E'), Binary('F')
+
+H_objective = (A + B + C + D + E + F)
+H_penalty = Constraint(((1 - A - C + A*C) +\
+(1 - A - D + A*D) +\
+(1 - A - F + A*F) +\
+(1 - B - C + B*C) +\
+(1 - B - F + B*F) +\
+(1 - D - E + D*E) +\
+(1 - E - F + E*F)) ,label='cnstr0')
+
+L = Placeholder('L')
+H = H_objective + L*H_penalty
+H_internal = H.compile()
+bqm = H_internal.to_bqm(feed_dict={'L': 2})
+
+sampler = SimulatedAnnealingSampler()
+result = sampler.sample(bqm, num_reads=10)
+	\end{minted}
+	\caption{Rewriting MVC with pyQUBO}
+	\label{lst:MVC_pyQUBO}
+\end{listing}
+Listing \ref{lst:MVC_pyQUBO} presents a possible re-implementation of listing \ref{lst:ising_ex}, where we can also see how PyQUBO interface with Ocean SDK (line 17), and how to create (lines 14-16) and instance (line 17) a parametric Hamiltonian.
+
+\subsection{qubovert}
+As written in the documentation\footnote{\url{https://qubovert.readthedocs.io/en/latest/index.html}} qubovert is the one-stop package for formulating, simulating, and solving problems in boolean and spin form. Using our nomenclature boolean and spin form are respectively QUBO and Ising form.
+
+Qubovert allow us to define various type of optimization problem that can be resolved by bruteforce, with qubovert’s simulated annealing or with D-Wave’s solver. Models defined in qubovert are:
+\begin{description}
+	\item [QUBO:] Quadratic Unconstrained Boolean Optimization;
+	\item [QUSO:] Quadratic Unconstrained Spin Optimization  (Ising model);
+	\item [PUBO:] Polynomial Unconstrained Boolean Optimization;
+	\item [PUSO:] Polynomial Unconstrained Spin Optimization;
+	\item [PCBO:] Polynomial Constrained Boolean Optimization;
+	\item [PCSO:] Polynomial Constrained Spin Optimization.
+\end{description}
+
+In addiction to generic models qubovert has a library of famous NP-complete problems mapped to QUBO and Ising forms.
+
+\begin{listing}[H]
+	\begin{minted}{py}
+from qubovert import boolean_var
+from dwave.samplers import SimulatedAnnealingSampler
+
+A, B, C, D, E, F  = boolean_var('A'), boolean_var('B'), boolean_var('C'), boolean_var('D'), boolean_var('E'), boolean_var('F')
+
+model = A + B + C + D + E + F
+model.add_constraint_OR(A, C, lam=2)
+model.add_constraint_OR(A, D, lam=2)
+model.add_constraint_OR(A, F, lam=2)
+model.add_constraint_OR(B, C, lam=2)
+model.add_constraint_OR(B, F, lam=2)
+model.add_constraint_OR(D, E, lam=2)
+model.add_constraint_OR(E, F, lam=2)
+
+qubo = model.to_qubo()
+dwave_qubo = qubo.Q
+
+sampler = SimulatedAnnealingSampler()
+result = sampler.sample_qubo(dwave_qubo, num_reads=10)
+	\end{minted}
+	\caption{Rewriting MVC with qubovert}
+	\label{lst:MVC_qubovert}
+\end{listing}
+
+Listing \ref{lst:MVC_qubovert} shows a possible implementation of MVC problem using the tool given by qubovert. Qubovert allow us to express our problem as a PCBO, we use this formulation to express constraints in a more natural way.  In our example we ensure that each edge is cover simply enforcing that at least one of the nodes linked by the edge is present in the solution. This constaint is repeated for each edge in the graph (lines 7-13), to specify the lagrange multiplier (equation \ref{asd}) we use the keyword \mintinline{text}|lam|.
+
+Qubovert like PyQUBO can interface with Ocean SDK transforming a PCBO problem in a QUBO problem (line 15) and then rewriting it in the format accepted by D-wave solver (or sampler).
+
+\section{Conclusion}
+In this chapter we have set up an environment to run our future experiments and test. We have also showed some small examples to present the main characteristic and tests the tools we will use in our work. 
+
+Following this setup allows anyone to recreate exactly the same configuration we use, avoiding (for what we know and test) incompatibility between python package.
