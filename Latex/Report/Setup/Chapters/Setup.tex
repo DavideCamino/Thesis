@@ -122,9 +122,102 @@ To define an optimization problem that can be resolved on a D-Wave quantum compu
 	\label{fig:ocean_overview}
 	\caption{Ocean software stack}
 \end{figure}
+
 All tools that implement the steps needed to solve your problem on a CPU, a D-Wave quantum computer, or a quantum-classical hybrid solver can be installed with:
 \begin{minted}{sh}
 pip install dwave-ocean-sdk
 \end{minted}
-After the installation running the command \mintinline{sh}|dwave setup| will start an interactive prompt that guide us through a full setup.
+
+After the installation running the command \mintinline{sh}|dwave setup| will start an interactive prompt that guide us through a full setup. During the setup is also possible adding a API token or connecting to the D-Wave account to import directly a key to use the quantum hardware.
 \subsection{Hello World}
+To present simple optimization program we consider the minimum vertex cover (MVC) problem. Given a graph $G = (V, E)$ the problem asks to find a subset $V'\subseteq V$ that for each edge $\set{u,v} \in E$ at least one of $v$ or $u$ belongs to $V'$ and the number of nodes in $V'$ ($|V'|$) is the lowest possible.
+
+The reduction from MVC to Ising formulation is well known, the cost function, that we want to minimize, could be expressed by:
+\[
+cost = \sum_{i = 1}^{|V|}v_i + 2 \cdot \sum_{\set{i,j} \in E}\left(1-v_i-v_j+v_iv_j\right)
+\]
+Where $v_i \in \set{-1, 1}$ and if $v_i = 1$ means that $v_i \in V'$, otherwise  $v_i = -1$. 
+
+Like all problem in Ising form we can express the cost as a symmetrical matrix, so our function become 
+\[
+cost = v^T\times \mathbf{M}\times v
+\]
+Were $v$ is the vector containing the binary variables $v_i$.
+
+The figure shows an example graph (\ref{fig:ising_ex_gr}) and the corresponding matrix (\ref{fig:ising_ex_mx}) expressing the cost function.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Original graph]
+		{\label{fig:ising_ex_gr}
+			\begin{tikzpicture}
+				\node (a) at (0,0)        [draw, circle] {A};
+				\node (b) at (0,1.5)      [draw, circle] {B};
+				\node (c) at (2,0)         [draw, circle] {C};
+				\node (d) at (0,-1.5)     [draw, circle] {D};
+				\node (e) at (-2,-1.5)    [draw, circle] {E};
+				\node (f) at (-2,0)			[draw, circle] {F};
+				\draw[-] (a.east)  -- (c.west);
+				\draw[-] (a.south) -- (d.north);
+				\draw[-] (a.west) -- (f.east);
+				\draw[-] (b.east) -- (c.north);
+				\draw[-] (b.west) -- (f.north);
+				\draw[-] (d.west) -- (e.east);
+				\draw[-] (e.north) -- (f.south);
+			\end{tikzpicture}
+		} \qquad
+	\subfloat[Corresponding matrix]
+		{
+			\label{fig:ising_ex_mx}%
+			\begin{tikzpicture}
+				\node (a) at (0,0) {
+					$
+					\mathbf{M} = 
+					\begin{pmatrix}
+						1&0&2&2&0&2\\
+						0&1&2&0&0&2\\
+						0&0&1&0&0&0\\
+						0&0&0&1&2&0\\
+						0&0&0&0&1&0\\
+						0&0&0&0&0&1\\
+					\end{pmatrix}
+					$
+				};
+			\end{tikzpicture}
+		}
+	\label{fig:ising_ex}
+	\caption{Ising formulation}
+\end{figure}
+
+The following code present a possible implementation of the Ising model described above. We have defined two dictionary to memorize the matrix coefficient. The last line of code founds ten possible answers to the problem using the simulated annealing function implemented by D-Wave.
+\begin{listing}[H]
+	\begin{minted}{py}
+from dwave.samplers import SimulatedAnnealingSampler
+linear = {'A': 1, 'B': 1, 'C': 1, 'D': 1, 'E': 1, 'F': 1}
+quadratic = {('B', 'C'): 2, ('B', 'F'): 2, ('C', 'A'): 2, ('D', 'A'): 2, ('E', 'D'): 2, ('E', 'F'): 2, ('F', 'A'): 2}
+sampler = SimulatedAnnealingSampler()
+result = sampler.sample_ising(linear, quadratic, num_reads=10)
+	\end{minted}
+	\label{lst:ising_ex}
+	\caption{Ising example}
+\end{listing}
+If we print the results with: \mintinline{py}|print(result.aggregate())| we could observe something similar to this:
+\begin{minted}{text}
+	A  B  C  D  E  F energy num_oc.
+0 -1 -1 +1 +1 -1 +1  -14.0       6
+1 +1 +1 -1 -1 +1 -1  -14.0       4
+['SPIN', 2 rows, 10 samples, 6 variables]
+\end{minted}
+The two different results represent the two correct answer to our particular instance of the MVC problem.
+
+\subsection{Example on real hardware}
+
+\subsection{Minor embedding}
+
+\section{PyQubo and QuboVert}
+In listing \ref{lst:ising_ex} we have manually built the matrix representing the function that we want to minimize. It can be useful to have some tools that allow us working at higher level defining the function like:
+\[
+	cost = objective + \lambda \cdot penalty
+\]
+
+

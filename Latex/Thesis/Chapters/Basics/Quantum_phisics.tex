@@ -753,12 +753,6 @@ The most obvious quantity that is conserved is the Hamiltonian $\mathbf{H}$ and,
 
 We can conclude that, under very general conditions, energy is conserved in quantum mechanics.
 
-%\subsection{Spin nel campo magnetico}
-%
-%\subsection{Equazione di Schrödinger}
-%
-%\subsection{Sovrapposizione e collasso}
-%
 \section{Conclusions}
 We conclude this chapter with a recap of what we have discovered in these pages, trying to put everything together to answer the question that opened this chapter: what are the physical limits of quantum computing, and why must our algorithms be reversible?
 
@@ -774,7 +768,7 @@ Considering infinitesimal time intervals, we have deduced the time-dependent Sch
 
 The discussion ends with a comforting result: as in classical physics, the energy of a closed system is conserved. We have obtained this result by presenting the commutator and linking the temporal evolution of an observable with the commutator between the observable and the Hamiltonian (energy) of the system. The commutator of the Hamiltonian with itself is trivially zero, so the expectation value for the energy doesn't change.
 
-All the information that we have learned allows us to understand the constraint of writing only reversible algorithms for quantum-gate-based quantum computers. Quantum gates operate on \emph{qubits} through physical transformations\footnote{Here we don't need to understand exactly how.}. These transformations, like all transformations in quantum mechanics, are described by unitary operators that are intrinsically reversible. This means that all quantum gates are reversible.
+All the information that we have learned allows us to understand the constraint of writing only reversible algorithms for quantum-gate-based quantum computers. Quantum gates operate on \emph{qubits} through physical transformations\footnote{How depend strongly on the particular physical implementation}. These transformations, like all transformations in quantum mechanics, are described by unitary operators that are intrinsically reversible. This means that all quantum gates are reversible.
 
 In other words, we can build only quantum gates that, having as input different (distinguishable) states, return orthogonal states; also, due to the conservation of overlaps, the inner product between input states is conserved during the quantum gate transformation.
 
