@@ -42,10 +42,10 @@ The result of a single measure is non deterministic, but we can make predictions
 
 Considering\marginpar{Invasive experiment} now a sequence of three measures: starting with $\mathcal{A}$ oriented along $z$ we prepare the spin $\sigma_z=+1$, then we rotate $\mathcal{A}$ to measure $\sigma_x$ obtaining, let's say, $+1$ (the reasoning is the same if we obtain $-1$); lastly returning with $\mathcal{A}$ parallel to $z$ we cannot make any prediction on the single result, the initial configuration (with $\sigma_z=+1$) is lost forever, the only result we can predict is that $\Braket{\sigma_z} = 0$.
 
-\subsection{Qbit}
+\subsection{Qubit}
 We have introduced the spin referring to electrons in a magnetic field. However, we can study the spin without examining the associated electron; we have isolated a simple physical system, the simplest we can study.
 
-Spin belongs to a class of simple physical systems called \emph{qbit}; in all of these systems the result of a measure is binary. We will see that, even if the result of a measure is equal to the classical \emph{bit}, the \emph{qbit} system is described in a very different way compared to its classical alter ego.
+Spin belongs to a class of simple physical systems called \emph{qubit}; in all of these systems the result of a measure is binary. We will see that, even if the result of a measure is equal to the classical \emph{bit}, the qubit system is described in a very different way compared to its classical alter ego.
 
 \subsection{Boolean Logic}
 In this paragraph we try to understand why we need two different ways to describe a classical and a quantum state space. To do so we analyze the results of some logical propositions, both basic and composed via logical connectives.
@@ -768,11 +768,11 @@ Considering infinitesimal time intervals, we have deduced the time-dependent Sch
 
 The discussion ends with a comforting result: as in classical physics, the energy of a closed system is conserved. We have obtained this result by presenting the commutator and linking the temporal evolution of an observable with the commutator between the observable and the Hamiltonian (energy) of the system. The commutator of the Hamiltonian with itself is trivially zero, so the expectation value for the energy doesn't change.
 
-All the information that we have learned allows us to understand the constraint of writing only reversible algorithms for quantum-gate-based quantum computers. Quantum gates operate on \emph{qubits} through physical transformations\footnote{How depend strongly on the particular physical implementation}. These transformations, like all transformations in quantum mechanics, are described by unitary operators that are intrinsically reversible. This means that all quantum gates are reversible.
+All the information that we have learned allows us to understand the constraint of writing only reversible algorithms for quantum-gate-based quantum computers. Quantum gates operate on qubits through physical transformations\footnote{How depend strongly on the particular physical implementation.}. These transformations, like all transformations in quantum mechanics, are described by unitary operators that are intrinsically reversible. This means that all quantum gates are reversible.
 
 In other words, we can build only quantum gates that, having as input different (distinguishable) states, return orthogonal states; also, due to the conservation of overlaps, the inner product between input states is conserved during the quantum gate transformation.
 
-Reversibility doesn't mean that we can go forward and backward in time as we please, but that all quantum gates express injective functions: if we know the output, we can know the input, or in more physical terms, if we know the final state of \emph{qubits}\footnote{This is a complex system (composed of more than one \emph{qubit}); to fully understand these systems, we should take into account entanglement. Since our discussion is already quite long, and the temporal evolution of an entangled system is still unitary (reversible), we exclude entanglement from our introduction.} and the transformations applied to this system (i.e., those implemented by the quantum gates), we can determine the initial state.
+Reversibility doesn't mean that we can go forward and backward in time as we please, but that all quantum gates express injective functions: if we know the output, we can know the input, or in more physical terms, if we know the final state of qubits\footnote{This is a complex system (composed of more than one qubit); to fully understand these systems, we should take into account entanglement. Since our discussion is already quite long, and the temporal evolution of an entangled system is still unitary (reversible), we exclude entanglement from our introduction.} and the transformations applied to this system (i.e., those implemented by the quantum gates), we can determine the initial state.
 
 Since every quantum algorithm has to be implemented as a path through quantum gates, and every quantum gate is reversible, the algorithms as a whole must also be reversible.
 
