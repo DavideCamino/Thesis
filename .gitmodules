@@ -1,3 +1,3 @@
 [submodule "Code/2_QA-prolog/qmasm"]
 	path = Code/2_QA-prolog/qmasm
-	url = https://github.com/lanl/qmasm
+	url = https://github.com/DavideCamino/qmasm
