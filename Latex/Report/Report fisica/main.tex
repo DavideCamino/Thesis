@@ -1,0 +1,93 @@
+\documentclass[]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{dirtytalk}
+
+
+%opening
+\title{High level programming language for quantum computing}
+\author{Davide Camino}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	In questo lavoro esploriamo una pipeline di trasformazioni successive che permettono di programmare un quantum computer attraverso un linguaggio ad alto livello. Il lavoro nasce dalla volontà di fare inferenza su strutture ontologiche \cite{bibid} sfruttando hardware quantistico. Il nostro lavoro parte da un progetto, ormai deprecato, che propone una pipeline per trasformare un programma Prolog in un istanza di problema risolvibile attraverso quantum annealing \cite{bibid}. Ci siamo quindi concentrati nel ripristinare la compatibilità del progetto con i framework attualmente in uso, successivamente abbiamo esplorato la possibilità di sfruttare anche architetture basate su quantum gate grazie all'algoritmo QAOA \cite{bibid}. Il lavoro termina con un esempio di una piccola base di conoscenza espressa in Prolog (sulla quale sia possibile fare inferenza) e alcune considerazioni sulla possibilità di trasformare un'ontologia espressa in OWL \cite{bibid} in un'ontologia espressa in Prolog e compatibile quindi con hardware quantistico.
+\end{abstract}
+
+\section{Quantum Computing}
+Il quantum computing sostituisce i classici bit con i \emph{qubit}. I \emph{qubit} trasportano la minima quantità di informazione possibile \cite{bibid} e se misurati possono trovarsi esclusivamente in due stati: $\Ket{1}$ o $\Ket{0}$\footnote{Esprimiamo gli stati dei \emph{qubit} con le parentesi di Dirac.}. Durante l'elaborazione tuttavia i \emph{qubit} possono essere in una sovrapposizione di stati che decadrà solo all'atto della misurazione. 
+
+Sfruttando la sovrapposizione degli stati e l'entanglement tra \emph{qubit} si ritiene sia possibile violare la tesi di Church-Turing estesa\footnote{\emph{Strong Church-Turing Thesis}.} secondo cui qualsiasi modello computazionale possa essere simulato attraverso una macchina di turing deterministica con overhead al più polinomiale\cite{bibid}. Si oterebbero così degli speedup più che polinomiali per problemi che ad oggi consideriamo non risolvibili con algoritmi efficienti\footnote{Un algoritmo è definito efficiente se ha complessità al più polinomiale.}. 
+\subsection{Quantum Gate}
+Il paradigma di computazione quantistica basato su quantum gate è il più noto e studiato, le prime formalizzazione del paradigma e i primi algoritmi che sfruttano computazione quantistica basata su gate anticipano di molti anni la costruzione effettiva di computer quantistici e già Richard Feinman nel 1982 propone la computazione quantistica come alternativa ai modelli classici di computazione\cite{bibid}.
+
+Come suggerisce il nome questo paradigma si basa su porte logiche, che agiscono sui \emph{qubit} esattamente come le porte logiche classiche (es. \textbf{and}, \textbf{or} e \textbf{not}) agiscono sui bit classici.
+
+Le porte logiche quantistiche (che da ora chiameremo quantum gate) modificano lo stato del \emph{qubit} operando una trasformazione fisica, non possiamo quindi progettare un gate partendo da un'arbitraria tabella di verità come faremmo nel caso classico, ma dovremo sottostare alle leggi della meccanica quantistica. In particolare le seguenti affermazioni sono tutte equivalenti e definiscono le caratteristiche di un quantum gate:
+\begin{itemize}
+	\item I quantum gate sono mappe lineari che mantengono lo stato normalizzato (le probabilità di misurare il o i \emph{qubit} in ogni stato sommano a uno\footnote{Se consideriamo $n$ \emph{qubit} nello stato $\Ket{A}$ avremo $2^n$ esiti della misura, detta $p_i$ la probabilità di ottenere l'esito $i$, $\Ket{A}$ è normalizzato se $\sum_{1}^{2^n} p_i = 1$, cioè $\Braket{A|A} = 1$});
+	\item Tutti i gate classici reversibili (dato l'output si può risalire all'input) sono quantum gate validi;
+	\item Le tavole di verità i cui output sono una permutazione degli input rappresentano quantum gate validi. \cite{bibid}
+\end{itemize}
+
+I gate reversibili possono essere espressi come matrici unitarie. Una matrice è unitaria se la sua inversa coincide con la coniugata Hermitiana (trasposta dei complessi coniugati): $\mathbf{U} \times \mathbf{U}^\dagger = \mathbf{U}^\dagger \times \mathbf{U} = \mathbf{I}$.
+
+Assemblando opportunamente quantum gate è possibile costruire circuiti logici che operano su \emph{qubit}. Questi circuiti possono essere a tutti gli effetti interpretati come algoritmi, uno dei più famosi è l'algoritmo per la fattorizzazione di un numero proposto da Shore \cite{bibid}, questo algoritmo presenta uno speedup più che polinomiale rispetto al miglior algoritmo di fattorizzazione classico, e rafforza l'ipotesi che i quantum computer possano violare la tesi di Church-Turing estesa.
+
+\subsection{Quantum Annealing}
+Il quantum annealing è un approccio differente alla computazione quantistica e si concentra principalmente sulla risoluzione di problemi di ottimizzazione. Tipicamente le istanze non banali di questi problemi sono NP-Hard, di conseguenza anche questo paradigma mira a risolvere problemi  che prevedono soluzioni classiche non efficienti.
+
+L'annealing (letteralmente ricottura), che sia classico o quantistico prevede l'esplorazione di uno spazio in cui ogni punto è associato ad un'energia, al fine di trovare il punto a energia minima. 
+
+L'ennealing classico\footnote{Chiamato simulated annealing.} è un algoritmo probabilistico che permette di trovare il minimo globale di una funzione avete molti minimi locali\cite{bibid}. Viene simulato il processo di ricottura di un solido, durante la fase di raffreddamento (se questa è sufficientemente lenta) le particelle del solido si dispongono nella configurazione di minima energia\cite{bibid}. L'algoritmo sfrutta la temperatura per uscire dai minimi locali.
+
+Il Quantum annealing sostituisce la temperatura con il tunneling quantistico, che permette di attraversare barriere di potenziale passando da un minimo a un altro senza dover superare la barriera, ma passandoci attraverso\cite{bibid}. Questo permette di superare anche barriere di potenziale infinite, ma infinitamente strette (con il simulated annealing sarebbe necessaria temperatura infinita) \cite{bibid}.
+
+Siccome si perde il concetto di temperatura che diminusce durante la simulazione il modo più corretto di riferirsi a questo approccio è adiabatic quantum computing (AQC). L'AQC sfrutta la tendenza di un sistema fisico a rimanere nella condizione di minima energia. 
+Si parte con un spazio per il quale sia molto facile trovare il minimo di energia, descriviamo l'energia di quasto sistema con l'Hamiltoniana $\mathcal{H}_i$, avremo poi l'Hamiltoniana del nostro problema detta $\mathcal{H}_f$ il cui minimo di energia rappresenta la soluzione del problema. Infine avremo una funzione $s(t)$ che decresce da 1 a 0 e rappresenta il cammino di evoluzione adiabatica. L'algoritmo AQC è definito dall'Hamiltoniana in funzione del tempo $\mathcal{H}(t)$ che gradualmente passa da $\mathcal{H}_i$ a $\mathcal{H}_f$: $\mathcal{H}(t) = s(t) \mathcal{H}_i + (1 - s(t)) \mathcal{H}_f$ \cite{bibid}.
+
+Per esprimere $\mathcal{H}_i$ si usa una base ortogonale a quella usata per $\mathcal{H}_f$ in questo modo quando i \emph{qubit} sono nel minimo specificato da $\mathcal{H}_i$ e passiamo alla base di $\mathcal{H}_f$ abbiamo una sovrapposizione equiprobabile di tutti gli stati \cite{bibid}. Man mano che l'Hamiltoniana evolve da $\mathcal{H}_i$ a $\mathcal{H}_f$ aumenta sempre di più la probabilità di effettuare una misura e trovare i \emph{qubit} nel ground state di $\mathcal{H}_f$.
+
+D'ora in poi ci concentreremo solo più sul trovare la forma di $\mathcal{H}_f$ e daremo per scontato che sia facile trovare $\mathcal{H}_i$ e  $s(t)$.
+
+\section{QA-Prolog}
+QA-Prolog \cite{bibid} è un proof of concep sviluppato da Scott Pakin, che mostra come sia pssibile compilare un sottoinsieme del Prolog in un'Hamiltoniana compatibile con il paradigma AQC.
+
+Il lavoro risale al 2017 ed è stato supportato fino al 2021. Nell'articolo originale il progetto viene testato sul quantum annealer a 1,095 \emph{qubit} prodotto da D-Wave \cite{bibid}.
+\subsection{Pipeline}
+Il progetto consiste in una serie di trasformazioni che permettono di assemblare un programma Prolog e una query in un'Hamiltoniana il cui minimo corrisponde alla risposta della query.
+
+La pipeline di trasformazione prevede 4 stadi:
+\begin{enumerate}
+	\item Il programma Prolog viene trasformato in un programma Verilog, un linguaggio di descrizione hardware (HDL) \cite{bibid};
+	\item Il programma Prolog viene sintetizzato in un circuito digitale fatto di porte logiche e ottimizzato da Yosys \cite{bibid};
+	\item Il circuito logico viene trasformato in un'Hamiltoniana simbolica, che offre qualche astrazione (come macro, riferimenti simbolici ai \emph{qubit}, ecc.) rispetto all'Hamiltoniana fisica $\mathcal{H}_f$. Questo step è implementato da edif2qmasm\cite{bibid};
+	\item Hamiltoniana fisica $\mathcal{H}_f$ è assemblata da QMASM un quantum macro assembler \cite{bibid}.
+\end{enumerate}
+\subsection{Update the original project}
+TO DO
+
+\section{From QA-Prolog to Q-Prolog}
+TO DO
+\subsection{QAOA}
+TO DO
+\subsection{From H to Paoli operator}
+TO DO
+\subsection{Results}
+TO DO
+
+\section{A Quantum Ontology}
+TO DO
+\subsection{A small example}
+TO DO
+\subsection{Triple-RDF to Prolog}
+TO DO
+
+\end{document}
