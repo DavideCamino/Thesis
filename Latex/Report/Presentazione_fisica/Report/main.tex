@@ -7,9 +7,12 @@
 \usepackage{amssymb}
 \usepackage{braket}
 \usepackage{dirtytalk}
+\usepackage{minted}
+
+\setminted{breaklines}
 
 
-%opening
+
 \title{High level programming language for quantum computing}
 \author{Davide Camino}
 
@@ -71,8 +74,63 @@ La pipeline di trasformazione prevede 4 stadi:
 	\item Il circuito logico viene trasformato in un'Hamiltoniana simbolica, che offre qualche astrazione (come macro, riferimenti simbolici ai \emph{qubit}, ecc.) rispetto all'Hamiltoniana fisica $\mathcal{H}_f$. Questo step è implementato da edif2qmasm\cite{bibid};
 	\item Hamiltoniana fisica $\mathcal{H}_f$ è assemblata da QMASM un quantum macro assembler \cite{bibid}.
 \end{enumerate}
+
+L'unico pezzo software non sviluppato appositamente per questa pipeline è Yosys, tutti gli altri componenti sono stati sviluppati da Scott Pakin con l'obbiettivo di astrarre sempre di più dalle \say{istruzioni macchina} dei quantum annealer di D-Wave e offrire un linguaggio di alto livello per interagire con un quantum computer. Ognuno di questi componenti è stato presentato in un articolo (citato nell'elenco puntato qui sopra) che spiega come il componente è stato realizzato, quali sono le funzionalità e in che modo astrae rispetto alla definizione di un'Hamiltoniana fisica $\mathcal{H}_f$.
+
+\subsection{Risultato finale}
+QA-Prolog mette insieme tutta la pipeline, e seppure sia possibile esplorare le trasformazioni passo passo e usare le singole componenti della pipeline per percorrerne anche solo una parte, uno dei punti di forza di  QA-Prolog è la possibilità di eseguire tutta la pipeline compilando un programma Prolog con annessa query, inviare la richiesta a un quantum annealer di D-Wave (o a un simulatore) e ottenere indietro i risultati presentati in modo chiaro e già organizzato.
+
+Presentiamo a titolo di esempio un piccolo programma Prolog che può essere riassunto con: \say{il nemico del mio nemico è mio amico} (Figura \ref{foae}).
+
+\begin{figure}[t!]
+	\centering
+	\begin{minipage}{.5\linewidth}
+		\hrule
+		\begin{minted}{Prolog}
+			
+hates(alice, bob).
+hates(bob, charlie).
+
+enemies(P, Q) :- hates(P, Q).
+enemies(P, Q) :- hates(Q, P).
+
+friends(A, B) :-
+	enemies(A, X),
+	enemies(X, B),
+	A \= B.
+		\end{minted}
+	\hrule
+	\end{minipage}
+	\caption{The enemy of my enemy is my friend.}
+	\label{foae}
+\end{figure}
+
+Usiamo QA-prolog per inferire se esiste una coppia di amici. Per questo esempio non useremo un vero quantum computer ma un simulatore (è possibile selezionare il solver direttamente come parametro di QA-Prolog). Il comando che invocheremo sarà:
+\begin{minted}{bash}
+QA-Prolog --qmasm-args="--solver=tabu --postproc=opt" --query='friends(P1, P2).'  friends.pl
+\end{minted}
+
+Stiamo specificando il solver (tabu search), la query, cioè cerchiamo di legare due variabili \mintinline{bash}|P1| e \mintinline{bash}|P2| che rispettino il predicato di essere amiche, infine specifichiamo il nome del file: \mintinline{bash}|friend.pl|.
+\begin{figure}[t]
+	\centering
+	\begin{minipage}{.3\linewidth}
+		\hrule
+		\begin{minted}{bash}
+			
+P1 = alice
+P2 = charlie
+
+P1 = charlie
+P2 = alice
+		\end{minted}
+		\hrule
+	\end{minipage}
+	\caption{Output}
+	\label{out}
+\end{figure}
+Il risultato che otterremo avrà un aspetto simile a quello mostrato in Figura \ref{out}. Possiamo notare che la coppia di amici viene individuata correttamente; inoltre, data la simmetria delle relazioni definite, otteniamo 2 risposte con i ruoli invertiti. Questo corrisponde a due minimi assoluti dell'Hamiltoniana che è stata genrata da QA-Prolog.
 \subsection{Update the original project}
-TO DO
+Il progetto è stato mantenuto fino al 2021
 
 \section{From QA-Prolog to Q-Prolog}
 TO DO
