@@ -1,25 +1,156 @@
 \section{QA-Prolog}
 \begin{frame}{QA-Prolog}
-	
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Il progetto}
+			\begin{itemize}
+				\item Sviluppato da Sott Pakin
+				\item Proof of concept
+				\item Trasformazioni successive
+				\item Prolog + Query $\rightarrow \mathcal{H}_f$  
+				\item Interagisce direttamente con il solver
+				\item Raccoglie e organizza i risultati
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		immagine
+	\end{minipage}
 \end{frame}
+
+
 \begin{frame}{Pipeline}
-	
+	\begin{minipage}{.48\linewidth}
+		immagine
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Trasformazioni}
+			\begin{enumerate}
+				\item Prolog $\rightarrow$ Verilog (HDL)
+				\item Verilog $\rightarrow$ Circuito digitale
+				\item Circuito digitale $\rightarrow$ $\mathcal{H}_f$ simbolica 
+				\item $\mathcal{H}_f$ simbolica  $\rightarrow$ $\mathcal{H}_f$ fisica 
+			\end{enumerate}
+		\end{block}
+	\end{minipage}
 \end{frame}
-\begin{frame}{QMASM}
-	
+
+
+\begin{frame}{QMASM}{$\mathcal{H}_f$ simbolica  $\rightarrow$ $\mathcal{H}_f$ fisica}
+		\begin{minipage}{.48\linewidth}
+			\begin{block}{Cos'è}
+				\begin{itemize}
+					\item Quantum macro assembler
+					\item Sviluppato in Python
+					\item Basso livello di astrazione
+					\item Si interfaccia con Ocean
+				\end{itemize}
+			\end{block}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.48\linewidth}
+			\begin{block}{Cosa permette di fare}
+				\begin{itemize}
+					\item Riferimento simbolico a \emph{qubit}
+					\item \emph{Qubit} \say{pinnati} a \texttt{TRUE} o \texttt{FALSE}
+					\item Incapsulare pattern in macro
+					\item Creazione di librerie di macro
+					\item Pulizia dell'output:
+					\begin{itemize}
+						\item solo \emph{qubit} \say{interessanti}
+						\item no slack variables
+					\end{itemize}
+				\end{itemize}
+			\end{block}
+		\end{minipage}
 \end{frame}
-\begin{frame}{QMASM}{Esempio}
-	
+
+
+\begin{frame}[fragile]{QMASM}{Esempio: Macro}
+	\begin{minipage}{.3\linewidth}
+		\begin{figure}[h]
+			\begin{minipage}{\linewidth}
+				\hrule
+				\begin{minted}{text}
+					
+# 2-input OR gate (Y = A or B)
+!begin_macro or2
+$A  0.3333
+$B  0.3333
+$Y -0.6667
+
+$A $B  0.3333
+$A $Y -0.6667
+$B $Y -0.6667
+!end_macro or2
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{\textbf{or} gate}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.3\linewidth}
+		\begin{figure}[h]
+			\begin{minipage}{\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+# 1-input NOT gate (Y = not A)
+!begin_macro not1
+$A -0.5
+$Y -0.5
+
+$A $Y 1.0
+!end_macro not1
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{\textbf{not} gate}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.3\linewidth}
+		\begin{figure}[h]
+			\begin{minipage}{\linewidth}
+				\hrule
+				\begin{minted}{text}
+					
+# 2-input AND gate (Y = A or B)
+!begin_macro or2
+$A  0
+$B  0
+$Y  1
+
+$A $B  0
+$A $Y -0.7
+$B $Y -0.7
+!end_macro or2
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{\textbf{and} gate}
+		\end{figure}
+	\end{minipage}
 \end{frame}
+
+
 \begin{frame}{Yosys - edif2qmasm}
 	
 \end{frame}
+
+
 \begin{frame}{Yosys - edif2qmasm}{Esempio}
 	
 \end{frame}
+
+
 \begin{frame}{QA-Prolog}
 	
 \end{frame}
+
+
 \begin{frame}{QA-Prolog}{Esempio}
 	
 \end{frame}
