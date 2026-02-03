@@ -1,0 +1,48 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartpage=1 ,
+	pdfpagemode=FullScreen % Start in full-screen mode
+	% Ensure it starts from page 1
+}
+\usetheme{CambridgeUS}
+\usecolortheme{beaver}
+\useoutertheme[subsection=false]{smoothbars}
+\usepackage{graphicx}
+\usepackage{dirtytalk}
+\usepackage{pgf}
+\graphicspath{{img}}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{multimedia}
+
+\input{beamercolorthemebeaver.sty}
+
+%\input{beamercolorthemespruce.sty}
+
+\title[QA-Prolog]{High level programming language for quantum computing}
+\author{Davide Camino}
+\date{\texttt{davide.camino@edu.unito.it}}
+\institute[UniTO]{\includegraphics[width=.15\linewidth]{logo_col}}
+
+\begin{document}
+\begin{frame}[plain]
+	\transfade[duration=0.5]
+    \maketitle
+\end{frame}
+\begin{frame}{Obbiettivo del lavoro}
+	\begin{block}{Reasoning su quantum computer}
+		\begin{enumerate}
+			\item Base di conoscenza classica + query
+			\item Embedding su quantum computer
+			\item Esecuzione e recupero risultati
+		\end{enumerate}
+	\end{block}
+\end{frame}
+\input{Quantum_computing}
+\input{QA-Prolog}
+\input{QAC_QAOA}
+\input{Ontologie}
+\input{Esempio_completo}
+
+\end{document}
