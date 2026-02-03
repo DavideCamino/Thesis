@@ -133,6 +133,70 @@ $B $Y -0.7
 			\caption{\textbf{and} gate}
 		\end{figure}
 	\end{minipage}
+	\begin{block}{}
+		\centering
+		possiamo racchiudere queste macro nel file \texttt{gates.qmasm}
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{QMASM}{Esempio: $y = x_1 \land \neg(x_2 \lor x_3)$}
+	\begin{center}
+	\begin{minipage}{.25\linewidth}
+		\begin{figure}[h]
+			\begin{minipage}{\linewidth}
+				\hrule
+				\begin{minted}{text}
+					
+!include <gates>
+
+!use_macro or2 x2_or_x3
+x2_or_x3.$A = x2
+x2_or_x3.$B = x3
+x2_or_x3.$Y = $x4
+
+!use_macro not1 not_x4
+not_x1.$A = $x4
+not_x1.$Y = $x5
+
+!use_macro and2 x1_and_x5
+x4_and_x5.$A = x1
+x4_and_x5.$B = $x5
+x4_and_x5.$Y = y
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{CircSat problem}
+		\end{figure}
+	\end{minipage}
+	\hspace{1cm}
+	\begin{minipage}{.6\linewidth}
+		\begin{block}{}
+			\say{Pinniamo} il valore di $y$ per ottenere l'assegnamento delle $x_i$ che verificano la formula logica:
+			\begin{center}
+				\scriptsize \texttt{qmasm --run --pin="x10 := true" circsat.qmasm}
+			\end{center}
+		\end{block}
+		\begin{figure}[h]
+			\centering
+			\begin{minipage}{.5\linewidth}
+				\hrule
+				\begin{minted}{text}
+					
+Solution #1 (energy = -80.00):
+
+    Name(s)  Spin  Boolean
+    -------  ----  -------
+    x1         +1  True
+    x2         -1  False
+    x3         -1  False
+    y          -1  True
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{CircSat solution}
+		\end{figure}
+	\end{minipage}
+	\end{center}
 \end{frame}
 
 
