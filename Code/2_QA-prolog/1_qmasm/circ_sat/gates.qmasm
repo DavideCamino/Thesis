@@ -1,0 +1,26 @@
+# Y = A AND B
+!begin_macro AND
+  $A -0.5
+  $B -0.5
+  $Y  1
+
+  $A $B  0.5
+  $A $Y -1
+  $B $Y -1
+!end_macro AND
+
+# Y = A OR B
+!begin_macro OR
+  $A  0.5
+  $B  0.5
+  $Y -1
+
+  $A $B  0.5
+  $A $Y -1
+  $B $Y -1
+!end_macro OR
+
+# Y = NOT A
+!begin_macro NOT
+  $A $Y 1.0
+!end_macro NOT
