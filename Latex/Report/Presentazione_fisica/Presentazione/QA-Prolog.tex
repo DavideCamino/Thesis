@@ -74,16 +74,16 @@
 				\hrule
 				\begin{minted}{text}
 					
-# 2-input OR gate (Y = A or B)
-!begin_macro or2
-$A  0.3333
-$B  0.3333
-$Y -0.6667
+# Y = A OR B
+!begin_macro OR
+  $A  0.5
+  $B  0.5
+  $Y -1
 
-$A $B  0.3333
-$A $Y -0.6667
-$B $Y -0.6667
-!end_macro or2
+  $A $B  0.5
+  $A $Y -1
+  $B $Y -1
+!end_macro OR
 				\end{minted}
 				\hrule
 			\end{minipage}
@@ -97,13 +97,10 @@ $B $Y -0.6667
 				\hrule
 				\begin{minted}{text}
 
-# 1-input NOT gate (Y = not A)
-!begin_macro not1
-$A -0.5
-$Y -0.5
-
-$A $Y 1.0
-!end_macro not1
+# Y = NOT A
+!begin_macro NOT
+  $A $Y 1.0
+!end_macro NOT
 				\end{minted}
 				\hrule
 			\end{minipage}
@@ -117,16 +114,16 @@ $A $Y 1.0
 				\hrule
 				\begin{minted}{text}
 					
-# 2-input AND gate (Y = A or B)
-!begin_macro or2
-$A  0
-$B  0
-$Y  1
+# Y = A AND B
+!begin_macro AND
+  $A -0.5
+  $B -0.5
+  $Y  1
 
-$A $B  0
-$A $Y -0.7
-$B $Y -0.7
-!end_macro or2
+  $A $B  0.5
+  $A $Y -1
+  $B $Y -1
+!end_macro AND
 				\end{minted}
 				\hrule
 			\end{minipage}
@@ -149,19 +146,19 @@ $B $Y -0.7
 					
 !include <gates>
 
-!use_macro or2 x2_or_x3
+!use_macro OR x2_or_x3
 x2_or_x3.$A = x2
 x2_or_x3.$B = x3
 x2_or_x3.$Y = $x4
 
-!use_macro not1 not_x4
-not_x1.$A = $x4
-not_x1.$Y = $x5
+!use_macro NOT not_x4
+not_x4.$A = $x4
+not_x4.$Y = $x5
 
-!use_macro and2 x1_and_x5
-x4_and_x5.$A = x1
-x4_and_x5.$B = $x5
-x4_and_x5.$Y = y
+!use_macro AND x1_and_x5
+x1_and_x5.$A = x1
+x1_and_x5.$B = $x5
+x1_and_x5.$Y = y
 				\end{minted}
 				\hrule
 			\end{minipage}
@@ -173,23 +170,23 @@ x4_and_x5.$Y = y
 		\begin{block}{}
 			\say{Pinniamo} il valore di $y$ per ottenere l'assegnamento delle $x_i$ che verificano la formula logica:
 			\begin{center}
-				\scriptsize \texttt{qmasm --run --pin="x10 := true" circsat.qmasm}
+				\scriptsize \texttt{qmasm --run --pin="y := true" circsat.qmasm}
 			\end{center}
 		\end{block}
 		\begin{figure}[h]
 			\centering
-			\begin{minipage}{.5\linewidth}
+			\begin{minipage}{.72\linewidth}
 				\hrule
 				\begin{minted}{text}
 					
-Solution #1 (energy = -80.00):
+Solution #1 (energy = -20.0000, tally = 647):
 
-    Name(s)  Spin  Boolean
-    -------  ----  -------
-    x1         +1  True
-    x2         -1  False
-    x3         -1  False
-    y          -1  True
+    Variable  Value
+    --------  -----
+    x1        True
+    x2        False
+    x3        False
+    y         True
 				\end{minted}
 				\hrule
 			\end{minipage}
@@ -201,17 +198,114 @@ Solution #1 (energy = -80.00):
 
 
 \begin{frame}{Yosys - edif2qmasm}
-	
+	\begin{block}{}
+		\centering
+		Verilog $\rightarrow$ Circuito digitale $\rightarrow \mathcal{H}$ simbolica 
+	\end{block}
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Yosys}
+			\begin{itemize}
+				\item Framework per la sintesi del Verilog
+				\item Free and open software sotto licenza ISC
+				\item Output: RTL Netlist in formato EDIF
+			\end{itemize}
+		\end{block}
+		Immagine
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{edif2qmasm}
+			\begin{itemize}
+				\item Converte dal formato EDIF a QMASM
+				\item Attinge a una libreria di gate
+			\end{itemize}
+		\end{block}
+		Immagine
+	\end{minipage}
 \end{frame}
 
 
-\begin{frame}{Yosys - edif2qmasm}{Esempio}
-	
+\begin{frame}[fragile]{Yosys - edif2qmasm}{Esempio: moltiplicazione tra interi}
+		\begin{minipage}{.48\linewidth}
+			\begin{figure}[h]
+				\begin{minipage}{\linewidth}
+					\hrule
+					\begin{minted}{Verilog}
+					
+module mult (multiplicand, multiplier, product);
+   input [1:0] multiplicand;
+   input [1:0] multiplier;
+   output[2:0] product;
+
+   assign product = multiplicand * multiplier;
+endmodule
+					\end{minted}
+					\hrule
+				\end{minipage}
+			\caption{Factorization problem}
+		\end{figure}
+		\vspace{-.7cm}
+		\begin{block}{}
+			Tradotto in EDIF con:
+			\begin{center}
+				\scriptsize \texttt{yosys myfile.v synth.ys -b edif -o myfile.edif}
+			\end{center}
+		\end{block}
+		\begin{block}{}
+			Tradotto in QMASM con:
+			\begin{center}
+				\scriptsize \texttt{edif2qmasm -o="myfile.qmasm" myfile.edif}
+			\end{center}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{}
+			Eseguito  con:\\
+			\begin{center}
+				\scriptsize \texttt{qmasm --run --pin="mult.product[2:0] := 110" --solver="sim\_anneal" mult.qmasm}
+			\end{center}
+		\end{block}
+			\begin{figure}[h]
+				\begin{minipage}{.9\linewidth}
+					\hrule
+					\begin{minted}{text}
+					
+Solution #1 (energy = -57.5000, tally = 68):
+
+    Variable              Value
+    --------------------  -----
+    mult.multiplicand[0]  False
+    mult.multiplicand[1]  True
+    mult.multiplier[0]    True
+    mult.multiplier[1]    True
+    mult.product[0]       False
+    mult.product[1]       True
+    mult.product[2]       True
+					\end{minted}
+					\hrule
+				\end{minipage}
+			\caption{Factorization Solution}
+		\end{figure}
+	\end{minipage}
 \end{frame}
 
 
 \begin{frame}{QA-Prolog}
-	
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{}
+			\begin{itemize}
+				\item Traduzione da Prolog a Verilog
+				\item Wrapper per tutta la Pipeline
+				\item Risultati in formato Human Readable
+				\item Decide dimensione delle variabili
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		immagine
+	\end{minipage}
 \end{frame}
 
 

@@ -11,3 +11,5 @@
 *.toc
 *.snm
 *.vrb
+*.fls
+*.fdb_latexmk
