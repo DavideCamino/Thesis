@@ -1,0 +1,17 @@
+# Solve a circuit-satisfiability problem.
+
+!include <gates>
+
+!use_macro OR x2_or_x3
+x2_or_x3.$A = x2
+x2_or_x3.$B = x3
+x2_or_x3.$Y = $x4
+
+!use_macro NOT not_x4
+not_x4.$A = $x4
+not_x4.$Y = $x5 
+
+!use_macro AND x1_and_x5
+x1_and_x5.$A = x1
+x1_and_x5.$B = $x5
+x1_and_x5.$Y = y
