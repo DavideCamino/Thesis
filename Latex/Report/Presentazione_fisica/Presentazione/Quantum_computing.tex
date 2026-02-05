@@ -3,28 +3,38 @@
 
 \begin{frame}{Perché il quantum computing}
 	\begin{minipage}{\linewidth}
-		\begin{minipage}{.48\linewidth}
+		\begin{minipage}{.3\linewidth}
 			\begin{block}{Grazie a}
 				\begin{itemize}
-					\item Entanglement
 					\item Superposition
+					\item Entanglement
 				\end{itemize}
 			\end{block}
 		\end{minipage}
 		\hfill
-		\begin{minipage}{.48\linewidth}
-			immagine
+		\begin{minipage}{.68\linewidth}
+			\begin{gather*}
+				\mathcal{H}(t) \Ket{\psi(t)} = i \hbar \frac{\partial}{\partial t} \Ket{\psi(t)}\\ 
+				\Braket{A_0 \otimes B_0} + \Braket{A_0 \otimes B_1} + \Braket{A_1 \otimes B_0} - \Braket{A_1 \otimes B_1} = 2\sqrt{2}
+			\end{gather*}
 		\end{minipage}
 	\end{minipage}
 	\begin{minipage}{\linewidth}
-		\begin{minipage}{.48\linewidth}
+		\begin{minipage}{.3\linewidth}
 			\begin{block}{Violiamo}
-				Strong Church-Turing Thesis
+				\begin{center}
+					Strong Church-Turing Thesis
+				\end{center}
 			\end{block}
 		\end{minipage}
 		\hfill
-		\begin{minipage}{.48\linewidth}
-			immagine
+		\begin{minipage}{.68\linewidth}
+			\vspace{.5cm}
+			\begin{figure}
+				\centering
+				\includegraphics[width=.6\linewidth]{ntm}
+				\caption{Probabilistic Turing Machine}
+			\end{figure}
 		\end{minipage}
 	\end{minipage}
 \end{frame}
@@ -45,19 +55,28 @@
 		\end{minipage}
 	\end{minipage}
 	\begin{minipage}{\linewidth}
+		\vspace{.5cm}
 		\begin{minipage}{.48\linewidth}
-			immagine
+			\begin{figure}
+				\centering
+				\includegraphics[width=.5\linewidth]{bloch}
+				\caption{A single \emph{qubit} gate can be seen as a rotation on the Bloch Sphere}
+			\end{figure}
 		\end{minipage}
 		\hfill
 		\begin{minipage}{.48\linewidth}
-			immagine
+			\begin{figure}
+				\centering
+				\includegraphics[width=.8\linewidth]{QA}
+				\caption{Tunneling effect (K. Chakrabarti, A. Das)}
+			\end{figure}
 		\end{minipage}
 	\end{minipage}
 \end{frame}
 
 
 \begin{frame}{Quantum Gate}
-	\begin{minipage}{.48\linewidth}
+	\begin{minipage}{.35\linewidth}
 		\begin{block}{}
 			\begin{itemize}
 				\item Formalismo molto studiato
@@ -68,8 +87,11 @@
 		\end{block}
 	\end{minipage}
 	\hfill
-	\begin{minipage}{.48\linewidth}
-		immagine
+	\begin{minipage}{.6\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{Shor}
+			\caption{Step for Shor algoritm (Thomas G. Wong)}
+		\end{figure}
 	\end{minipage}
 \end{frame}
 
