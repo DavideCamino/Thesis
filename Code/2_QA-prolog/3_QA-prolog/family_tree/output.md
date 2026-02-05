@@ -1,6 +1,6 @@
 Result of
 
-`QA-Prolog --verbose --qmasm-args="--solver=tabu --postproc=opt" --query='friends(P1, P2).' --work-dir="/home/dadi/Thesis/Code/2_QA-prolog/3_QA-prolog/family/work" friends.pl`
+`QA-Prolog --verbose --qmasm-args="--solver=tabu --postproc=opt" --query='friends(P1, P2).' --work-dir="/home/dadi/Thesis/Code/2_QA-prolog/3_QA-prolog/friends/work" friends.pl`
 
 ---
 ```text
