@@ -197,11 +197,12 @@ Solution #1 (energy = -20.0000, tally = 647):
 \end{frame}
 
 
-\begin{frame}{Yosys - edif2qmasm}
+\begin{frame}[fragile]{Yosys - edif2qmasm}
 	\begin{block}{}
 		\centering
 		Verilog $\rightarrow$ Circuito digitale $\rightarrow \mathcal{H}$ simbolica 
 	\end{block}
+\begin{minipage}{\linewidth}
 	\begin{minipage}{.48\linewidth}
 		\begin{block}{Yosys}
 			\begin{itemize}
@@ -210,7 +211,6 @@ Solution #1 (energy = -20.0000, tally = 647):
 				\item Output: RTL Netlist in formato EDIF
 			\end{itemize}
 		\end{block}
-		Immagine
 	\end{minipage}
 	\hfill
 	\begin{minipage}{.48\linewidth}
@@ -220,8 +220,30 @@ Solution #1 (energy = -20.0000, tally = 647):
 				\item Attinge a una libreria di gate
 			\end{itemize}
 		\end{block}
-		Immagine
 	\end{minipage}
+\end{minipage}
+\begin{figure}
+	\begin{minipage}{.65\linewidth}
+		\includegraphics[width=.47\linewidth]{sat_circ.pdf}
+		\hfill
+		\includegraphics[width=.47\linewidth]{sat_net.pdf}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.3\linewidth}
+		\begin{minted}{text}
+			
+!begin_macro sat
+  !use_macro AND $id00004
+  !use_macro OR $id00003
+  $id00003.A = b
+  $id00003.B = c
+  $id00004.A = a
+  $id00004.B = $id00003.Y
+  $id00004.Y = y
+!end_macro sat
+		\end{minted}
+	\end{minipage}
+\end{figure}
 \end{frame}
 
 
@@ -289,7 +311,7 @@ Solution #1 (energy = -57.5000, tally = 68):
 \end{frame}
 
 
-\begin{frame}{QA-Prolog}
+\begin{frame}[fragile]{QA-Prolog}
 	\begin{minipage}{.48\linewidth}
 		\begin{block}{}
 			\begin{itemize}
@@ -302,7 +324,36 @@ Solution #1 (energy = -57.5000, tally = 68):
 	\end{minipage}
 	\hfill
 	\begin{minipage}{.48\linewidth}
-		immagine
+		\begin{figure}[h]
+			\begin{minipage}{.9\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+
+sat(A, B, C, Y) :-
+    or(B, C, X),
+    not(X, Z),
+    and(A, Z, Y).
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Prolog Code}
+		\end{figure}
+		\begin{figure}[h]
+			\begin{minipage}{.9\linewidth}
+				\hrule
+				\begin{minted}{Verilog}
+
+module sat (a, b, c, y);
+   input a, b, c;
+   output y;
+
+   assign y = a & ~(b | c);
+endmodule
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Verilog Code}
+		\end{figure}
 	\end{minipage}
 \end{frame}
 
