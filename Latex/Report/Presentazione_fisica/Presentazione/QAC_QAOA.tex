@@ -1,10 +1,65 @@
 \section{QAC to QAOA}
 \begin{frame}{QAOA}
+	\begin{block}{Quantum approximate optimization algorithm}
+		\begin{enumerate}
+			\item Definire matrici: $\mathcal{H}_c$ e  $\ \mathcal{H}_m$
+			\item Definire oracoli parametrici: $\mathcal{U}_c(\gamma) = \mathnormal{e}^{-i\gamma\mathcal{H}_c}$ e $\ \mathcal{U}_m(\beta) = \mathnormal{e}^{-i\beta\mathcal{H}_m}$
+			\item Applicazione ripetuta di $\mathcal{U}_c(\gamma)$ e $\ \mathcal{U}_m(\gamma)$
+			\item Ottimizzazione (classica) dei parametri $\gamma_i$ e $\beta_i$
+		\end{enumerate}
+	\end{block}
+	\begin{figure}[h]
+		\includegraphics[width=.7\linewidth]{QAOA}
+		\caption{BLEKOS, Kostas, et al. A review on quantum approximate optimization algorithm and its variants}
+	\end{figure}
+\end{frame}
 
-\end{frame}
-\begin{frame}{Da $\mathcal{H}$ a operatori di Paoli}
+
+\begin{frame}[fragile]{QUBO $\rightarrow$ ISING $\rightarrow$ Operatori di Pauli}
+	\begin{center}
+		\begin{minipage}{.7\linewidth}
+			\begin{figure}[h]
+				\begin{minipage}{\linewidth}
+					\hrule
+					\begin{minted}{python}
 	
+qubo = qubovert.utils.matrix_to_qubo(qubo_mat)
+ising = qubovert.utils.qubo_to_quso(qubo)
+qubo_dict = dict(qubo)
+ising_dict = dict(ising)
+ising_dict.popitem()
+ising_mat = qubovert.utils.qubo_to_matrix(ising_dict)
+					\end{minted}
+					\hrule
+				\end{minipage}
+				\caption{QUBO $\rightarrow$ ISING (libreria qubovert)}
+			\end{figure}
+			\vspace{-.8cm}
+			\begin{figure}[h]
+				\begin{minipage}{\linewidth}
+					\hrule
+					\begin{minted}{python}
+
+def build_paulis(matrix):
+	pauli_list = []
+	for i in range(len(matrix)):
+		pauli_list.append(("Z", [i], matrix[i][i]))
+		for j in range(i+1, len(matrix)):
+				pauli_list.append(("ZZ", [i, j], matrix[i][j]))
+	return pauli_list
+
+sat_paulis = build_paulis(ising_mat)
+cost_hamiltonian = SparsePauliOp.from_sparse_list(sat_paulis, n_qubits)
+					\end{minted}
+					\hrule
+				\end{minipage}
+				\caption{ISING $\rightarrow$ Operatori di Pauli}
+			\end{figure}
+		\end{minipage}
+	\end{center}
 \end{frame}
+
+
 \begin{frame}{Esempio}
 	
 \end{frame}
