@@ -1,4 +1,131 @@
 \section{Esempio Completo}
-\begin{frame}{Da OWL-rdf a Prolog}
-	
+\begin{frame}[fragile]{Esempio completo}{Quantum Simpson}
+	\begin{figure}
+        \begin{minipage}{.9\linewidth}
+            \hrule
+            \begin{minted}{xml}
+
+<owl:NamedIndividual rdf:about="http://www.people#marge">
+    <rdf:type rdf:resource="http://www.people#People"/>
+    <www:marry rdf:resource="http://www.people#homer"/>
+    <www:parent_of rdf:resource="http://www.people#bart"/>
+</owl:NamedIndividual>
+            \end{minted}
+            \hrule
+        \end{minipage}
+        \caption{Marge Simpson entry}
+    \end{figure}
+    \vspace{-.3cm}
+    \begin{figure}
+        \includegraphics[width=.55\linewidth]{people.pdf}
+        \caption{Ontology Structure}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}[fragile]{Da OWL-rdf a Prolog}
+	\begin{minipage}{.35\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+
+person(marge).
+person(bart).
+person(jackie).
+person(selma).
+person(ling).
+
+parent_of(marge, bart).
+parent_of(jackie, marge).
+parent_of(jackie, selma).
+parent_of(selma, ling).
+
+son_of(P, Q) :- parent_of(Q, P).
+
+gran_parent_of(P, Q) :-
+	son_of(Q, X),
+	son_of(X, P).
+				\end{minted}
+				\hrule
+                \caption{Prolog Ontology}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.62\linewidth}
+        \begin{block}{Interrogazione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='gran\_parent\_of(P1, P2).' family.pl}
+			\end{center}
+		\end{block}
+		\begin{figure}
+			\begin{minipage}{.4\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+P1 = jackie
+P2 = bart
+
+P1 = jackie
+P2 = selma
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result 1}
+		\end{figure}
+        \vspace{-.5cm}
+        \begin{figure}
+			\begin{minipage}{.4\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+P1 = jackie
+P2 = bart
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result 2}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Limitazioni del simulatore}
+	\begin{minipage}{.35\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+
+cousins(P, Q):-
+	gran_parent_of(X, P),
+	gran_parent_of(X, Q),
+	parent_of(Y, P),
+	parent_of(Z, Q),
+	Z \= Y.
+				\end{minted}
+				\hrule
+                \caption{Cousins rule}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.62\linewidth}
+        \begin{block}{Interrogazione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='cousins(P1, P2).' family.pl}
+			\end{center}
+		\end{block}
+		\begin{figure}
+			\begin{minipage}{.55\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+QA-Prolog: No solutions were found
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result}
+		\end{figure}
+	\end{minipage}
 \end{frame}

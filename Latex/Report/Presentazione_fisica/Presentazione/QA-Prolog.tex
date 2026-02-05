@@ -245,14 +245,12 @@ endmodule
 			\caption{Factorization problem}
 		\end{figure}
 		\vspace{-.7cm}
-		\begin{block}{}
-			Tradotto in EDIF con:
+		\begin{block}{Traduzione in EDIF}
 			\begin{center}
 				\scriptsize \texttt{yosys myfile.v synth.ys -b edif -o myfile.edif}
 			\end{center}
 		\end{block}
-		\begin{block}{}
-			Tradotto in QMASM con:
+		\begin{block}{Traduzione in QMASM}
 			\begin{center}
 				\scriptsize \texttt{edif2qmasm -o="myfile.qmasm" myfile.edif}
 			\end{center}
@@ -260,12 +258,12 @@ endmodule
 	\end{minipage}
 	\hfill
 	\begin{minipage}{.48\linewidth}
-		\begin{block}{}
-			Eseguito  con:\\
+		\begin{block}{Esecuzione}
 			\begin{center}
 				\scriptsize \texttt{qmasm --run --pin="mult.product[2:0] := 110" --solver="sim\_anneal" mult.qmasm}
 			\end{center}
 		\end{block}
+		\vspace{-.1cm}
 			\begin{figure}[h]
 				\begin{minipage}{.9\linewidth}
 					\hrule
@@ -309,6 +307,181 @@ Solution #1 (energy = -57.5000, tally = 68):
 \end{frame}
 
 
-\begin{frame}{QA-Prolog}{Esempio}
-	
+\begin{frame}[fragile]{QA-Prolog}{Esempio}
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Base di conoscenza}
+			Il nemico del mio nemico è mio amico
+		\end{block}
+		\begin{figure}[h]
+			\begin{minipage}{\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+					
+hates(alice, bob).
+hates(bob, charlie).
+
+enemies(P, Q) :- hates(P, Q).
+enemies(P, Q) :- hates(Q, P).
+
+friends(A, B) :-
+	enemies(A, X),
+	enemies(X, B),
+	A \= B.
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Enemy of my Enemy}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Esecuzione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog --qmasm-args="--postproc=opt" --query='friends(P1, P2).' friends.pl}
+			\end{center}
+		\end{block}
+			\begin{figure}[h]
+				\begin{minipage}{.3\linewidth}
+					\hrule
+					\begin{minted}{text}
+					
+P1 = alice
+P2 = charlie
+
+P1 = charlie
+P2 = alice
+					\end{minted}
+					\hrule
+				\end{minipage}
+			\caption{Query Solution}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+
+\begin{frame}[fragile]{Update al progetto}
+	\begin{minipage}{.42\linewidth}
+		\begin{block}{Integrazione con Ocean}
+			\begin{itemize}
+				\item Aggiornamento librerie obsolete
+				\item Rimozione metodi deprecati
+				\item Sostituzione funzioni \say{spostate}
+				\item Correzione parametri funzioni
+			\end{itemize}
+		\end{block}
+		\begin{block}{Altro}
+			\begin{itemize}
+				\item Sostituzione funzioni rinominate
+				\item Parametri command line
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.55\linewidth}
+		\begin{figure}
+			\begin{minipage}{.9\linewidth}
+				\hrule
+				\begin{minted}{python}
+
+#from dwave.cloud import Client, hybrid, qpu, sw
+from dwave.cloud import Client
+import hybrid
+
+#from greedy import SteepestDescentSolver
+from dwave.samplers import SteepestDescentSolver
+
+#from tabu import TabuSampler
+from dwave.samplers import TabuSampler
+
+#from scipy.stats import median_absolute_deviation
+from scipy.stats import median_abs_deviation
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Update librerie}
+		\end{figure}
+		\vspace{-.5cm}
+		\begin{figure}
+			\begin{minipage}{.9\linewidth}
+				\hrule
+				\begin{minted}{python}
+
+#elif solver == "neal":
+elif solver == "sim_anneal":
+				\end{minted}
+				\hrule
+				\caption{Correzione parametri command line}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Update al progetto}{Incompatibilità tra output edif2qmasm e input QMASM}
+	\begin{minipage}{.31\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{verilog}
+
+// Define hates(atom, atom).
+module \hates/2 (A, B, Valid);
+	...
+endmodule
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Verilog}
+		\end{figure}
+		\vspace{-.6cm}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+# hates/2
+!begin_macro id00011
+	...
+!end_macro id00011
+
+# enemies/2
+!begin_macro id00010
+  !use_macro OR $id00031
+  !use_macro hates/2
+  ...
+				\end{minted}
+				\hrule
+				\caption{qmasm}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.67\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{python}
+
+with open(file, 'r') as input:
+	first = input.readline()
+	second = input.readline()
+	while(second_row != ""):
+		if first.startswith("#") and second.startswith("!begin_macro"):
+			self.name[first[2:-1]] = second[len("!begin_macro "):-1]
+		first_row = second_row
+		second_row = input.readline()
+
+with open(file, 'r') as input:
+	doc = input.read()
+	lines = doc.splitlines()
+	for line in lines:
+		for word in line.split():
+			if word in self.name.keys():
+				line = line.replace(word, self.name[word])
+		self.new_lines.append(line)
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Preprocessing}
+		\end{figure}
+	\end{minipage}
 \end{frame}
