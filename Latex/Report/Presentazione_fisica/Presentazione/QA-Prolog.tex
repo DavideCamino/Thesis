@@ -24,7 +24,9 @@
 
 \begin{frame}{Pipeline}
 	\begin{minipage}{.48\linewidth}
-		immagine
+		\begin{figure}
+			\includegraphics[width=.6\linewidth]{pipeline}
+		\end{figure}
 	\end{minipage}
 	\hfill
 	\begin{minipage}{.48\linewidth}
@@ -210,7 +212,6 @@ Solution #1 (energy = -20.0000, tally = 647):
 		\begin{block}{Yosys}
 			\begin{itemize}
 				\item Framework per la sintesi del Verilog
-				\item Free and open software sotto licenza ISC
 				\item Output: RTL Netlist in formato EDIF
 			\end{itemize}
 		\end{block}
@@ -234,15 +235,16 @@ Solution #1 (energy = -20.0000, tally = 647):
 	\hfill
 	\begin{minipage}{.3\linewidth}
 		\begin{minted}{text}
-			
 !begin_macro sat
-  !use_macro AND $id00004
-  !use_macro OR $id00003
-  $id00003.A = b
-  $id00003.B = c
-  $id00004.A = a
-  $id00004.B = $id00003.Y
-  $id00004.Y = y
+	!use_macro AND $id00006
+	!use_macro NOT $id00004
+	!use_macro OR $id00005
+	$id00004.A = $id00005.Y
+	$id00005.A = b
+	$id00005.B = c
+	$id00006.A = a
+	$id00006.B = $id00004.Y
+	$id00006.Y = y
 !end_macro sat
 		\end{minted}
 	\end{minipage}

@@ -18,6 +18,7 @@
 \usepackage{minted}
 \usepackage{subcaption}
 \usepackage{braket}
+\setcounter{MaxMatrixCols}{11}
 
 
 \setminted{fontsize=\scriptsize, tabsize=2}
@@ -38,17 +39,40 @@
 \begin{document}
 \begin{frame}[plain]
 	\transfade[duration=0.5]
-    \maketitle
+	\maketitle
 \end{frame}
+
+
 \begin{frame}{Obbiettivo del lavoro}
-	\begin{block}{Reasoning su quantum computer}
-		\begin{enumerate}
-			\item Base di conoscenza classica + query
-			\item Embedding su quantum computer
-			\item Esecuzione e recupero risultati
-		\end{enumerate}
-	\end{block}
+	\begin{center}
+		\begin{minipage}{.7\linewidth}
+			\hfill
+			\begin{block}{}
+				\centering
+				\large
+				\textbf{Reasoning su quantum computer}
+			\end{block}
+			\hfill
+			\begin{block}{}
+				\centering
+				Base di conoscenza classica + query
+			\end{block}
+			\hfill
+			\begin{block}{}
+				\centering
+				Embedding su quantum computer
+			\end{block}
+			\hfill
+			\begin{block}{}
+				\centering
+				Esecuzione e recupero risultati
+			\end{block}
+			\hfill
+		\end{minipage}
+	\end{center}
 \end{frame}
+
+
 \input{Quantum_computing}
 \input{QA-Prolog}
 \input{QAC_QAOA}
