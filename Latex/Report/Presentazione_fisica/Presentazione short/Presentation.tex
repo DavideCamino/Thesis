@@ -1,0 +1,56 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartpage=1 ,
+	pdfpagemode=FullScreen % Start in full-screen mode
+	% Ensure it starts from page 1
+}
+\usetheme{CambridgeUS}
+\usecolortheme{beaver}
+\useoutertheme[subsection=false]{smoothbars}
+\usepackage{graphicx}
+\usepackage{dirtytalk}
+\usepackage{pgf}
+\graphicspath{{img}}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{multimedia}
+\usepackage{minted}
+\usepackage{subcaption}
+\usepackage{braket}
+\setcounter{MaxMatrixCols}{11}
+
+
+\setminted{fontsize=\scriptsize, tabsize=2}
+
+\captionsetup{font=footnotesize}
+
+\newcounter{framenumberbeforeappendix}
+
+
+\input{package/beamercolorthemebeaver.sty}
+
+%\input{beamercolorthemespruce.sty}
+
+\title[QA-Prolog]{High level programming language for quantum computing}
+\author{Davide Camino}
+\date{\texttt{davide.camino@edu.unito.it}}
+\institute[UniTO]{\includegraphics[width=.15\linewidth]{logo_col}}
+
+
+\begin{document}
+
+\input{chapter/Intro}
+\input{chapter/QA-Prolog}
+\input{chapter/AQC_QAOA}
+\input{chapter/Esempio_completo}
+\input{chapter/Outro}
+\setcounter{framenumberbeforeappendix}{\value{framenumber}}
+\appendix
+\input{chapter/appendix/Quantum_computing}
+\input{chapter/appendix/QA-prolog}
+\input{chapter/appendix/AQC_QAOA}
+\input{chapter/appendix/Ontologie}
+\setcounter{framenumber}{\value{framenumberbeforeappendix}}
+
+\end{document}

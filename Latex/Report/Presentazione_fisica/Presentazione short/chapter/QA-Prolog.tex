@@ -1,0 +1,196 @@
+\section{QA-Prolog}
+\begin{frame}{QA-Prolog}
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Il progetto}
+			\begin{itemize}
+				\item Sviluppato da Scott Pakin
+				\item Python + GO
+				\item Proof of concept
+				\item Trasformazioni successive
+				\item Prolog + Query $\rightarrow \mathcal{H}_f$  
+				\item Interagisce direttamente con il solver
+				\item Raccoglie e organizza i risultati
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{figure}
+			\includegraphics[width=.6\linewidth]{pipeline}
+			\caption{Transformation pipeline}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+
+\begin{frame}[fragile]{QMASM}{$\mathcal{H}_f$ simbolica  $\rightarrow$ $\mathcal{H}_f$ fisica}
+		\begin{minipage}{.48\linewidth}
+			\begin{block}{Cos'è}
+				\begin{itemize}
+					\item Quantum macro assembler
+					\item Si interfaccia con Ocean
+				\end{itemize}
+			\end{block}
+			\begin{block}{Cosa permette di fare}
+				\begin{itemize}
+					\item Riferimento simbolico a \emph{qubit}
+					\item \emph{Qubit} \say{pinnati} a \texttt{TRUE} o \texttt{FALSE}
+					\item Incapsulare pattern in macro
+					\item Creazione di librerie di macro
+					\item Organizzazione output
+				\end{itemize}
+			\end{block}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.48\linewidth}
+			\begin{figure}[h]
+				\begin{minipage}{.6\linewidth}
+					\hrule
+					\begin{minted}{text}
+						
+						# Y = A OR B
+						!begin_macro OR
+						$A  0.5
+						$B  0.5
+						$Y -1
+						
+						$A $B  0.5
+						$A $Y -1
+						$B $Y -1
+						!end_macro OR
+					\end{minted}
+					\hrule
+				\end{minipage}
+				\caption{\textbf{or} gate}
+			\end{figure}
+			\vspace{-.5cm}
+			\begin{center}
+				\begin{minipage}{.8\linewidth}
+					\begin{block}{}
+						\centering
+						Creiamo il file \texttt{gates.qmasm} 
+					\end{block}
+				\end{minipage}
+			\end{center}
+		\end{minipage}
+\end{frame}
+
+
+\begin{frame}[fragile]{Yosys - edif2qmasm}
+	\begin{block}{}
+		\centering
+		Verilog $\rightarrow$ Circuito digitale $\rightarrow \mathcal{H}$ simbolica 
+	\end{block}
+\begin{minipage}{\linewidth}
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{Yosys}
+			\begin{itemize}
+				\item Framework per la sintesi del Verilog
+				\item Output: RTL Netlist in formato EDIF
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{edif2qmasm}
+			\begin{itemize}
+				\item Converte dal formato EDIF a QMASM
+				\item Attinge a una libreria di gate
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+\end{minipage}
+\begin{figure}
+	\begin{minipage}{.65\linewidth}
+		\includegraphics[width=.47\linewidth]{sat_circ.pdf}
+		\hfill
+		\includegraphics[width=.47\linewidth]{sat_net.pdf}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.3\linewidth}
+		\begin{minted}{text}
+!begin_macro sat
+	!use_macro AND $id00006
+	!use_macro NOT $id00004
+	!use_macro OR $id00005
+	$id00004.A = $id00005.Y
+	$id00005.A = b
+	$id00005.B = c
+	$id00006.A = a
+	$id00006.B = $id00004.Y
+	$id00006.Y = y
+!end_macro sat
+		\end{minted}
+	\end{minipage}
+\end{figure}
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]{QA-Prolog}
+	\begin{minipage}{.42\linewidth}
+		\begin{block}{}
+			\begin{itemize}
+				\item Traduzione da Prolog a Verilog
+				\item Wrapper per tutta la Pipeline
+				\item Risultati formato Human Readable
+				\item Decide dimensione delle variabili
+			\end{itemize}
+		\end{block}
+		\vspace{.3cm}
+		\begin{figure}[h]
+			\begin{minipage}{.6\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+					
+sat(A, B, C, Y) :-
+	or(B, C, X),
+	not(X, Z),
+	and(A, Z, Y).
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Prolog Code}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.52\linewidth}
+		\begin{figure}[h]
+			\begin{minipage}{.9\linewidth}
+				\hrule
+				\begin{minted}{Verilog}
+
+module sat (A, B, C, Y);
+   input A, B, C;
+   output Y;
+	
+   assign  Y = A & ~(B | C);
+endmodule
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Verilog Code}
+		\end{figure}
+		\vspace{-.5cm}
+		\begin{block}{Interrogazione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog  --qmasm-args="--solver=tabu --postproc=opt" --query='sat(A, B, C, true).'  circ\_sat.pl}
+			\end{center}
+		\end{block}
+		\begin{figure}
+			\begin{minipage}{.4\linewidth}
+				\hrule
+				\begin{minted}{text}
+					
+A = true
+B = false
+C = false
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result}
+		\end{figure}
+	\end{minipage}
+\end{frame}

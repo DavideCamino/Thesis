@@ -1,0 +1,90 @@
+\section{Ontologie}
+\begin{frame}[fragile]{Ontologia}{I Simpson}
+	\begin{figure}
+		\includegraphics[width=.55\linewidth]{people.pdf}
+		\caption{Ontology Structure}
+	\end{figure}
+	\begin{figure}
+        \begin{minipage}{.9\linewidth}
+            \hrule
+            \begin{minted}{xml}
+
+<owl:NamedIndividual rdf:about="http://www.people#marge">
+    <rdf:type rdf:resource="http://www.people#People"/>
+    <www:marry rdf:resource="http://www.people#homer"/>
+    <www:parent_of rdf:resource="http://www.people#bart"/>
+</owl:NamedIndividual>
+            \end{minted}
+            \hrule
+        \end{minipage}
+        \caption{Marge Simpson entry}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}[fragile]{Da OWL-rdf a Prolog}
+	\begin{minipage}{.35\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+
+person(marge).
+person(bart).
+person(jackie).
+person(selma).
+person(ling).
+
+parent_of(marge, bart).
+parent_of(jackie, marge).
+parent_of(jackie, selma).
+parent_of(selma, ling).
+
+son_of(P, Q) :- parent_of(Q, P).
+
+gran_parent_of(P, Q) :-
+	son_of(Q, X),
+	son_of(X, P).
+				\end{minted}
+				\hrule
+                \caption{Prolog Ontology}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.62\linewidth}
+        \begin{block}{Interrogazione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='gran\_parent\_of(P1, P2).' family.pl}
+			\end{center}
+		\end{block}
+		\begin{figure}
+			\begin{minipage}{.4\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+P1 = jackie
+P2 = bart
+
+P1 = jackie
+P2 = selma
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result 1}
+		\end{figure}
+        \vspace{-.5cm}
+        \begin{figure}
+			\begin{minipage}{.4\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+P1 = jackie
+P2 = bart
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result 2}
+		\end{figure}
+	\end{minipage}
+\end{frame}
