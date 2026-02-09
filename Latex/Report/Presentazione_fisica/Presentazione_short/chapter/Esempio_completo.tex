@@ -42,7 +42,7 @@ parent_of(selma, ling).
 
 son_of(P, Q) :- parent_of(Q, P).
 
-gran_parent_of(P, Q) :-
+grand_parent_of(P, Q) :-
 	son_of(Q, X),
 	son_of(X, P).
 				\end{minted}
@@ -55,7 +55,7 @@ gran_parent_of(P, Q) :-
 	\begin{minipage}{.62\linewidth}
         \begin{block}{Interrogazione}
 			\begin{center}
-				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='gran\_parent\_of(P1, P2).' family.pl}
+				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='grand\_parent\_of(P1, P2).' family.pl}
 			\end{center}
 		\end{block}
 		\begin{figure}
