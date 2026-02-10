@@ -1,8 +1,87 @@
 \chapter{Ontology}
-In this chapter we explain what is an ontology and why they are important. To clarify and demonstrate why ontologies are useful we present some examples of important ontologies discussing briefly their utility.
+In this chapter we explain what kind of knowledge base is an ontology, how to build an ontology, what are the rule to follow to attribute a meaning to the information in an ontology and why this knowledge representation are important. To clarify and demonstrate why ontologies are useful we present one example of an important ontology discussing briefly its utility.
 
-The rest of the chapter is about reasoning on ontologies, we discuss the complexity of the reasoning and present some 
-\section{Ontology}
-\section{Famous ontology}
+The rest of the chapter is about reasoning on ontologies, we discuss the complexity of the reasoning and present some reasoner showing the basic ideas of their functioning.
+\section{Knowledge Base}
+In the field of information technologies an ontology is a structured rappresentation of knowledge about a certain domain of interest, however the study of knowledge begin much before informatics. To better understand what is an ontology let's start with the philosophy definition and then we point out the difference between this vision and the  information technologies  one.
+\subsection{Ontology in philosophy}
+Ontology born as a branch of philosophy. In this context is the science of what is, of the kinds and structures of objects, properties, events, processes and relations in every area of reality\cite{smith2012ontology}.
+
+The goal of an ontology is to give a definitive and exhaustive classification of entities in all spheres of being. With the term definitive we mean that an ontology should answer to questions as: \say{What classes of entities are needed for a complete description and explanation of all the goings-on in the universe?} With the term exhaustive, instead we want that all types of entities and realtion between these entities are included in our ontology\cite{smith2012ontology}.
+
+\subsection{Ontology in computer science}
+Thanks to the advent of internet and the develop of bigger and bigger software used by bigger and bigger group of user emerged what we might call the Tower of Babel problem. Each research group develop his knowledge base with term and concept shared and accepted only inside the group. For example different databases may use identical labels but with different meanings and the same meaning may be expressed with different names\cite{smith2012ontology}. 
+
+To address incompatibility problem between software, databases and research groups, ontologies have become an important research topic in computer science where the goal is defining standards for data exchange, information integration, and interoperability\cite{zarri2005ontologies}.
+
+In this field the term ontology gain a new meaning:
+\begin{definition}
+	Ontologies represent a formal and explicit specification of a shared conceptualization\cite{gruber1993translation}.
+\end{definition}
+In this definition the keywords are:
+\begin{description}
+	\item[Conceptualization] an ontology creates an abstract model identifing and defing only the relevant concepts;
+	\item[Explicit] type of concepts and constraints on their use are explicitly defined;
+	\item[Formal] an ontology should be machine-readable;
+	\item[Shared] the knowledge represented by the ontology has to be accepted by a group of people, ideally by everyone
+\end{description}
+
+When we use ontology to represent knowledge we are describing a graph where entities are bound together through relationships, and classified according to a formal description of the world\cite{fossati2018n}. Knowledge bases expressed with this formalism are divided in two components\cite{de1996tbox}: 
+\begin{description}
+	\item[T-Box] stores a set of universally quantified assertions (inclusion assertions) stating general properties of concepts and roles;
+	\item[A-Box] contains assertions on individual objects (instance assertions).
+\end{description}
+
+\subsection{OWL Language}
+\label{sec:owl}
+OWL 2 Web Ontology Language is an ontology language for the Semantic Web with formally defined meaning\cite{hitzler2012owl}. Thanks to OWL we can model class and relation between class (T-Box) and individuals with their specific properties and relation between individuals (A-Box). The T-Box is the conceptualization ow the word, the A-Box is a certain instance of the world we have modelled in the T-Box.
+
+OWL is a declarative language and define the state of the world in a logic way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, dicidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world\cite{hitzler2012owl}. 
+
+\subsection{Importance of ontologies}
+Ontologies are important in various fields, from interoperability to machine learning.
+
+In the Semantic Web context, ontologies are a main vehicle for data integration, sharing, and discovery\cite{hitzler2021review}. Different research group can use the same ontology to share a unified vocabulary that help build a common knowledge and help to integrate better the results obtained by each group.
+
+In a more aziendal  scenario an ontology can be used as a translation layer between different databases or software that are build by different teams and use different vocabulary.
+
+In the machine learning field an ontology could be used to support the sharing and reuse of formally represented knowledge among AI systems\cite{gruber1993translation}. In the last year we become used to train AI agent on unstructured data, but a formal knowledge can help to fine tuning theese models or to check their answer.
+
+\section{Example ontologies}
+To help understanding the structure of ontologies and to show a practical example of ontolgy we present two ontologies: a simple ontology about the family relationship and DOLCE a foundational ontology.
+
+\subsection{Simple ontology}
+
+\section{DOLCE ontology}
+
+Dolce is a top-level (foundational) ontology\cite{borgo2022dolce} these means that this ontology describe foundamental aspect of the reality and shuold be used as a base for construct an ontology about a particular domain of interest. For this reason DOLCE defines only the T-Box, the user then will expand the T-Box with his specific class and relation of interest and laslty will populate the A-Box.
+
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{ontology/DOLCE}
+	\caption{First layer of DOLCE taxonomy}
+\end{figure}
+\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time, for these reason DOLCE distinguis between endurants and perdurants. Endurants may acquire and lose properties and
+parts through time, perdurants are fixed in time\cite{borgo2022dolce}. With a simplification we can see the perdurants as the physical entities that are modified by the passing of time (like objects, animal and people) and endurants as events that when they passed they cannot be changed anymore (like a tennis match or a conference).
+
+The relation connecting endurants and perdurants is called participation. An physical entities can be in time by participating in a perdurant, and perdurants happen in time by having endurants as participants\cite{borgo2022dolce}.
+
+Another important aspect of DOLCE is the way we attribute a property to an entity, to do so we use qualities that are what can be perceived and measured. To do so we can assert that a certain entity has a specific quality and then, when it is possible, quantify that quality. 
+ 
+\paragraph{Importance of DOLCE:} foundational ontologies can be usefull in several fields, from conceptual modeling to natural language processing. DOLCE, today, is used in a variety of domain where provides the general categories and relations needed to give a coherent view of reality\cite{borgo2022dolce}.
+
 \section{Rerasoning on ontology}
+In \ref{sec:owl} we have introduced the standard language to encode an ontology, in order to infer new information strarting from the one we already have we need to better specify the semantics of OWL DL.
+
+The semantics of OWL DL extends the semantics of the description logic $\mathcal{SROIQ}$ to provide supports for datatypes and punning\cite{w3c_2012_owl_dl}. For construct available both in OWL DL and in $\mathcal{SROIQ}$ the semantics corrispond exactly.
+
+Description logics allow the modeling of the domain of interest with three kind of entity: concepts, roles and individual names. This entity correspond to unary predicates, binary predicates and constants in the first-order logic\cite{krotzsch2012description}. From the point of view of ontology and OWL concepts are classes, roles are relationship, individual names are the individuals that can belong to one or more classes.
+
+$\mathcal{SROIQ}$ is one of the most expressive description logic where we have constructor for
+\begin{itemize}
+	\item transitive roles: $\mathcal{S}$
+	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: $\mathcal{R}$
+	\item nominals: $\mathcal{O}$;
+	\item inverse roles: $\mathcal{I}$;
+	\item qualified number restrictions: $\mathcal{Q}$;
+\end{itemize}
 \section{Conclusion}
