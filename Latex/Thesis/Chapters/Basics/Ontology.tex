@@ -1,9 +1,9 @@
 \chapter{Ontology}
-In this chapter we explain what kind of knowledge base is an ontology, how to build an ontology, what are the rule to follow to attribute a meaning to the information in an ontology and why this knowledge representation are important. To clarify and demonstrate why ontologies are useful we present one example of an important ontology discussing briefly its utility.
+In this chapter we explain what kind of knowledge base is an ontology, how to build an ontology and why this knowledge representation are important. To clarify and demonstrate why ontologies are useful we present one example of an important ontology discussing briefly its utility.
 
-The rest of the chapter is about reasoning on ontologies, we discuss the complexity of the reasoning and present some reasoner showing the basic ideas of their functioning.
+The rest of the chapter is about reasoning on ontologies, we discuss the semantics of formal language use ro represent knowledge, what we mean when saying interpretation of a knowledge base and the complexity of find an interpretation.
 \section{Knowledge Base}
-In the field of information technologies an ontology is a structured rappresentation of knowledge about a certain domain of interest, however the study of knowledge begin much before informatics. To better understand what is an ontology let's start with the philosophy definition and then we point out the difference between this vision and the  information technologies  one.
+In the field of information technologies an ontology is a structured representation of knowledge about a certain domain of interest, however the study of knowledge begin much before informatics. To better understand what is an ontology let's start with the philosophy definition and then we point out the difference between this vision and the  information technologies  one.
 \subsection{Ontology in philosophy}
 Ontology born as a branch of philosophy. In this context is the science of what is, of the kinds and structures of objects, properties, events, processes and relations in every area of reality\cite{smith2012ontology}.
 
@@ -32,11 +32,19 @@ When we use ontology to represent knowledge we are describing a graph where enti
 	\item[A-Box] contains assertions on individual objects (instance assertions).
 \end{description}
 
+We can see some similarities between an ontology and a database, the T-Box can be see as the Entity-Relation schema and the A-Box as the set of all entry of the database. There is, however, a logical difference between the world represented by an ontology and the world represented by a database.
+
+Databases make the \emph{closed world assumption}, i.e. everything that is not present in the database is automatically false, for example if a person does not compare in a bank registry it means that that person is not client in the bank.
+
+Ontology on the other hand make the \emph{open world assumption}\cite{krotzsch2012description}, that means for example that we can assert that a certain person is a parent even if we have not specified any son or daughter.
+
 \subsection{OWL Language}
 \label{sec:owl}
 OWL 2 Web Ontology Language is an ontology language for the Semantic Web with formally defined meaning\cite{hitzler2012owl}. Thanks to OWL we can model class and relation between class (T-Box) and individuals with their specific properties and relation between individuals (A-Box). The T-Box is the conceptualization ow the word, the A-Box is a certain instance of the world we have modelled in the T-Box.
 
-OWL is a declarative language and define the state of the world in a logic way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, dicidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world\cite{hitzler2012owl}. 
+OWL is a declarative language and define the state of the world in a logic way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, decidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world\cite{hitzler2012owl}. 
+
+OWL per se doesn't specify any syntax, it states only what can or cannot be expressed in an ontology. The World Wide Web Consortium (W3C) standardize various syntaxes, some inspired by functional language other more suitable for the storing on web pages. The only syntax that must be implemented by all tools to be compliant to the OWL standard is the RDF/XML syntax\cite{hitzler2012owl} (examples of this syntax are provided in \ref{sec:ont_ex}).
 
 \subsection{Importance of ontologies}
 Ontologies are important in various fields, from interoperability to machine learning.
@@ -51,9 +59,46 @@ In the machine learning field an ontology could be used to support the sharing a
 To help understanding the structure of ontologies and to show a practical example of ontolgy we present two ontologies: a simple ontology about the family relationship and DOLCE a foundational ontology.
 
 \subsection{Simple ontology}
+\label{sec:ont_ex}
+This simple ontology about parental relationship shows the basic structure of an ontology, helping understanding the graph structure of these knowledge bases and the ralation and difference between the T-Box and A-Box.
 
-\section{DOLCE ontology}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\linewidth]{ontology/people}
+	\caption{Graph for T-Box}
+	\label{fig:ont_people}
+\end{figure}
 
+In figure\ref{fig:ont_people}, we can see the T-Box of the ontology, these structure specify what is our domain of interest and what entity could possibly populate our world. This ontology is about people, so the main class/concept is \mintinline{text}|People|, this class has several sublcasses that represent parents, children and married people. We can assert that a person belong to the married class without specify the partner (open world assumption) but we can also infer that a person belong to parents class because we have created a relationship of type \mintinline{text}|parent_of| between that person and another person.
+
+OWL allow us to express rules to infer when a habitant of a class belong also to another class, the following code shows (in the RDF/XML syntax) the definition of the class  \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{url}}:
+
+\begin{listing}[H]
+	\inputminted{xml}{code/ontology/people_parent.xml}
+	\caption{Definition of parents}
+	\label{lst:ont_parent}
+\end{listing}
+At lines 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People| and at lines 4 and 5 is explicited that  a parent is a person that is \mintinline{text}|parent_of| of some person.
+
+From figure \ref{fig:ont_people} we can also see some property of the relations:
+\begin{itemize}
+	\item relation \mintinline{text}|marry| is symmetric;
+	\item relation \mintinline{text}|parent_of| is the inverse of \mintinline{text}|son_of|;
+	\item we can specify a domain and a range for relations. 
+\end{itemize}
+OWL give us construct for all of this specification (and other more complex).
+
+\begin{wrapfigure}{r}{.5\linewidth}
+	\centering
+	\includegraphics[width=.9\linewidth]{ontology/simpson}
+	\caption{Simpson family tree}
+	\label{fig:ont_tree}
+\end{wrapfigure}
+Now we can populate the ontology adding individuals and relations between individual. For this small example we take inspiration from the Simpson family and in family tree on the right we can see the small portion of the family represented. To show what we mean with open world assumption we have asserted that Jackie is a married person even if in our rappresentation there is no husband.
+
+Our ontology cover a small domain, the type of entity that populate our model are very limited, the next example shows the commitment of engenierized an ontology to represent virtually anything in the universe.
+
+\subsection{DOLCE ontology}
 Dolce is a top-level (foundational) ontology\cite{borgo2022dolce} these means that this ontology describe foundamental aspect of the reality and shuold be used as a base for construct an ontology about a particular domain of interest. For this reason DOLCE defines only the T-Box, the user then will expand the T-Box with his specific class and relation of interest and laslty will populate the A-Box.
 
 \begin{figure}[h]
@@ -72,7 +117,8 @@ Another important aspect of DOLCE is the way we attribute a property to an entit
 \section{Rerasoning on ontology}
 In \ref{sec:owl} we have introduced the standard language to encode an ontology, in order to infer new information strarting from the one we already have we need to better specify the semantics of OWL DL.
 
-The semantics of OWL DL extends the semantics of the description logic $\mathcal{SROIQ}$ to provide supports for datatypes and punning\cite{w3c_2012_owl_dl}. For construct available both in OWL DL and in $\mathcal{SROIQ}$ the semantics corrispond exactly.
+\subsection{$\mathcal{SROIQ}$ DL}
+The semantics of OWL DL extends the semantics of the description logic (DL) $\mathcal{SROIQ}$ to provide supports for datatypes and punning\cite{w3c_2012_owl_dl}. For construct available both in OWL DL and in $\mathcal{SROIQ}$ the semantics corrispond exactly.
 
 Description logics allow the modeling of the domain of interest with three kind of entity: concepts, roles and individual names. This entity correspond to unary predicates, binary predicates and constants in the first-order logic\cite{krotzsch2012description}. From the point of view of ontology and OWL concepts are classes, roles are relationship, individual names are the individuals that can belong to one or more classes.
 
@@ -84,4 +130,27 @@ $\mathcal{SROIQ}$ is one of the most expressive description logic where we have 
 	\item inverse roles: $\mathcal{I}$;
 	\item qualified number restrictions: $\mathcal{Q}$;
 \end{itemize}
+
+For example, we can construct the ontology showed in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertion like:
+
+\begin{minipage}{\linewidth}
+	\centering
+	\begin{minipage}{.3\linewidth}
+		\centering
+		\mintinline{text}|person(selma)|
+	\end{minipage}
+	\begin{minipage}{.3\linewidth}
+		\centering
+		\mintinline{text}|married(jackie)|
+	\end{minipage}
+	\begin{minipage}{.3\linewidth}
+		\centering
+		\mintinline{text}|parent_of(marge, bart)|
+	\end{minipage}
+\end{minipage}
+Each of this statement is called axiom and the set of all axioms constitued our knowledge base.
+
+\subsection{Interpretation of a knowledge base}
+
+
 \section{Conclusion}
