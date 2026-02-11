@@ -131,26 +131,71 @@ $\mathcal{SROIQ}$ is one of the most expressive description logic where we have 
 	\item qualified number restrictions: $\mathcal{Q}$;
 \end{itemize}
 
-For example, we can construct the ontology showed in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertion like:
-
+For example, we can construct the ontology showed in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertion like:\\
 \begin{minipage}{\linewidth}
-	\centering
-	\begin{minipage}{.3\linewidth}
-		\centering
+	\hspace{.5cm}
+	\begin{minipage}{.27\linewidth}
 		\mintinline{text}|person(selma)|
 	\end{minipage}
 	\begin{minipage}{.3\linewidth}
-		\centering
 		\mintinline{text}|married(jackie)|
 	\end{minipage}
-	\begin{minipage}{.3\linewidth}
-		\centering
+	\begin{minipage}{.2\linewidth}
 		\mintinline{text}|parent_of(marge, bart)|
 	\end{minipage}
 \end{minipage}
 Each of this statement is called axiom and the set of all axioms constitued our knowledge base.
 
 \subsection{Interpretation of a knowledge base}
+An interpretation $\mathit{I}$ consist in a domain $\Delta^\mathit{I}$ and an interpretation function $\cdot^\mathit{I}$ that map:
+\begin{gather*}
+	\text{concept } A \rightarrow A^\mathit{I} \subseteq \Delta^\mathit{I}\\
+	\text{role } R \rightarrow R^\mathit{I} \subseteq \Delta^\mathit{I} \times \Delta^\mathit{I}\\
+	\text{named individual } a \rightarrow a^\mathit{I} \in \Delta^\mathit{I}
+\end{gather*}
 
+In other words $\mathit{I}$ assign a fixed meaning to all entities in the knowledge base\cite{krotzsch2012description}. Having a fixed meaning we can say if an axiom $\alpha$ is hold in $\mathit{I}$ or not, in the first case we say that $\mathit{I}$ satisfy $\alpha$  and we write $\mathit{I} \models \alpha$. 
+
+If all axioms in an ontology are satisfied by $\mathit{I}$ we say that $\mathit{I}$ is a \emph{model} of the ontology. An ontology is consistent if it accepts at least one model.
+
+A reasoner should at least be capable to say i an ontology is consistent, but we are also interested to query knowledge to retrieve new information.
+
+\paragraph{Query interpretation:} Considering a knowledge base $\mathit{K}$, a query $q$ consists of axiom templates where $\mathcal{SROIQ}$ axiom are composed by concept name, role name and individual name, but also by concept variable, role variable and individual variable. A solution for the query is an interpretation $\mu$ that allows to rewreite all variable in $q$ with names, we denote with $\mu(q)$ the result of the sobstitution. 
+
+The evaluation of the query $q$ over the knowledge base $\mathit{K}$ is a set of sulutions $\mu$ with:\cite{kollia2011query}
+\[
+	\set{\mu | \mathit{K} \cup \mu(q) \text{ is a } \mathcal{SROIQ} \text{ knowledge base and } \mathit{K} \models \mu(q) } 
+\]
+In other word $\mu$ bind all free variable of $q$ to names present in $\mathit{K}$\cite{kollia2011query}.
+
+A naive approach to find the solution to a query is simply to tests, for each possible solution mapping $\mu$, if $ \mathit{K} \models \mu(q)$, however, in the worst case, the number of mappings that have to be tested is exponential in the number of variables in the query\cite{kollia2011query}.
+\subsection{Complexity of reasoning}
+In this section we give a hint about the complexity of reasoning, commenting an actual algoritm for reasonin is out of the scope of his work. We start with some hight level consideration and then we present some theoriacle result that comfir the actual difficults in reasoning over ontology.
+
+It is easy to convince themself that the more axioms are in a ontology the fever interpretation exist that satisfy all axioms. On the other hand if an ontology has fever models the more axioms hold in all of them and he more logical conseguances follow from the ontology. We can rephrase this two sttement sayng that the semantic of description logics are \emph{monotonic}: the more knowledge we embed in an ontology the more results it returns\cite{krotzsch2012description}.
+
+A more formal wiev is given in \cite{baader2003description}, here are identified two \emph{source of complexity}:
+\begin{itemize}
+	\item OR-branching: the presence of disjunctive constructors
+	\item AND-branching: the presence of qualified existential and universal quantifiers 
+\end{itemize}
+The AND-branching is responsible esponsible for the exponential size of a single interpretation, and the OR-branching is responsible for the exponential number of different interpretations.
+
+\begin{wrapfigure}{l}{.5\linewidth}
+	\centering
+	\includegraphics[width=.9\linewidth]{ontology/complexity}
+	\caption{Complexity classes}
+\end{wrapfigure}
+To discuss the complexity of reasoning we take in account the description logic $\mathcal{ALC}$, this DL is a restriction of $ \mathcal{SROIQ}$\cite{krotzsch2012description}, so its complexity is a lover bound for  $\mathcal{SROIQ}$. 
+
+It is possible to prove the PSpace-hardness of satisfiability in $\mathcal{ALC}$\cite{baader2003description}, therefore also $\mathcal{SROIQ}$ DL is at least PSpace-hard. 
+
+This result shows, that unless $\text{PSpace} = \text{PTime}$ the exponential time complexity of any algoritm that make inference on an ontology cannot be improved.
+
+For the one interested in some numerical examples to better understand what this class of complexity means in real context \cite{glimm2014hermit} presents the reasoner HermiT\footnote{\url{http://www.hermit-reasoner.com/}} and evauate his performance on some real ontologies.
 
 \section{Conclusion}
+In this chapter we have explained what is an ontology and we have motivated the interest in this field. We have show both teorically and with example wat can be expressed in an ontology and what cannot. We have formally defined what is the interpretation of a knowledge base and showed what is query and its result.
+
+Lastly we have characterized the complexity of reasoning on ontlogyes. This complexity is what motivated us to search other paradigm to infer new knowledge starting from an ontology. in the next chapters we will build the tool necessary to achieve these goal.
+
