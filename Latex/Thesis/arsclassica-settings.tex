@@ -31,3 +31,14 @@
 	breaklines=true,
 	fontsize=\small
 }
+
+
+\DeclareMathVersion{alt}
+\SetSymbolFont{operators}{alt}{OT1}{cmr}{m}{n}
+\SetSymbolFont{letters}{alt}{OML}{cmm}{m}{it}
+\SetSymbolFont{symbols}{alt}{OMS}{cmsy}{m}{n}
+\SetSymbolFont{largesymbols}{alt}{OMX}{cmex}{m}{n}
+
+\newcommand{\dl}[1]{%
+	{\mathversion{alt}$\mathcal{#1}$}%
+}

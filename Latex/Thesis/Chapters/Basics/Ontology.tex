@@ -116,18 +116,18 @@ Another important aspect of DOLCE is the way we attribute a property to an entit
 \section{Rerasoning on ontology}
 In \ref{sec:owl} we have introduced the standard language to encode an ontology; in order to infer new information, starting from the one we already have, we need to better specify the semantics of OWL DL.
 
-\subsection{$\mathcal{SROIQ}$ DL}
-The semantics of OWL DL extends the semantics of the description logic (DL) $\mathcal{SROIQ}$ to provide support for datatypes and punning\cite{w3c_2012_owl_dl}. For constructs available both in OWL DL and in $\mathcal{SROIQ}$ the semantics correspond exactly.
+\subsection{\dl{SROIQ} DL}
+The semantics of OWL DL extends the semantics of the description logic (DL) \dl{SROIQ} to provide support for datatypes and punning\cite{w3c_2012_owl_dl}. For constructs available both in OWL DL and in \dl{SROIQ} the semantics correspond exactly.
 
 Description logics allow the modeling of the domain of interest with three kinds of entity: concepts, roles, and individual names. These entities correspond to unary predicates, binary predicates, and constants in first-order logic\cite{krotzsch2012description}. From the point of view of ontology and OWL, concepts are classes, roles are relationships, and individual names are the individuals that can belong to one or more classes.
 
-$\mathcal{SROIQ}$ is one of the most expressive description logics where we have constructors for:
+\dl{SROIQ} is one of the most expressive description logics where we have constructors for:
 \begin{itemize}
-	\item transitive roles: $\mathcal{S}$;
-	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: $\mathcal{R}$;
-	\item nominals: $\mathcal{O}$;
-	\item inverse roles: $\mathcal{I}$;
-	\item qualified number restrictions: $\mathcal{Q}$.
+	\item transitive roles: \dl{S}
+	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: \dl{R};
+	\item nominals: \dl{O};
+	\item inverse roles: \dl{I};
+	\item qualified number restrictions: \dl{Q}.
 \end{itemize}
 
 For example, we can construct the ontology shown in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertions like:\\
@@ -159,12 +159,14 @@ If all axioms in an ontology are satisfied by $\mathit{I}$ we say that $\mathit{
 
 A reasoner should at least be capable of saying if an ontology is consistent, but we are also interested in querying knowledge to retrieve new information.
 
-\paragraph{Query interpretation:} Considering a KB $\mathit{K}$, a query $q$ consists of axiom templates where $\mathcal{SROIQ}$ axioms are composed of concept names, role names, and individual names, but also of concept variables, role variables, and individual variables. A solution for the query is an interpretation $\mu$ that allows us to rewrite all variables in $q$ with names; we denote with $\mu(q)$ the result of the substitution. 
+\paragraph{Query interpretation:} Considering a KB $\mathit{K}$, a query $q$ consists of axiom templates where \dl{SROIQ} axioms are composed of concept names, role names, and individual names, but also of concept variables, role variables, and individual variables. A solution for the query is an interpretation $\mu$ that allows us to rewrite all variables in $q$ with names; we denote with $\mu(q)$ the result of the substitution. 
 
 The evaluation of $q$ over $\mathit{K}$ is a set of solutions $\mu$ with:\cite{kollia2011query}
-\[
-\set{\mu | \mathit{K} \cup \mu(q) \text{ is a } \mathcal{SROIQ} \text{ knowledge base and } \mathit{K} \models \mu(q) } 
-\]
+
+\begin{center}
+	$\{\ \mu | \mathit{K} \cup \mu(q)$ is a \dl{SROIQ} knowledge base and $\mathit{K} \models \mu(q) \}$
+\end{center}
+
 In other words $\mu$ binds all free variables of $q$ to names present in $\mathit{K}$\cite{kollia2011query}.
 
 A naive approach to find the solution to a query is to simply test for each possible solution mapping $\mu$, if $ \mathit{K} \models \mu(q)$; however, in the worst case, the number of mappings that have to be tested is exponential in the number of variables in the query\cite{kollia2011query}.
@@ -188,11 +190,9 @@ The AND-branching is responsible for the exponential size of a single interpreta
 	\includegraphics[width=.9\linewidth]{ontology/complexity}
 	\caption{Complexity classes}
 \end{wrapfigure}
-To discuss the complexity of reasoning we take into account the description logic $\mathcal{ALC}$; this DL is a restriction of $\mathcal{SROIQ}$\cite{krotzsch2012description}, so its complexity is a lower bound for $\mathcal{SROIQ}$. 
+To discuss the complexity of reasoning we take into account the description logic \dl{ALC}; this DL is a restriction of \dl{SROIQ}\cite{krotzsch2012description}, so its complexity is a lower bound for \dl{SROIQ}. It is possible to prove the PSpace-hardness of satisfiability in \dl{ALC}\cite{baader2003description}, therefore also \dl{SROIQ} DL is at least PSpace-hard. 
 
-It is possible to prove the PSpace-hardness of satisfiability in $\mathcal{ALC}$\cite{baader2003description}, therefore also $\mathcal{SROIQ}$ DL is at least PSpace-hard. 
-
-This result shows that, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved unless $\text{PSpace} = \text{PTime}$.
+This result shows that, unless $\text{PSpace} = \text{PTime}$, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved .
 
 For those interested in some numerical examples to better understand what this class of complexity means in a real context, \cite{glimm2014hermit} presents the reasoner HermiT\footnote{\url{http://www.hermit-reasoner.com/}.} and evaluates its performance on some real ontologies.
 
