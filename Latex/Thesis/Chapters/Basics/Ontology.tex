@@ -1,92 +1,92 @@
 \chapter{Ontology}
-In this chapter we explain what kind of knowledge base is an ontology, how to build an ontology and why this knowledge representation are important. To clarify and demonstrate why ontologies are useful we present one example of an important ontology discussing briefly its utility.
+In this chapter we explain what kind of knowledge base (KB) an ontology is, how to build an ontology, and why this knowledge representation is important. To clarify and demonstrate why ontologies are useful, we present an example of an important ontology, briefly discussing its utility.
 
-The rest of the chapter is about reasoning on ontologies, we discuss the semantics of formal language use ro represent knowledge, what we mean when saying interpretation of a knowledge base and the complexity of find an interpretation.
+The rest of the chapter is about reasoning on ontologies; we discuss the semantics of the formal language used to represent knowledge, what we mean when saying interpretation of a KB, and the complexity of finding an interpretation.
 \section{Knowledge Base}
-In the field of information technologies an ontology is a structured representation of knowledge about a certain domain of interest, however the study of knowledge begin much before informatics. To better understand what is an ontology let's start with the philosophy definition and then we point out the difference between this vision and the  information technologies  one.
+In the field of information technologies, an ontology is a structured representation of knowledge about a certain domain of interest; however, the study of knowledge began much before informatics. To better understand what an ontology is, let's start with the philosophical definition and then point out the differences between this vision and the IT one.
 \subsection{Ontology in philosophy}
-Ontology born as a branch of philosophy. In this context is the science of what is, of the kinds and structures of objects, properties, events, processes and relations in every area of reality\cite{smith2012ontology}.
+Ontology was born as a branch of philosophy. In this context it is the science of what is, of the kinds and structures of objects, properties, events, processes, and relations in every area of reality\cite{smith2012ontology}.
 
-The goal of an ontology is to give a definitive and exhaustive classification of entities in all spheres of being. With the term definitive we mean that an ontology should answer to questions as: \say{What classes of entities are needed for a complete description and explanation of all the goings-on in the universe?} With the term exhaustive, instead we want that all types of entities and realtion between these entities are included in our ontology\cite{smith2012ontology}.
+The goal of an ontology is to give a definitive and exhaustive classification of entities in all spheres of being. With the term \say{definitive} we mean that an ontology should answer questions such as: \say{What classes of entities are needed for a complete description and explanation of all the goings-on in the universe?} With the term \say{exhaustive}, instead, we mean that all types of entities and relations between these entities are included in our ontology\cite{smith2012ontology}.
 
 \subsection{Ontology in computer science}
-Thanks to the advent of internet and the develop of bigger and bigger software used by bigger and bigger group of user emerged what we might call the Tower of Babel problem. Each research group develop his knowledge base with term and concept shared and accepted only inside the group. For example different databases may use identical labels but with different meanings and the same meaning may be expressed with different names\cite{smith2012ontology}. 
+Thanks to the advent of the internet and the development of bigger and bigger software used by bigger and bigger groups of users, what we might call the Tower of Babel problem emerged. Each research group develops its KB with terms and concepts shared and accepted only inside the group. For example, different databases may use identical labels but with different meanings, and the same meaning may be expressed with different names\cite{smith2012ontology}. 
 
-To address incompatibility problem between software, databases and research groups, ontologies have become an important research topic in computer science where the goal is defining standards for data exchange, information integration, and interoperability\cite{zarri2005ontologies}.
+To address the incompatibility problem between software, databases, and research groups, ontologies have become an important research topic in computer science where the goal is to define standards for data exchange, information integration, and interoperability\cite{zarri2005ontologies}.
 
-In this field the term ontology gain a new meaning:
+In this field the term ontology gains a new meaning:
 \begin{definition}
 	Ontologies represent a formal and explicit specification of a shared conceptualization\cite{gruber1993translation}.
 \end{definition}
 In this definition the keywords are:
 \begin{description}
-	\item[Conceptualization] an ontology creates an abstract model identifing and defing only the relevant concepts;
-	\item[Explicit] type of concepts and constraints on their use are explicitly defined;
+	\item[Conceptualization] an ontology creates an abstract model identifying and defining only the relevant concepts;
+	\item[Explicit] the types of concepts and constraints on their use are explicitly defined;
 	\item[Formal] an ontology should be machine-readable;
-	\item[Shared] the knowledge represented by the ontology has to be accepted by a group of people, ideally by everyone
+	\item[Shared] the knowledge represented by the ontology has to be accepted by a group of people, ideally by everyone.
 \end{description}
 
-When we use ontology to represent knowledge we are describing a graph where entities are bound together through relationships, and classified according to a formal description of the world\cite{fossati2018n}. Knowledge bases expressed with this formalism are divided in two components\cite{de1996tbox}: 
+When we use an ontology to represent knowledge we are describing a graph where entities are bound together through relationships, and classified according to a formal description of the world\cite{fossati2018n}. Knowledge bases expressed with this formalism are divided into two components\cite{de1996tbox}: 
 \begin{description}
 	\item[T-Box] stores a set of universally quantified assertions (inclusion assertions) stating general properties of concepts and roles;
 	\item[A-Box] contains assertions on individual objects (instance assertions).
 \end{description}
 
-We can see some similarities between an ontology and a database, the T-Box can be see as the Entity-Relation schema and the A-Box as the set of all entry of the database. There is, however, a logical difference between the world represented by an ontology and the world represented by a database.
+We can see some similarities between an ontology and a database: the T-Box can be seen as the Entity-Relation schema and the A-Box as the set of all entries of the database. There is, however, a logical difference between the world represented by an ontology and the world represented by a database.
 
-Databases make the \emph{closed world assumption}, i.e. everything that is not present in the database is automatically false, for example if a person does not compare in a bank registry it means that that person is not client in the bank.
+Databases make the \emph{closed world assumption}: everything that is not present in the database is automatically false; for example, if a person does not appear in a bank registry it means that that person is not a client of the bank.
 
-Ontology on the other hand make the \emph{open world assumption}\cite{krotzsch2012description}, that means for example that we can assert that a certain person is a parent even if we have not specified any son or daughter.
+Ontologies, on the other hand, make the \emph{open world assumption}\cite{krotzsch2012description}, which means, for example, that we can assert that a certain person is a parent even if we have not specified any son or daughter.
 
 \subsection{OWL Language}
 \label{sec:owl}
-OWL 2 Web Ontology Language is an ontology language for the Semantic Web with formally defined meaning\cite{hitzler2012owl}. Thanks to OWL we can model class and relation between class (T-Box) and individuals with their specific properties and relation between individuals (A-Box). The T-Box is the conceptualization ow the word, the A-Box is a certain instance of the world we have modelled in the T-Box.
+OWL 2 Web Ontology Language is an ontology language for the Semantic Web with a formally defined meaning\cite{hitzler2012owl}. Thanks to OWL we can model classes and relations between classes (T-Box) and individuals with their specific properties and relations between individuals (A-Box). The T-Box is the conceptualization of the world, while the A-Box is a certain instance of the world we have modelled in the T-Box.
 
-OWL is a declarative language and define the state of the world in a logic way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, decidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world\cite{hitzler2012owl}. 
+OWL is a declarative language and defines the state of the world in a logical way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, decidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world\cite{hitzler2012owl}. 
 
-OWL per se doesn't specify any syntax, it states only what can or cannot be expressed in an ontology. The World Wide Web Consortium (W3C) standardize various syntaxes, some inspired by functional language other more suitable for the storing on web pages. The only syntax that must be implemented by all tools to be compliant to the OWL standard is the RDF/XML syntax\cite{hitzler2012owl} (examples of this syntax are provided in \ref{sec:ont_ex}).
+OWL per se doesn't specify any syntax, it states only what can or cannot be expressed in an ontology. The World Wide Web Consortium (W3C) standardizes various syntaxes, some inspired by functional languages, others more suitable for storing on web pages. The only syntax that must be implemented by all tools to be compliant with the OWL standard is the RDF/XML syntax\cite{hitzler2012owl} (examples of this syntax are provided in \ref{sec:ont_ex}).
 
 \subsection{Importance of ontologies}
 Ontologies are important in various fields, from interoperability to machine learning.
 
-In the Semantic Web context, ontologies are a main vehicle for data integration, sharing, and discovery\cite{hitzler2021review}. Different research group can use the same ontology to share a unified vocabulary that help build a common knowledge and help to integrate better the results obtained by each group.
+In the Semantic Web context, ontologies are a main vehicle for data integration, sharing, and discovery\cite{hitzler2021review}. Different research groups can use the same ontology to share a unified vocabulary that helps build common knowledge and helps to better integrate the results obtained by each group.
 
-In a more aziendal  scenario an ontology can be used as a translation layer between different databases or software that are build by different teams and use different vocabulary.
+In a more commercial scenario, an ontology can be used as a translation layer between different databases or software that are built by different teams and use different vocabularies.
 
-In the machine learning field an ontology could be used to support the sharing and reuse of formally represented knowledge among AI systems\cite{gruber1993translation}. In the last year we become used to train AI agent on unstructured data, but a formal knowledge can help to fine tuning theese models or to check their answer.
+In the machine learning field an ontology could be used to support the sharing and reuse of formally represented knowledge among AI systems\cite{gruber1993translation}. In the last years, we have become used to training AI agents on unstructured data, but formal knowledge can help to fine-tune these models or to check their answers.
 
 \section{Example ontologies}
-To help understanding the structure of ontologies and to show a practical example of ontolgy we present two ontologies: a simple ontology about the family relationship and DOLCE a foundational ontology.
+To help understanding the structure of ontologies and to show a practical example of ontology, we present two ontologies: a simple ontology about family relationships and DOLCE, a foundational ontology.
 
 \subsection{Simple ontology}
 \label{sec:ont_ex}
-This simple ontology about parental relationship shows the basic structure of an ontology, helping understanding the graph structure of these knowledge bases and the ralation and difference between the T-Box and A-Box.
+This simple ontology about parental relationships shows the basic structure of an ontology, helping to understand the graph structure of these KBs and the relations between the T-Box and A-Box.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.8\linewidth]{ontology/people}
+	\includegraphics[width=.9\linewidth]{ontology/people}
 	\caption{Graph for T-Box}
 	\label{fig:ont_people}
 \end{figure}
 
-In figure\ref{fig:ont_people}, we can see the T-Box of the ontology, these structure specify what is our domain of interest and what entity could possibly populate our world. This ontology is about people, so the main class/concept is \mintinline{text}|People|, this class has several sublcasses that represent parents, children and married people. We can assert that a person belong to the married class without specify the partner (open world assumption) but we can also infer that a person belong to parents class because we have created a relationship of type \mintinline{text}|parent_of| between that person and another person.
+In figure \ref{fig:ont_people}, we can see the T-Box of the ontology: this structure specifies what our domain of interest is, and what entities could possibly populate our world. This ontology is about people, so the main class/concept is \mintinline{text}|People|: this class has several subclasses that represent parents, children, and married people. We can assert that a person belongs to the married class without specifying the partner (open world assumption) but we can also infer that a person belongs to the parents class because we have created a relationship of type \mintinline{text}|parent_of| between that person and another person.
 
-OWL allow us to express rules to infer when a habitant of a class belong also to another class, the following code shows (in the RDF/XML syntax) the definition of the class  \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{url}}:
+OWL allows us to express rules to infer when a member of a class belongs also to another class. The following code shows (in the RDF/XML syntax) the definition of the class \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{url}.}:
 
 \begin{listing}[H]
 	\inputminted{xml}{code/ontology/people_parent.xml}
 	\caption{Definition of parents}
 	\label{lst:ont_parent}
 \end{listing}
-At lines 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People| and at lines 4 and 5 is explicited that  a parent is a person that is \mintinline{text}|parent_of| of some person.
+At line 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People|, and at lines 4 and 5 it is specified that a parent is a person that is \mintinline{text}|parent_of| another person.
 
-From figure \ref{fig:ont_people} we can also see some property of the relations:
+From figure \ref{fig:ont_people} we can also see some properties of the relations:
 \begin{itemize}
 	\item relation \mintinline{text}|marry| is symmetric;
 	\item relation \mintinline{text}|parent_of| is the inverse of \mintinline{text}|son_of|;
 	\item we can specify a domain and a range for relations. 
 \end{itemize}
-OWL give us construct for all of this specification (and other more complex).
+OWL gives us constructs for all of these specifications (and other more complex ones).
 
 \begin{wrapfigure}{r}{.5\linewidth}
 	\centering
@@ -94,44 +94,43 @@ OWL give us construct for all of this specification (and other more complex).
 	\caption{Simpson family tree}
 	\label{fig:ont_tree}
 \end{wrapfigure}
-Now we can populate the ontology adding individuals and relations between individual. For this small example we take inspiration from the Simpson family and in family tree on the right we can see the small portion of the family represented. To show what we mean with open world assumption we have asserted that Jackie is a married person even if in our rappresentation there is no husband.
+Now we can populate the ontology by adding individuals and relations between individuals. For this small example we take inspiration from the Simpson family, and in the family tree on the right we can see the small portion of the family represented. To show what we mean by open world assumption we have asserted that Jackie is a married person even if in our representation there is no husband.
 
-Our ontology cover a small domain, the type of entity that populate our model are very limited, the next example shows the commitment of engenierized an ontology to represent virtually anything in the universe.
+Our ontology covers a small domain, the types of entities that populate our model are very limited; the next example shows the commitment of engineering an ontology to represent virtually anything in the universe.
 
 \subsection{DOLCE ontology}
-Dolce is a top-level (foundational) ontology\cite{borgo2022dolce} these means that this ontology describe foundamental aspect of the reality and shuold be used as a base for construct an ontology about a particular domain of interest. For this reason DOLCE defines only the T-Box, the user then will expand the T-Box with his specific class and relation of interest and laslty will populate the A-Box.
+DOLCE (Descriptive Ontology for Linguistic and Cognitive Engineering) is a top-level (foundational) ontology\cite{borgo2022dolce}; this means that this ontology describes fundamental aspects of reality and should be used as a base for constructing an ontology about a particular domain of interest. For this reason DOLCE defines only the T-Box; the user will then expand the T-Box with specific classes and relations of interest, and lastly will populate the A-Box.
 
 \begin{figure}[h]
 	\includegraphics[width=\linewidth]{ontology/DOLCE}
 	\caption{First layer of DOLCE taxonomy}
 \end{figure}
-\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time, for these reason DOLCE distinguis between endurants and perdurants. Endurants may acquire and lose properties and
-parts through time, perdurants are fixed in time\cite{borgo2022dolce}. With a simplification we can see the perdurants as the physical entities that are modified by the passing of time (like objects, animal and people) and endurants as events that when they passed they cannot be changed anymore (like a tennis match or a conference).
+\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time; for this reason DOLCE distinguishes between endurants and perdurants. Endurants may acquire and lose properties and parts through time, perdurants are fixed in time\cite{borgo2022dolce}. With a simplification we can see endurants as the physical entities that are modified by the passing of time (like objects, animals, and people) and perdurants as events that, once they have passed, cannot be changed anymore (like a tennis match or a conference).
 
-The relation connecting endurants and perdurants is called participation. An physical entities can be in time by participating in a perdurant, and perdurants happen in time by having endurants as participants\cite{borgo2022dolce}.
+The relation connecting endurants and perdurants is called participation. A physical entity can be in time by participating in a perdurant, and perdurants happen in time by having endurants as participants\cite{borgo2022dolce}.
 
-Another important aspect of DOLCE is the way we attribute a property to an entity, to do so we use qualities that are what can be perceived and measured. To do so we can assert that a certain entity has a specific quality and then, when it is possible, quantify that quality. 
- 
-\paragraph{Importance of DOLCE:} foundational ontologies can be usefull in several fields, from conceptual modeling to natural language processing. DOLCE, today, is used in a variety of domain where provides the general categories and relations needed to give a coherent view of reality\cite{borgo2022dolce}.
+Another important aspect of DOLCE is the way we attribute a property to an entity; this is done by using qualities, which are what can be perceived and measured. To do so we can assert that a certain entity has a specific quality and then, when it is possible, quantify that quality. 
+
+\paragraph{Importance of DOLCE:} foundational ontologies can be useful in several fields, from conceptual modeling to natural language processing. DOLCE, today, is used in a variety of domains where it provides the general categories and relations needed to give a coherent view of reality\cite{borgo2022dolce}.
 
 \section{Rerasoning on ontology}
-In \ref{sec:owl} we have introduced the standard language to encode an ontology, in order to infer new information strarting from the one we already have we need to better specify the semantics of OWL DL.
+In \ref{sec:owl} we have introduced the standard language to encode an ontology; in order to infer new information, starting from the one we already have, we need to better specify the semantics of OWL DL.
 
 \subsection{$\mathcal{SROIQ}$ DL}
-The semantics of OWL DL extends the semantics of the description logic (DL) $\mathcal{SROIQ}$ to provide supports for datatypes and punning\cite{w3c_2012_owl_dl}. For construct available both in OWL DL and in $\mathcal{SROIQ}$ the semantics corrispond exactly.
+The semantics of OWL DL extends the semantics of the description logic (DL) $\mathcal{SROIQ}$ to provide support for datatypes and punning\cite{w3c_2012_owl_dl}. For constructs available both in OWL DL and in $\mathcal{SROIQ}$ the semantics correspond exactly.
 
-Description logics allow the modeling of the domain of interest with three kind of entity: concepts, roles and individual names. This entity correspond to unary predicates, binary predicates and constants in the first-order logic\cite{krotzsch2012description}. From the point of view of ontology and OWL concepts are classes, roles are relationship, individual names are the individuals that can belong to one or more classes.
+Description logics allow the modeling of the domain of interest with three kinds of entity: concepts, roles, and individual names. These entities correspond to unary predicates, binary predicates, and constants in first-order logic\cite{krotzsch2012description}. From the point of view of ontology and OWL, concepts are classes, roles are relationships, and individual names are the individuals that can belong to one or more classes.
 
-$\mathcal{SROIQ}$ is one of the most expressive description logic where we have constructor for
+$\mathcal{SROIQ}$ is one of the most expressive description logics where we have constructors for:
 \begin{itemize}
-	\item transitive roles: $\mathcal{S}$
-	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: $\mathcal{R}$
+	\item transitive roles: $\mathcal{S}$;
+	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: $\mathcal{R}$;
 	\item nominals: $\mathcal{O}$;
 	\item inverse roles: $\mathcal{I}$;
-	\item qualified number restrictions: $\mathcal{Q}$;
+	\item qualified number restrictions: $\mathcal{Q}$.
 \end{itemize}
 
-For example, we can construct the ontology showed in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertion like:\\
+For example, we can construct the ontology shown in figures \ref{fig:ont_people} and \ref{fig:ont_tree} with a set of assertions like:\\
 \begin{minipage}{\linewidth}
 	\hspace{.5cm}
 	\begin{minipage}{.27\linewidth}
@@ -144,58 +143,61 @@ For example, we can construct the ontology showed in figures \ref{fig:ont_people
 		\mintinline{text}|parent_of(marge, bart)|
 	\end{minipage}
 \end{minipage}
-Each of this statement is called axiom and the set of all axioms constitued our knowledge base.
+Each of these statements is called an axiom and the set of all axioms constitutes our KB.
 
 \subsection{Interpretation of a knowledge base}
-An interpretation $\mathit{I}$ consist in a domain $\Delta^\mathit{I}$ and an interpretation function $\cdot^\mathit{I}$ that map:
+An interpretation $\mathit{I}$ consists of a domain $\Delta^\mathit{I}$ and an interpretation function $\cdot^\mathit{I}$ that maps:
 \begin{gather*}
 	\text{concept } A \rightarrow A^\mathit{I} \subseteq \Delta^\mathit{I}\\
 	\text{role } R \rightarrow R^\mathit{I} \subseteq \Delta^\mathit{I} \times \Delta^\mathit{I}\\
 	\text{named individual } a \rightarrow a^\mathit{I} \in \Delta^\mathit{I}
 \end{gather*}
 
-In other words $\mathit{I}$ assign a fixed meaning to all entities in the knowledge base\cite{krotzsch2012description}. Having a fixed meaning we can say if an axiom $\alpha$ is hold in $\mathit{I}$ or not, in the first case we say that $\mathit{I}$ satisfy $\alpha$  and we write $\mathit{I} \models \alpha$. 
+In other words $\mathit{I}$ assigns a fixed meaning to all entities in the KB\cite{krotzsch2012description}. By having a fixed meaning, we can say if an axiom $\alpha$ holds in $\mathit{I}$ or not; in the first case we say that $\mathit{I}$ satisfies $\alpha$ and we write $\mathit{I} \models \alpha$. 
 
 If all axioms in an ontology are satisfied by $\mathit{I}$ we say that $\mathit{I}$ is a \emph{model} of the ontology. An ontology is consistent if it accepts at least one model.
 
-A reasoner should at least be capable to say i an ontology is consistent, but we are also interested to query knowledge to retrieve new information.
+A reasoner should at least be capable of saying if an ontology is consistent, but we are also interested in querying knowledge to retrieve new information.
 
-\paragraph{Query interpretation:} Considering a knowledge base $\mathit{K}$, a query $q$ consists of axiom templates where $\mathcal{SROIQ}$ axiom are composed by concept name, role name and individual name, but also by concept variable, role variable and individual variable. A solution for the query is an interpretation $\mu$ that allows to rewreite all variable in $q$ with names, we denote with $\mu(q)$ the result of the sobstitution. 
+\paragraph{Query interpretation:} Considering a KB $\mathit{K}$, a query $q$ consists of axiom templates where $\mathcal{SROIQ}$ axioms are composed of concept names, role names, and individual names, but also of concept variables, role variables, and individual variables. A solution for the query is an interpretation $\mu$ that allows us to rewrite all variables in $q$ with names; we denote with $\mu(q)$ the result of the substitution. 
 
-The evaluation of the query $q$ over the knowledge base $\mathit{K}$ is a set of sulutions $\mu$ with:\cite{kollia2011query}
+The evaluation of $q$ over $\mathit{K}$ is a set of solutions $\mu$ with:\cite{kollia2011query}
 \[
-	\set{\mu | \mathit{K} \cup \mu(q) \text{ is a } \mathcal{SROIQ} \text{ knowledge base and } \mathit{K} \models \mu(q) } 
+\set{\mu | \mathit{K} \cup \mu(q) \text{ is a } \mathcal{SROIQ} \text{ knowledge base and } \mathit{K} \models \mu(q) } 
 \]
-In other word $\mu$ bind all free variable of $q$ to names present in $\mathit{K}$\cite{kollia2011query}.
+In other words $\mu$ binds all free variables of $q$ to names present in $\mathit{K}$\cite{kollia2011query}.
 
-A naive approach to find the solution to a query is simply to tests, for each possible solution mapping $\mu$, if $ \mathit{K} \models \mu(q)$, however, in the worst case, the number of mappings that have to be tested is exponential in the number of variables in the query\cite{kollia2011query}.
+A naive approach to find the solution to a query is to simply test for each possible solution mapping $\mu$, if $ \mathit{K} \models \mu(q)$; however, in the worst case, the number of mappings that have to be tested is exponential in the number of variables in the query\cite{kollia2011query}.
+
 \subsection{Complexity of reasoning}
-In this section we give a hint about the complexity of reasoning, commenting an actual algoritm for reasonin is out of the scope of his work. We start with some hight level consideration and then we present some theoriacle result that comfir the actual difficults in reasoning over ontology.
+Since presenting an actual algorithm for reasoning on ontologies is out of the scope of this work, we only give some hints about the reasons for the complexity and then present the theoretical results.
 
-It is easy to convince themself that the more axioms are in a ontology the fever interpretation exist that satisfy all axioms. On the other hand if an ontology has fever models the more axioms hold in all of them and he more logical conseguances follow from the ontology. We can rephrase this two sttement sayng that the semantic of description logics are \emph{monotonic}: the more knowledge we embed in an ontology the more results it returns\cite{krotzsch2012description}.
+It is easy to convince oneself that the more axioms there are in an ontology, the fewer interpretations exist that satisfy all axioms. On the other hand, if an ontology has fewer models, the more axioms hold in all of them and the more logical consequences follow from the ontology.
 
-A more formal wiev is given in \cite{baader2003description}, here are identified two \emph{source of complexity}:
+We can rephrase these two statements by saying that the semantics of description logics are \emph{monotonic}: the more knowledge we embed in an ontology, the more results it returns\cite{krotzsch2012description}.
+
+A more formal view is given in \cite{baader2003description}, where two \emph{sources of complexity} are identified:
 \begin{itemize}
-	\item OR-branching: the presence of disjunctive constructors
-	\item AND-branching: the presence of qualified existential and universal quantifiers 
+	\item OR-branching: the presence of disjunctive constructors;
+	\item AND-branching: the presence of qualified existential and universal quantifiers.
 \end{itemize}
-The AND-branching is responsible esponsible for the exponential size of a single interpretation, and the OR-branching is responsible for the exponential number of different interpretations.
+The AND-branching is responsible for the exponential size of a single interpretation, and the OR-branching is responsible for the exponential number of different interpretations.
 
 \begin{wrapfigure}{l}{.5\linewidth}
 	\centering
 	\includegraphics[width=.9\linewidth]{ontology/complexity}
 	\caption{Complexity classes}
 \end{wrapfigure}
-To discuss the complexity of reasoning we take in account the description logic $\mathcal{ALC}$, this DL is a restriction of $ \mathcal{SROIQ}$\cite{krotzsch2012description}, so its complexity is a lover bound for  $\mathcal{SROIQ}$. 
+To discuss the complexity of reasoning we take into account the description logic $\mathcal{ALC}$; this DL is a restriction of $\mathcal{SROIQ}$\cite{krotzsch2012description}, so its complexity is a lower bound for $\mathcal{SROIQ}$. 
 
 It is possible to prove the PSpace-hardness of satisfiability in $\mathcal{ALC}$\cite{baader2003description}, therefore also $\mathcal{SROIQ}$ DL is at least PSpace-hard. 
 
-This result shows, that unless $\text{PSpace} = \text{PTime}$ the exponential time complexity of any algoritm that make inference on an ontology cannot be improved.
+This result shows that, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved unless $\text{PSpace} = \text{PTime}$.
 
-For the one interested in some numerical examples to better understand what this class of complexity means in real context \cite{glimm2014hermit} presents the reasoner HermiT\footnote{\url{http://www.hermit-reasoner.com/}} and evauate his performance on some real ontologies.
+For those interested in some numerical examples to better understand what this class of complexity means in a real context, \cite{glimm2014hermit} presents the reasoner HermiT\footnote{\url{http://www.hermit-reasoner.com/}.} and evaluates its performance on some real ontologies.
 
-\section{Conclusion}
-In this chapter we have explained what is an ontology and we have motivated the interest in this field. We have show both teorically and with example wat can be expressed in an ontology and what cannot. We have formally defined what is the interpretation of a knowledge base and showed what is query and its result.
+\section{Conclusions}
+In this chapter we have explained what an ontology is and we have motivated the interest in this field. We have shown both theoretically and with examples what can be expressed in an ontology and what cannot. We have formally defined what the interpretation of a KB is and showed what a query and its results are.
 
-Lastly we have characterized the complexity of reasoning on ontlogyes. This complexity is what motivated us to search other paradigm to infer new knowledge starting from an ontology. in the next chapters we will build the tool necessary to achieve these goal.
+Lastly, we have characterized the complexity of reasoning on ontologies. This complexity is what motivated us to search for other paradigms to infer new knowledge starting from an ontology. In the next chapters we will build the tools necessary to achieve this goal.
 
