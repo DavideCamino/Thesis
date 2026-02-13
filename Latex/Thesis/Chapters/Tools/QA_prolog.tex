@@ -1,5 +1,57 @@
 \chapter{QA-Prolog}
+QA-Prolog is a tool that allows to write a program in a logic programming language and execute it on a quantum annealer, QA-Prolog also retreive the results returned by the quantum annealer and present them in a natural and comprensible way.
+
+In this chapter we describe the pipeline of transformations that permit to start from a Prolog code and end with a Hamiltonian $\mathbf{H}_f$ like as we have described in \ref{}.
+
+We will show the changes we have made to the original QA-Prolog code to restore the compatibility with the modern framework to interface with the D-Wave quantum annealer and to support the latest version of the libriry used in the project.
+
+The chapter end with some pointer to related works that evaluate the project (the wole pipeline or only some steps), expand the compatibility of the pipeline to other language, or are in some way similar to this work.
 \section{The project}
+QA-Prolog is a project developed by Scott Pakin\footnote{Los Alamos National Laboratory: \mail{pakin@lanl.gov}.} in $2017-2019$, it starts from the question: \say{Can one express constraint logic programming in the form accepted by quantum-annealing hardware?}\cite{pakin2018performing}. 
+
+The hope is that even if today we live in the NISQ\footnote{Noisy intermediate-scale quantum computing.} era of quantum computer quantum annealer are more easily scalable that quantum gate based computer\cite{kaminsky2004scalable} and QA-Prolog could improving Prolog program execution by replacing backtracking with fully parallel annealing into a solution state\cite{lanl_QA_Prolog}.
+
+\subsection{Reason}
+As we have shown in \ref{} and \ref{} programming a quantum computer is not an easy task. We express our algorithm in a very low level way.
+
+On quantum annealer we have to define a cost function, without constrain (that must be transformed in a penalty function), even if there are library that allow ut to express this functions in a easyer way we need at least find a QUBO representation of our problem.
+
+Even worse is the situation on quantum gate based computer. The programmer has to built a quantum cirquit gate by gate, an approach similar to what is done with FPGAs (Field Programmable Gate Arrays)\cite{farooq2012fpga}, we can indeed see a strong analogy:
+\begin{itemize}
+	\item programmable logic blocks which implement logic functions $\rightarrow$ quantum gate;
+	\item programmable routing that connects these logic functions $\rightarrow$ possibility to define the order of gates;
+	\item I/O blocks connected to logic $\rightarrow$ input \emph{qubit} and output \emph{qubit} that we can measure. 
+\end{itemize}
+FPGAs are components that the majority of computer scientist are not used to and probably is out of the interest for a programmer. In the same way the hardness of programming a quantum computer could be a big distinctiveness to attract new researcher in the field.
+
+
+In conclusion even if there exist some sort of abstraction with \say{high level gates} that wrap multiple low level gates in useful pattern and exist both for quantum gate based computer and quantum annealer some template of well known problem that need only a fine-tuning to be useful for a specific problem programming a quantum computer is, today, very near to the machine language.
+
+The goal of QA-Prolog is to fill the gap between the high level description with a powerful logic programming language and the promising quantum computers.
+
+\subsection{Prolog}
+We can see QA-Prolog as a compiler from Prolog to $\mathbf{H}_f$ where the ground state of $\mathbf{H}_f$ is the solution of our Prolog program. Before starting with the compilation process is useful to understand the main characteristics of Prolog, because it is not an imperative programming language like c or java, but a declarative one. For more information about Prolog lecture of \cite{clocksin2003programming} and \cite{learn_prolog_now_online} are recommended.
+
+In Prolog we do not specify step by step an algorithm that resolve our problem; instead we describe the formal relationship between the object in our problem and what relation has to be true in our solution\cite{clocksin2003programming}.
+
+Programming in Prolog consist in:
+\begin{itemize}
+	\item listing \emph{facts} about objects and relationship between objects;
+	\item specify \emph{rules} to derive new facts from the ones already asserted;
+	\item asking question (\emph{query}) about objects and their relationship.
+\end{itemize}
+
+From these characteristics we can understand what means \say{declarative}: the program is a list of statements about our problem (our domain of interest). Moreover, Prolog is a logic programming language, this means that the core of programming is not  tell to the computer what to do, but telling it what is true and asking it to try and draw conclusion\cite{clocksin2003programming}. The idea behind logic programming are very interesting, for more details \cite{kowalski1982logic} and \cite{hogger1984introduction} are recommended.
+
+
+
+\subsection{Feature of QA-Prolog}
+QA-Prolog doesn't support all the feature of Prolog, but enough to make it possible basic logic programming\cite{pakin2018performing}.
+
+QA Prolog supports atoms and positive integers but not floating point numbers, strings or lists.  It
+supports arithmetic and relational operation and rules can reference other rules but not recursively.  QA-Prolog supports unification, backtracking, and predicates comprising multiple clauses\cite{pakin2018performing}.
+
+QA-Prolog support also some feature not presents in the basic version of Prolog, In particular, operations can be performed on variables even before they are ground\cite{pakin2018performing}, this mean that QA-Prolog is more powerful in manipulating free variables.
 \section{Pipeline}
 \section{Update to the project}
 \section{Related Work}
