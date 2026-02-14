@@ -1,5 +1,5 @@
 \chapter{Ontology}
-In this chapter we explain what kind of knowledge base (KB) an ontology is, how to build an ontology, and why this knowledge representation is important. To clarify and demonstrate why ontologies are useful, we present an example of an important ontology, briefly discussing its utility.
+In this chapter we explain what kind of knowledge base (KB) an ontology is, how to build an ontology, and why this knowledge representation is important. To clarify and demonstrate why ontologies are useful, we present an example of a foundational ontology, briefly discussing its utility.
 
 The rest of the chapter is about reasoning on ontologies; we discuss the semantics of the formal language used to represent knowledge, what we mean when saying interpretation of a KB, and the complexity of finding an interpretation.
 \section{Knowledge Base}
@@ -53,7 +53,7 @@ In the Semantic Web context, ontologies are a main vehicle for data integration,
 
 In a more commercial scenario, an ontology can be used as a translation layer between different databases or software that are built by different teams and use different vocabularies.
 
-In the machine learning field an ontology could be used to support the sharing and reuse of formally represented knowledge among AI systems\cite{gruber1993translation}. In the last years, we have become used to training AI agents on unstructured data, but formal knowledge can help to fine-tune these models or to check their answers.
+In the machine learning field an ontology could be used to support the sharing and reuse of formally represented knowledge among neuro-symbolic AI systems\cite{gruber1993translation}.
 
 \section{Example ontologies}
 To help understanding the structure of ontologies and to show a practical example of ontology, we present two ontologies: a simple ontology about family relationships and DOLCE, a foundational ontology.
@@ -64,7 +64,7 @@ This simple ontology about parental relationships shows the basic structure of a
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.9\linewidth]{ontology/people}
+	\includegraphics[width=\linewidth]{ontology/people}
 	\caption{Graph for T-Box}
 	\label{fig:ont_people}
 \end{figure}
@@ -94,7 +94,7 @@ OWL gives us constructs for all of these specifications (and other more complex 
 	\caption{Simpson family tree}
 	\label{fig:ont_tree}
 \end{wrapfigure}
-Now we can populate the ontology by adding individuals and relations between individuals. For this small example we take inspiration from the Simpson family, and in the family tree on the right we can see the small portion of the family represented. To show what we mean by open world assumption we have asserted that Jackie is a married person even if in our representation there is no husband.
+Now we can populate the ontology by adding individuals and relations between individuals. For this small example we take inspiration from the Simpson family, and in the family tree (Figure \ref{fig:ont_tree} on the right) we can see the small portion of the family represented. To show what we mean by open world assumption we have asserted that Jackie is a married person even if in our representation there is no husband.
 
 Our ontology covers a small domain, the types of entities that populate our model are very limited; the next example shows the commitment of engineering an ontology to represent virtually anything in the universe.
 
@@ -113,7 +113,7 @@ Another important aspect of DOLCE is the way we attribute a property to an entit
 
 \paragraph{Importance of DOLCE:} foundational ontologies can be useful in several fields, from conceptual modeling to natural language processing. DOLCE, today, is used in a variety of domains where it provides the general categories and relations needed to give a coherent view of reality\cite{borgo2022dolce}.
 
-\section{Rerasoning on ontology}
+\section{Reasoning on ontology}
 In \ref{sec:owl} we have introduced the standard language to encode an ontology; in order to infer new information, starting from the one we already have, we need to better specify the semantics of OWL DL.
 
 \subsection{\dl{SROIQ} DL}
@@ -194,7 +194,7 @@ To discuss the complexity of reasoning we take into account the description logi
 
 This result shows that, unless $\text{PSpace} = \text{PTime}$, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved .
 
-For those interested in some numerical examples to better understand what this class of complexity means in a real context, \cite{glimm2014hermit} presents the reasoner HermiT\footnote{\url{http://www.hermit-reasoner.com/}.} and evaluates its performance on some real ontologies.
+For those interested in some numerical examples to better understand what this class of complexity means in a real context, \cite{glimm2014hermit} presents the reasoner HermiT and evaluates its performance on some real ontologies.
 
 \section{Conclusions}
 In this chapter we have explained what an ontology is and we have motivated the interest in this field. We have shown both theoretically and with examples what can be expressed in an ontology and what cannot. We have formally defined what the interpretation of a KB is and showed what a query and its results are.
