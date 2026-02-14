@@ -41,9 +41,31 @@ Programming in Prolog consist in:
 	\item asking question (\emph{query}) about objects and their relationship.
 \end{itemize}
 
-From these characteristics we can understand what means \say{declarative}: the program is a list of statements about our problem (our domain of interest). Moreover, Prolog is a logic programming language, this means that the core of programming is not  tell to the computer what to do, but telling it what is true and asking it to try and draw conclusion\cite{clocksin2003programming}. The idea behind logic programming are very interesting, for more details \cite{kowalski1982logic} and \cite{hogger1984introduction} are recommended.
+From these characteristics we can understand what means \say{declarative}: the program is a list of statements about our problem (our domain of interest); the relation between a Prolog program and an ontology is very strict, in Prolog we encode a knowledge base made of facts and rules, in \ref{} we can see a complete example of rewriting from an OWL ontology in a Prolog KB. Moreover, Prolog is a logic programming language, this means that the core of programming is not  tell to the computer what to do, but telling it what is true and asking it to try and draw conclusion\cite{clocksin2003programming}. The idea behind logic programming are very interesting, for more details \cite{kowalski1982logic} and \cite{hogger1984introduction} are recommended.
 
+\paragraph{Example:} In the following listing, adapted from \cite{learn_prolog_now_online}, we present a basic Prolog program in order to show the syntax and the usage of query. 
+\begin{listing}[h]
+	\begin{minted}{Prolog}
+sings(mia).
+listens2Music(yolanda).
+party.
 
+dance(yolanda):- listens2Music(yolanda).
+happy(yolanda):- dance(yolanda).
+happy(mia):- sings(mia).
+
+smile(X) :- happy(X).
+	\end{minted}
+	\caption{text}
+\end{listing}
+
+The first three lines are facts, we are asserting that Yolanda is listening to music, Mia is singing and there is a party. Other lines are rules, we can identify rules by the \mintinline{prolog}|:-| sign that divides the \emph{head} of the rule, on the left, from the \emph{body} on the right. The head of a rule is true if the body is true.
+
+For example rule at line seven can be read as: \say{If Mia is singing, therefore Mia is happy}. Line nine shows the usage of variable, variables starts with uppercase letter and are placeholders for information; we can read this rule as \say{if someone is happy, he smiles}.
+
+We can query our KB asking for example if Yolanda is happy. In SWI-Prolog\cite{wielemaker2011tplp} we can interact with the interpreter and the query we evaluate is: \mintinline{text}|?- happy(yolanda).| (the full stop is part of the syntax and tell to the interpreter that the query is complete).  Prolog will answer \mintinline{text}|yes.|, this is because Yolanda is listening to music, but if she is listening to music she dances end if she dances she is happy.
+
+For analogous reasoning it should be clear wy the result of \mintinline{text}|?- smile(X).| is \mintinline{text}|X = mia; X = yolanda.| where \mintinline{text}|;| means logical distinction: \emph{or}.
 
 \subsection{Feature of QA-Prolog}
 QA-Prolog doesn't support all the feature of Prolog, but enough to make it possible basic logic programming\cite{pakin2018performing}.
@@ -53,6 +75,101 @@ supports arithmetic and relational operation and rules can reference other rules
 
 QA-Prolog support also some feature not presents in the basic version of Prolog, In particular, operations can be performed on variables even before they are ground\cite{pakin2018performing}, this mean that QA-Prolog is more powerful in manipulating free variables.
 \section{Pipeline}
+We are now ready to descrobe the pipeline of transformation that bring us from a Prolog program to a Haniltonian $\mathbf{H}_f$.
+
+The chain of transformations is shown in Figure \ref{fig:pipeline}, where the last step (in orange) is the quantum annealer capable of finding the ground state of  $\mathbf{H}_f$. In purple we can see the various file format trough the pipeline and in yellow the software that make the rewrite. Some of these software are made ad hoc for the QA-Prolog pipeline other are also used in very different field.
+
+\begin{wrapfigure}[10]{r}{.4\linewidth}
+	\centering
+	\includegraphics[width=.8\linewidth]{qa_prolog/pipeline}
+	\caption{QA-Prolog pipeline}
+	\label{fig:pipeline}
+\end{wrapfigure}
+
+From a high level point of view the pipeline rewrite the initial knowledge base expressed in Prolog in different objects. The logical meaning of the entities we will build during the pipeline are:
+\begin{enumerate}
+	\item Prolog program (KB); 
+	\item Hight level digital circuit in Verilog;
+	\item Low level digital circuit in EDIF;
+	\item Symbolic Hamiltonian;
+	\item Physical Hamiltonian.
+\end{enumerate}
+\vspace{.2cm}
+Let' start analizing the pipeline starting from the last step, the one nearest to the QPU.
+
+\subsection{QMASM}
+QMASM is a quantum macro assembler\cite{pakin2016quantum}, it processes a symbolic Hamiltonian and assemble a physical Hamiltonian that can be immediatly embedded on a D-Wave quantum annealer. It is developed by Scott Pakin with the goal of filling a gap in tools for creation of D-Wave programs. QMASM is an abstraction layer the allows the programmer to not care about manually setting specific point weights and coupler strengths on the physical topology. 
+
+This software can be considered an assembler in the sense that maps a symbolic representation of the operation (assembly language) to the machine language. QMASM is not only an assebler, but extends his functionalities by including macro: named blocks of assembly language, parameterized, that a program can instantiate multiple times\cite{pakin2016quantum}.
+
+\paragraph{Feature:} QMASM provides a number of features to simplify low-level D-Wave programming\cite{pakin2016quantum}, but not only, we can also use QMASM to assemble a physical Hamiltonian that we can later manipulate or solve both using classical method or other quantum system.
+
+Some of the most useful and interesting feature of QMASM are:
+\begin{itemize}
+	\item \emph{qubits} are referenced symbolically, not numerically, both	in the source code and when QMASM reports execution results;
+	\item \emph{qubits} can be pinned to \mintinline{text}|true| or \mintinline{text}|false|;
+	\item \emph{qubit} patterns can be encapsulated into macros	and instantiated repeatedly;
+	\item groups of macros can be encapsulated into libraries and reused across multiple programs;
+	\item QMASM can automatically exlude from the results the solution know to be incorrect;
+	\item the programmer can select the \say{interesting} \emph{qubits} and these are the only ones reported in the results.
+\end{itemize}
+
+Thanks to this set of features QMASM is already a useful abstraction layer that simplify the development of program that target an annealer classical or quantum.
+
+\paragraph{Example:} Let's consider an example that show the potentiality of QMASm and that is useful also for the following steps of the pipeline. The satisfability problem is well known to be an NP-complete problem\cite{bibid}, so is a good candidate for our example. We take in account the simple formula:
+
+\begin{equation}
+	y = x_1 \land \neg(x_2 \lor x_3)
+\end{equation}
+
+Thanks to QMASM we can define macros for every logical operator needed to represent the formula and then assemble the final formula calling the macros.
+
+\begin{listing}[h]
+\begin{minipage}{.3\linewidth}
+		\begin{minted}[linenos=false]{text}
+# Y = A AND B
+!begin_macro AND
+	!assert Y = A&B
+	A -0.5
+	B -0.5
+	Y  1
+	
+	A B  0.5
+	A Y -1
+	B Y -1
+!end_macro AND
+		\end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}{.3\linewidth}
+	\begin{minted}[linenos=false]{text}
+# Y = NOT A
+!begin_macro NOT
+	!assert Y = !A
+	A Y 1.0
+!end_macro NOT
+	\end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}{.3\linewidth}
+	\begin{minted}[linenos=false]{text}
+# Y = A OR B
+!begin_macro OR
+	!assert Y = A|B
+	A  0.5
+	B  0.5
+	Y -1
+	
+	A B  0.5
+	A Y -1
+	B Y -1
+!end_macro OR
+	\end{minted}
+\end{minipage}
+\caption{Logical operators}
+\end{listing}
+
+
 \section{Update to the project}
 \section{Related Work}
 \section{Conclusion}
