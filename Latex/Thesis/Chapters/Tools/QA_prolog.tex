@@ -116,27 +116,27 @@ Some of the most useful and interesting feature of QMASM are:
 
 Thanks to this set of features QMASM is already a useful abstraction layer that simplify the development of program that target an annealer classical or quantum.
 
-\paragraph{Example:} Let's consider an example that show the potentiality of QMASm and that is useful also for the following steps of the pipeline. The satisfability problem is well known to be an NP-complete problem\cite{bibid}, so is a good candidate for our example. We take in account the simple formula:
+\paragraph{Example:} Let's consider an example that show the potentiality of QMASm and that is useful also for the following steps of the pipeline. The satisfiability problem is well known to be an NP-complete problem\cite{bibid}, so is a good candidate for our example. We take in account the simple formula:
 
 \begin{equation}
 	y = x_1 \land \neg(x_2 \lor x_3)
 \end{equation}
 
-Thanks to QMASM we can define macros for every logical operator needed to represent the formula and then assemble the final formula calling the macros.
+QMASM allow us to define a macro for every logical operator needed to represent the formula and then assemble the final formula calling these macros. In the following listings we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Wheigts are specified as an Ising problem \ref{label} that is the default format for QMASM source file\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}}.
 
 \begin{listing}[h]
 \begin{minipage}{.3\linewidth}
 		\begin{minted}[linenos=false]{text}
 # Y = A AND B
 !begin_macro AND
-	!assert Y = A&B
-	A -0.5
-	B -0.5
-	Y  1
+	!assert $Y = $A&$B
+	$A -0.5
+	$B -0.5
+	$Y  1
 	
-	A B  0.5
-	A Y -1
-	B Y -1
+	$A $B  0.5
+	$A $Y -1
+	$B $Y -1
 !end_macro AND
 		\end{minted}
 \end{minipage}
@@ -145,8 +145,8 @@ Thanks to QMASM we can define macros for every logical operator needed to repres
 	\begin{minted}[linenos=false]{text}
 # Y = NOT A
 !begin_macro NOT
-	!assert Y = !A
-	A Y 1.0
+	!assert $Y = !$A
+	$A $Y 1.0
 !end_macro NOT
 	\end{minted}
 \end{minipage}
@@ -155,21 +155,95 @@ Thanks to QMASM we can define macros for every logical operator needed to repres
 	\begin{minted}[linenos=false]{text}
 # Y = A OR B
 !begin_macro OR
-	!assert Y = A|B
-	A  0.5
-	B  0.5
-	Y -1
+	!assert $Y = $A|$B
+	$A  0.5
+	$B  0.5
+	$Y -1
 	
-	A B  0.5
-	A Y -1
-	B Y -1
+	$A $B  0.5
+	$A $Y -1
+	$B $Y -1
 !end_macro OR
 	\end{minted}
 \end{minipage}
 \caption{Logical operators}
+\label{lst:macro}
 \end{listing}
 
+There are multiple interesting detail about these macros:
+\begin{itemize}
+	\item the sign \mintinline{text}|#| tells QMASM that the following line is a comment and should not be processed;
+	\item the sign \mintinline{text}|$| is used to tag a \emph{qubit} as ancillary, this means that, unless explicitly requested by the programmer, the intermediate results are not reported in the solutions;
+	\item compared with what we have done in listing \ref{lst:ising_ex}, defining weights is much easier and the result is more readable;
+	\item  thanks to the directive \mintinline{text}|!assert| we can inform QMASM about constraint on the solution, this directive does not change the weights, but allow the programmer to exclude from the solutions the ones surely incorrect.
+\end{itemize}
+It is possible to verify, for each macro in listings \ref{lst:macro}, that given a configuration of the input \emph{qubits} the value of  \mintinline{text}|Y| that minimize the energy corresponds to the output of the logic gate we are modeling.
 
+
+We can save this macros in a file named \mintinline{text}|gates.qmasm| and using to solve our problem. To compute the formula $y = x_1 \land \neg(x_2 \lor x_3)$ we will use some intermediate results, we start with $x_4 = (x_2 \lor x_3)$, then we apply the negation $x_5 = \neg  x_4$ lastly we compute the result as $y = x_1 \land x_5$. The QMASM code implementing this procedure is reported in listing \ref{lst:circ_sat_qmasm}.
+\begin{listing}[h]
+	\begin{minted}{text}
+# Solve a circuit-satisfiability problem.
+
+!include <gates>
+
+!use_macro OR x2_or_x3
+x2_or_x3.$A = x2
+x2_or_x3.$B = x3
+x2_or_x3.$Y = $x4
+
+!use_macro NOT not_x4
+not_x4.$A = $x4
+not_x4.$Y = $x5 
+
+!use_macro AND x1_and_x5
+x1_and_x5.$A = x1
+x1_and_x5.$B = $x5
+x1_and_x5.$Y = y
+	\end{minted}
+	\caption{Circuit satisfiability}
+	\label{lst:circ_sat_qmasm}
+\end{listing}
+
+Here we can see how to use a macro: we call the macro with \mintinline[escapeinside=@@]{text}|!use_macro @\textit{name}@| (es. line five), and then instantiate the \emph{qubits} defined in the macro with our actual \emph{qubits}; for example considering the  \mintinline{text}|!use_macro OR| at line five we can see that we use $x_2$ and $x_3$ as input and an ancillary \emph{qubit} $\$x_4$ as output. Another detail to point out is the directive \mintinline{text}|!include| (line three) that import all gates used in this source file.
+
+Finally, we can query the quantum annealer (or in this case a classical solver) to find a solution for our  satisfiability problem. To do so we pin the output variable $y$ to be sure that in the solution its value will be \mintinline{text}|true|. We can query the solver with:
+\begin{minted}[linenos=false]{text}
+qmasm --run --pin="y := true" --solver="sim_anneal" circ_sat.qmasm
+\end{minted}
+Where \mintinline{text}|circ_sat.qmasm| is the file name of our source code. 
+
+\begin{listing}
+	\begin{minted}{text}
+# x1 -->   12
+# x2 -->    3
+# x3 -->    4
+# y --> [True]
+Solution #1 (energy = -20.0000, tally = 642):
+
+Variable  Value
+--------  -----
+x1        True
+x2        False
+x3        False
+y         True
+	\end{minted}
+	\caption{Circuit satisfiability results}
+	\label{lst:qmasm_res}
+\end{listing}
+
+Results are reported in listing \ref{lst:qmasm_res}, here we can see that the solver has correctly founded the solution, but only 642 times over the default 1000 sample. This is caused by the stochastic nature of annealing, simulated or quantum; QMASM removed automatically the solution that do not respect the \mintinline{text}|!assert| directive or do not have the minimum energy.
+
+QMASM offer already some powerful abstraction to work with quantum annealer, now we add another two layer that allow a programming style far to similar with paradigm computer scientists are used to, but preserving a strong control over variable dimension therefore over number of \emph{qubits} used.
+
+\subsection{Yosys and edif2qmasm}
+We aggregate two steps of the pipeline for two reasons:
+\begin{itemize}
+	\item Yosys is not a tool developed for this pipeline and is used mostly to optimize the intermediate results of transformations;
+	\item Yosys and edif2qmasm work on the same logical entity: a digital circuit that, in these steps of the pipeline is converted into a symbolic Hamiltonian.
+\end{itemize}
+
+These steps of the pipeline took in input a Verilog program and transform it in a symbolic Hamiltonian. Verilog is 
 \section{Update to the project}
 \section{Related Work}
 \section{Conclusion}
