@@ -120,6 +120,7 @@ Thanks to this set of features QMASM is already a useful abstraction layer that 
 
 \begin{equation}
 	y = x_1 \land \neg(x_2 \lor x_3)
+	\label{eqn:simple_logic}
 \end{equation}
 
 QMASM allow us to define a macro for every logical operator needed to represent the formula and then assemble the final formula calling these macros. In the following listings we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Wheigts are specified as an Ising problem \ref{label} that is the default format for QMASM source file\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}}.
@@ -237,13 +238,53 @@ Results are reported in listing \ref{lst:qmasm_res}, here we can see that the so
 QMASM offer already some powerful abstraction to work with quantum annealer, now we add another two layer that allow a programming style far to similar with paradigm computer scientists are used to, but preserving a strong control over variable dimension therefore over number of \emph{qubits} used.
 
 \subsection{Yosys and edif2qmasm}
-We aggregate two steps of the pipeline for two reasons:
+These steps of the pipeline took in input a Verilog HDL (Hardware Description Language) program and transform it in a symbolic Hamiltonian. 
+
+We aggregate two steps because Yosys is not a tool developed for this pipeline and is used mostly to optimize the intermediate results of transformations. Also, Yosys and edif2qmasm work on the same logical entity: a digital circuit that, in these steps of the pipeline, is converted into a symbolic Hamiltonian.
+
+Verilog is a hardware description languages that offer different levels of design abstraction. The highest level is \say{behavioural} and uses programming constructs such as assignments, conditionals and while-loops. The lowest level is a connection of gates (netlists)~\cite{gordon1995semantic}. 
+
+Hardware description languages are not something that the majority of programmers are familiar with, but they offer some advantages to target a quantum annealer~\cite{pakin2019targeting}:
 \begin{itemize}
-	\item Yosys is not a tool developed for this pipeline and is used mostly to optimize the intermediate results of transformations;
-	\item Yosys and edif2qmasm work on the same logical entity: a digital circuit that, in these steps of the pipeline is converted into a symbolic Hamiltonian.
+	\item provide precise control over bit widths in order to not waste any \emph{qubit};
+	\item can be compiled to a small set of primitives: the gates we can define with QMASM.
 \end{itemize}
 
-These steps of the pipeline took in input a Verilog program and transform it in a symbolic Hamiltonian. Verilog is 
+In these steps of the pipeline we follow the same procedure used in the design of digital system: we start with using behavioural constructs then we generated automatically a netlist as the output of synthesisers. 
+
+The synthesiser used is Yosys~\cite{wolf2013yosys} the first free and open source software for Verilog HDL synthesis which supports the vast majority of synthesizable Verilog features.
+
+The two most useful features of Yosys are the possibility of specify a \emph{cell library}: the set of gates used to syntetize the netlist; and the use of  the external tool Berkeley ABC~\cite{brayton2010abc}(incorporated in Yosys)  providing additional code optimizations.
+
+Yosys lower a Verilog program to an EDIF netlist that use only a specifyed set of gates, then edif2qmasm lower the netlist into a symbolic Hamiltonian; these Hamiltonian uses a set of macros defining the energy for each type of gate Yosys can use\footnote{The actual set of gates extend the logical ports \emph{and}, \emph{or}, and \emph{not} and is available at: \url{https://github.com/lanl/edif2qmasm/blob/master/stdcell.qmasm}}. What we end with is a symbolic Hamiltonian tha can be used as input for QMASM.
+
+\paragraph{Example:} Considering again the simple formula \ref{eqn:simple_logic}
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Original graph]
+	{\label{fig:isisng_ex_gr}
+		\begin{minipage}{.45\linewidth}
+			\vspace{1.5cm}
+			\inputminted{Verilog}{code/qa_prolog/sat.vl}
+		\end{minipage}
+	} \qquad
+	\subfloat[Corresponding matrix]
+	{
+		\label{fig:ising_esx_mx}%
+		\includegraphics[width=.45\linewidth]{qa_prolog/sat_net}
+	}
+	\\
+	\vspace{-2cm}
+	\hspace{.45\linewidth}\qquad \subfloat[Corresponding matrix]
+	{
+	\label{fig:ising_sesx_mx}%
+	
+	\includegraphics[width=.45\linewidth]{qa_prolog/sat_circ}
+	}
+	\caption{Ising formulation}
+	\label{fig:isings_ex}
+\end{figure}
 \section{Update to the project}
 \section{Related Work}
 \section{Conclusion}
