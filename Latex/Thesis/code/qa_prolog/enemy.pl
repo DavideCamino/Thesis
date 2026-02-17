@@ -1,9 +1,9 @@
 hates(alice, bob).
 hates(bob, charlie).
 
-enemy(A, B) :- hates(A, B).
-enemy(A, B) :- hates(B, A).
+enemy(X, Y) :- hates(X, Y).
+enemy(X, Y) :- hates(Y, X).
 
-friend(A, B) :- 
-	enemy(A, C),
-	enemy(C, B).
+friend(X, Y) :- 
+	enemy(X, Z),
+	enemy(Z, Y).
