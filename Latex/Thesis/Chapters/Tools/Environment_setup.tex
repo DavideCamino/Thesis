@@ -8,20 +8,30 @@ In the following sections we install the SDKs to develop and interact with quant
 The language used to interface with quantum computers is usually Python. In this section we create a virtual environment in Python in order to communicate with the IBM quantum computer and the D-Wave quantum computer.
 
 For our tests we manage Python environments with \mintinline{sh}|conda|. Let's start by creating the virtual environment named \mintinline{sh}|quantum| and activating it with:
-\begin{minted}{sh}
-conda create --name quantum python=3.12 pip
-conda activate quantum
-\end{minted}
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.8\linewidth}
+		\begin{minted}[linenos=false]{text}
+$ conda create --name quantum python=3.12 pip
+$ conda activate quantum
+		\end{minted}
+	\end{minipage}
+\end{center}
 For our tests and to follow the various examples presented both by IBM and D-Wave, it is also useful to be able to run a Jupyter notebook. We can install Jupyter with:
-\begin{minted}{sh}
-pip install jupyter
-\end{minted}
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.6\linewidth}
+		\begin{minted}[linenos=false]{text}
+$ pip install jupyter
+		\end{minted}
+	\end{minipage}
+\end{center}
 
 \section{IBM Qiskit}
-To program a gate-based architecture and to access IBM quantum computers we use the \emph{Qiskit} software stack. The name Qiskit is a general term referring to a collection of softwares for executing programs on quantum computers.
-\begin{figure}[H]
+To program a gate-based architecture and to access IBM quantum computers we use the \emph{Qiskit} software stack. The name Qiskit is a general term referring to a collection of software for executing programs on quantum computers.
+\begin{figure}[h]
 	\centering
-	\includegraphics[width=.95\linewidth]{setup/overview-image}
+	\includegraphics[width=.9\linewidth]{setup/overview-image}
 	\caption{Qiskit software stack}
 	\label{fig:qiskit_overview}
 \end{figure}
@@ -30,56 +40,40 @@ The core components are \emph{Qiskit SDK} and \emph{Qiskit Runtime}. The first o
 
 \subsection{Hello World}
 Following the IBM documentation\footnote{https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit} we can install the SDK and the Runtime with:
-\begin{minted}{text}
-pip install qiskit matplotlib qiskit[visualization]
-pip install qiskit-ibm-runtime
-pip install qiskit-aer
-\end{minted}
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.8\linewidth}
+		\begin{minted}[linenos=false]{text}
+$ pip install qiskit matplotlib qiskit[visualization]
+$ pip install qiskit-ibm-runtime
+$ pip install qiskit-aer
+		\end{minted}
+	\end{minipage}
+\end{center}
 
-Line $3$ installs Aer, which is a high-performance simulator for quantum circuits written in Qiskit. Aer includes realistic noise models, and we will use it later to test our circuit.
+Last command installs Aer, which is a high-performance simulator for quantum circuits written in Qiskit. Aer includes realistic noise models, and we will use it later to test our circuit.
 
 Sometimes the Qiskit stack suffers from incompatibilities between the various software components that compose the environment. At the moment of writing, the latest packages seem to work without any problem. For our tests we will use \mintinline{py}|qiskit: 2.2.3|, \mintinline{py}|qiskit-ibm-runtime: 0.43.1| and \mintinline{py}|qiskit-aer: 0.17.2|.
 
 If the setup is successful we are now able to run a small test to build a Bell state (two entangled qubits). The following code assembles the gates, shows the final circuit and uses a sampler to simulate on the CPU the result of $1024$ runs of the program.
 
-\begin{listing}[H]
-	\begin{minted}{py}
-from qiskit import QuantumCircuit
-from qiskit.primitives import StatevectorSampler
-
-qc = QuantumCircuit(2)
-qc.h(0)
-qc.cx(0, 1)
-qc.measure_all()
-
-sampler = StatevectorSampler()
-result = sampler.run([qc], shots=1024).result()
-print(result[0].data.meas.get_counts())
-qc.draw("mpl")
-	\end{minted}
-	\label{lst:hello_qiskit}
+\begin{listing}[h]
+	\mylisting{.8}{py}{code/setup/hello_qiskit.py}
 	\caption{Building Bell state}
+	\label{lst:hello_qiskit}
 \end{listing}
 
 \subsection{Transpilation}
 Each Quantum Processing Unit (QPU) has a specific topology. We need to rewrite our quantum circuit in order to match the topology of the selected device on which we want to run our program. This phase of rewriting, followed by an optimization, is called transpilation.
 
-Considering, for now, a fake hardware (so we do not need an API key) we can transpile the quantum circuit \mintinline{py}|qc|, from the code above, to match the topology of a specific QPU:
-\begin{listing}[H]
-	\begin{minted}{py}
-from qiskit_ibm_runtime.fake_provider import FakeWashingtonV2
-from qiskit.transpiler import generate_preset_pass_manager
+Considering, for now, a fake hardware (so we do not need an API key) we can transpile the quantum circuit \mintinline{py}|qc|, from the code above, to match the topology of a specific QPU. Listing \ref{lst:transpilation} implement the transpilantion, and Figure \ref{fig:qc_transpilation} shows the circuits generated: (\hyperref[fig:qc_orig]{a}) is the circuit whe have defined in Listing \ref{lst:hello_qiskit} and (\hyperref[fig:qc_trans]{b}) is the transpiled version where the Hadamard gate is replaced to match the actual topology of the QPU.
 
-backend = FakeWashingtonV2()
-pass_manager = generate_preset_pass_manager(backend=backend)
-
-transpiled = pass_manager.run(qc)
-transpiled.draw("mpl")
-	\end{minted}
-	\label{lst:transpilation}
+\begin{listing}[h]
+	\mylisting{.85}{py}{code/setup/transpilation.py}
 	\caption{Transpilation}
+	\label{lst:transpilation}
 \end{listing}
-The following picture shows (\ref{fig:qc_orig}) the quantum circuit that builds a Bell state, and (\ref{fig:qc_trans}) the transpiled version where the Hadamard gate is replaced to match the actual topology of the QPU.
+
 \begin{figure}[h]
 	\centering
 	\subfloat[Original circuit]
@@ -93,27 +87,24 @@ The following picture shows (\ref{fig:qc_orig}) the quantum circuit that builds 
 \end{figure}
 
 \subsection{Execution}
-To test our transpiled circuit we use Aer, which allows us to simulate also the noise of real quantum hardware. We can execute our program with:
-\begin{listing}[H]
-	\begin{minted}{py}
-from qiskit_aer.primitives import SamplerV2
-
-sampler = SamplerV2.from_backend(backend)
-job = sampler.run([transpiled], shots=1024)
-result = job.result()
-print(f"counts for Bell circuit : {result[0].data.meas.get_counts()}")
-	\end{minted}
+To test our transpiled circuit we use Aer, which allows us to simulate also the noise of real quantum hardware. Listing \ref{lst:execution} shows how to simulate the execution.
+\begin{listing}[h]
+	\mylisting{.9}{py}{code/setup/gate_execution.py}
 	\caption{Simulated execution}
 	\label{lst:execution}
 \end{listing}
 
 If we look at the results of the execution we can observe that some answers present non-entangled qubits; this is caused by the (simulated) noise of the quantum device. A typical output of the execution could be:
-\begin{minted}{text}
-> counts for Bell circuit : {'00': 504, '11': 503, '01': 10, '10': 7}
-\end{minted}
-Where states \mintinline{text}|01| and \mintinline{text}|10| should not be present in an ideal execution with no errors.
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.9\linewidth}
+		\begin{minted}[linenos=false]{text}
+> counts Bell circuit: {'00': 504, '11': 503, '01': 10, '10': 7}
+		\end{minted}
+	\end{minipage}
+\end{center}
 
-\subsection{A complete example on real hardware}
+Where states \mintinline{text}|01| and \mintinline{text}|10| should not be present in an ideal execution with no errors.
 
 \section{D-Wave Ocean}
 \label{sec:ocean}
@@ -126,9 +117,14 @@ To define an optimization problem that can be solved on a D-Wave quantum compute
 \end{figure}
 
 All tools that implement the steps needed to solve your problem on a CPU, a D-Wave quantum computer, or a quantum-classical hybrid solver can be installed with:
-\begin{minted}{text}
-pip install dwave-ocean-sdk
-\end{minted}
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.6\linewidth}
+		\begin{minted}[linenos=false]{text}
+$ pip install dwave-ocean-sdk
+		\end{minted}
+	\end{minipage}
+\end{center}
 
 After the installation, running the command \mintinline{sh}|dwave setup| will start an interactive prompt that guides us through a full setup. During the setup it is also possible to add an API token or connect to the D-Wave account to import a key directly to use the quantum hardware.
 
@@ -194,29 +190,24 @@ The figure shows an example graph (\ref{fig:ising_ex_gr}) and the corresponding 
 
 The following code presents a possible implementation of the Ising model described above. We have defined two dictionaries to store the matrix coefficients. The last line of code finds ten possible answers to the problem using the simulated annealing function implemented by D-Wave.
 \begin{listing}[H]
-	\begin{minted}{py}
-from dwave.samplers import SimulatedAnnealingSampler
-linear = {'A': 1, 'B': 1, 'C': 1, 'D': 1, 'E': 1, 'F': 1}
-quadratic = {('B', 'C'): 2, ('B', 'F'): 2, ('C', 'A'): 2, ('D', 'A'): 2, ('E', 'D'): 2, ('E', 'F'): 2, ('F', 'A'): 2}
-sampler = SimulatedAnnealingSampler()
-result = sampler.sample_ising(linear, quadratic, num_reads=10)
-	\end{minted}
+	\mylisting{.9}{py}{code/setup/ising_ex.py}
 	\caption{Ising example}
 	\label{lst:ising_ex}
 \end{listing}
 
 If we print the results with \mintinline{py}|print(result.aggregate())| we can observe something similar to this:
-\begin{minted}{text}
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.6\linewidth}
+		\begin{minted}[linenos=false]{text}
 	A  B  C  D  E  F energy num_oc.
 0 -1 -1 +1 +1 -1 +1  -14.0       6
 1 +1 +1 -1 -1 +1 -1  -14.0       4
 ['SPIN', 2 rows, 10 samples, 6 variables]
-\end{minted}
+		\end{minted}
+	\end{minipage}
+\end{center}
 The two different results represent the two correct answers to our particular instance of the MVC problem.
-
-\subsection{Example on real hardware}
-
-\subsection{Minor embedding}
 
 \section{PyQUBO and qubovert}
 In listing \ref{lst:ising_ex} we have manually built the matrix representing the function that we want to minimize. It can be useful to have some tools that allow us to work at a higher level, defining cost functions like \ref{asd} that we defined in the section about quantum annealing (\ref{asd}).
@@ -232,31 +223,9 @@ Reading from the documentation on the PyQUBO site\footnote{\url{https://pyqubo.r
 	\item Placeholder for parameter tuning.
 \end{itemize}
 
-We can install PyQUBO with \mintinline{text}|pip install pyqubo| and rewrite our MVC problem by defining the Hamiltonian that we want to minimize.
-\begin{listing}[H]
-	\begin{minted}{py}
-from pyqubo import Binary, Placeholder, Constraint
-from dwave.samplers import SimulatedAnnealingSampler
-
-A, B, C, D, E, F  = Binary('A'), Binary('B'), Binary('C'), Binary('D'), Binary('E'), Binary('F')
-
-H_objective = (A + B + C + D + E + F)
-H_penalty = Constraint(((1 - A - C + A*C) +\
-(1 - A - D + A*D) +\
-(1 - A - F + A*F) +\
-(1 - B - C + B*C) +\
-(1 - B - F + B*F) +\
-(1 - D - E + D*E) +\
-(1 - E - F + E*F)) ,label='cnstr0')
-
-L = Placeholder('L')
-H = H_objective + L*H_penalty
-H_internal = H.compile()
-bqm = H_internal.to_bqm(feed_dict={'L': 2})
-
-sampler = SimulatedAnnealingSampler()
-result = sampler.sample(bqm, num_reads=10)
-	\end{minted}
+We can install PyQUBO with \mintinline{text}|$ pip install pyqubo| and rewrite our MVC problem by defining the Hamiltonian that we want to minimize.
+\begin{listing}[h]
+	\mylisting{.85}{py}{code/setup/mvc_pyqubo.py}
 	\caption{Rewriting MVC with pyQUBO}
 	\label{lst:MVC_pyQUBO}
 \end{listing}
@@ -278,28 +247,8 @@ Qubovert allows us to define various types of optimization problems that can be 
 
 In addition to generic models, qubovert has a library of famous NP-complete problems mapped to QUBO and Ising forms.
 
-\begin{listing}[H]
-	\begin{minted}{py}
-from qubovert import boolean_var
-from dwave.samplers import SimulatedAnnealingSampler
-
-A, B, C, D, E, F  = boolean_var('A'), boolean_var('B'), boolean_var('C'), boolean_var('D'), boolean_var('E'), boolean_var('F')
-
-model = A + B + C + D + E + F
-model.add_constraint_OR(A, C, lam=2)
-model.add_constraint_OR(A, D, lam=2)
-model.add_constraint_OR(A, F, lam=2)
-model.add_constraint_OR(B, C, lam=2)
-model.add_constraint_OR(B, F, lam=2)
-model.add_constraint_OR(D, E, lam=2)
-model.add_constraint_OR(E, F, lam=2)
-
-qubo = model.to_qubo()
-dwave_qubo = qubo.Q
-
-sampler = SimulatedAnnealingSampler()
-result = sampler.sample_qubo(dwave_qubo, num_reads=10)
-	\end{minted}
+\begin{listing}[h]
+	\mylisting{.85}{py}{code/setup/mvc_qubovert.py}
 	\caption{Rewriting MVC with qubovert}
 	\label{lst:MVC_qubovert}
 \end{listing}

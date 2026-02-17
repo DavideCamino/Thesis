@@ -43,18 +43,9 @@ From these characteristics we can understand what \say{declarative} means: the p
 
 \paragraph{Example:} In the following listing, adapted from \cite{learn_prolog_now_online}, we present a basic Prolog program in order to show the syntax and the usage of queries. 
 \begin{listing}[h]
-	\begin{minted}{Prolog}
-sings(mia).
-listens2Music(yolanda).
-party.
-
-dance(yolanda):- listens2Music(yolanda).
-happy(yolanda):- dance(yolanda).
-happy(mia):- sings(mia).
-
-smile(X) :- happy(X).
-	\end{minted}
+	\mylisting{.6}{prolog}{code/qa_prolog/prolog_kb1.pl}
 	\caption{text}
+	\label{lst:prolog_kb1}
 \end{listing}
 
 The first three lines are facts; we are asserting that Yolanda is listening to music, Mia is singing, and there is a party. The other lines are rules; we can identify rules by the \mintinline{prolog}|:-| sign that divides the \emph{head} of the rule, on the left, from the \emph{body} on the right. The head of a rule is true if the body is true.
@@ -116,8 +107,7 @@ Some of the most useful and interesting features of QMASM are:
 	\item \emph{qubits} can be pinned to \mintinline{text}|true| or \mintinline{text}|false|;
 	\item \emph{qubit} patterns can be encapsulated into macros and instantiated repeatedly;
 	\item groups of macros can be encapsulated into libraries and reused across multiple programs;
-	\item QMASM can automatically exclude from the results the solutions known to be incorrect;
-	\item the programmer can select the \say{interesting} \emph{qubits}, and these are the only ones reported in the results.
+	\item QMASM can automatically exclude from the results the solutions known to be incorrec and shows only \say{interesting} \emph{qubits};
 \end{itemize}
 
 Thanks to this set of features, QMASM is already a useful abstraction layer that simplifies the development of programs that target an annealer, classical or quantum.
@@ -129,53 +119,25 @@ Thanks to this set of features, QMASM is already a useful abstraction layer that
 	\label{eqn:simple_logic}
 \end{equation}
 
-QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings \ref{lst:macro} we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Weights are specified as an Ising problem \ref{label}, which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}}.
+\begin{figure}[h]
+	\centering
+	\subfloat[\emph{and} gate]
+	{\label{lst:and_gate}
+		\mylistingnonumber{.3}{text}{code/qa_prolog/and.qmasm}
+	}
+	\subfloat[\emph{not} gate]
+	{\label{lst:not_gate}
+		\mylistingnonumber{.3}{text}{code/qa_prolog/not.qmasm}
+	}
+	\subfloat[\emph{or} gate]
+	{\label{lst:or_gate}
+		\mylistingnonumber{.3}{text}{code/qa_prolog/or.qmasm}
+	}
+	\captionof{listing}{Logical operators}
+	\label{lst:macros}
+\end{figure}
 
-\begin{listing}[h]
-	\begin{minipage}{.3\linewidth}
-		\begin{minted}[linenos=false]{text}
-			# Y = A AND B
-			!begin_macro AND
-			!assert $Y = $A&$B
-			$A -0.5
-			$B -0.5
-			$Y  1
-			
-			$A $B  0.5
-			$A $Y -1
-			$B $Y -1
-			!end_macro AND
-		\end{minted}
-	\end{minipage}
-	\hfill
-	\begin{minipage}{.3\linewidth}
-		\begin{minted}[linenos=false]{text}
-			# Y = NOT A
-			!begin_macro NOT
-			!assert $Y = !$A
-			$A $Y 1.0
-			!end_macro NOT
-		\end{minted}
-	\end{minipage}
-	\hfill
-	\begin{minipage}{.3\linewidth}
-		\begin{minted}[linenos=false]{text}
-			# Y = A OR B
-			!begin_macro OR
-			!assert $Y = $A|$B
-			$A  0.5
-			$B  0.5
-			$Y -1
-			
-			$A $B  0.5
-			$A $Y -1
-			$B $Y -1
-			!end_macro OR
-		\end{minted}
-	\end{minipage}
-	\caption{Logical operators}
-	\label{lst:macro}
-\end{listing}
+QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings \ref{lst:macros} we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Weights are specified as an Ising problem \ref{label}, which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}}.
 
 There are multiple interesting details about these macros:
 \begin{itemize}
@@ -184,29 +146,11 @@ There are multiple interesting details about these macros:
 	\item compared with what we have done in listing \ref{lst:ising_ex}, defining weights is much easier and the result is more readable;
 	\item thanks to the directive \mintinline{text}|!assert| we can inform QMASM about constraints on the solution; this directive does not change the weights, but allows the programmer to exclude from the solutions those that are surely incorrect.
 \end{itemize}
-It is possible to verify, for each macro in listings \ref{lst:macro}, that given a configuration of the input \emph{qubits}, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling.
+It is possible to verify, for each macro in listings \ref{lst:macros}, that given a configuration of the input \emph{qubits}, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling.
 
-We can save these macros in a file named \mintinline{text}|gates.qmasm| and use it to solve our problem. To compute the formula $y = x_1 \land \neg(x_2 \lor x_3)$ we will use some intermediate results: we start with $x_4 = (x_2 \lor x_3)$, then we apply the negation $x_5 = \neg x_4$, and lastly we compute the result as $y = x_1 \land x_5$. The QMASM code implementing this procedure is reported in listing \ref{lst:circ_sat_qmasm}.
+We can save these macros in a file named \mintinline{text}|gates.qmasm| and use it to solve our problem. To compute the formula $y = x_1 \land \neg(x_2 \lor x_3)$ we will use some intermediate results: we start with $x_4 = (x_2 \lor x_3)$, then we apply the negation $x_5 = \neg x_4$, and lastly we compute the result as $y = x_1 \land x_5$. The QMASM code implementing this procedure is reported in Listing \ref{lst:circ_sat_qmasm}.
 \begin{listing}[h]
-	\begin{minted}{text}
-		# Solve a circuit-satisfiability problem.
-		
-		!include <gates>
-		
-		!use_macro OR x2_or_x3
-		x2_or_x3.$A = x2
-		x2_or_x3.$B = x3
-		x2_or_x3.$Y = $x4
-		
-		!use_macro NOT not_x4
-		not_x4.$A = $x4
-		not_x4.$Y = $x5 
-		
-		!use_macro AND x1_and_x5
-		x1_and_x5.$A = x1
-		x1_and_x5.$B = $x5
-		x1_and_x5.$Y = y
-	\end{minted}
+	\mylisting{.6}{text}{code/qa_prolog/circ_sat.qmasm}
 	\caption{Circuit satisfiability}
 	\label{lst:circ_sat_qmasm}
 \end{listing}
@@ -219,26 +163,13 @@ Finally, we can query the quantum annealer (or in this case a classical solver) 
 \end{minted}
 where \mintinline{text}|circ_sat.qmasm| is the file name of our source code. 
 
-\begin{listing}
-	\begin{minted}{text}
-		# x1 -->   12
-		# x2 -->    3
-		# x3 -->    4
-		# y --> [True]
-		Solution #1 (energy = -20.0000, tally = 642):
-		
-		Variable  Value
-		--------  -----
-		x1        True
-		x2        False
-		x3        False
-		y         True
-	\end{minted}
+Results are reported in listing \ref{lst:qmasm_res}. Here we can see that the solver has correctly found the solution, but only 642 times out of the default 1000 samples. This is caused by the stochastic nature of annealing, simulated or quantum; QMASM automatically removed the solutions that do not respect the \mintinline{text}|!assert| directive or do not have the minimum energy.
+
+\begin{listing}[h]
+	\mylistingnonumber{.7}{text}{code/qa_prolog/result.txt}
 	\caption{Circuit satisfiability results}
 	\label{lst:qmasm_res}
 \end{listing}
-
-Results are reported in listing \ref{lst:qmasm_res}. Here we can see that the solver has correctly found the solution, but only 642 times out of the default 1000 samples. This is caused by the stochastic nature of annealing, simulated or quantum; QMASM automatically removed the solutions that do not respect the \mintinline{text}|!assert| directive or do not have the minimum energy.
 
 QMASM already offers some powerful abstractions to work with quantum annealers; now we add two additional layers that allow a programming style more similar to the paradigms computer scientists are used to, while preserving strong control over variable dimensions and therefore over the number of \emph{qubits} used.
 
@@ -291,25 +222,9 @@ Yosys lowers a Verilog program to an EDIF netlist that uses only a specified set
 	\label{fig:yosys}
 \end{figure}
 
-Now we can feed the resulting netlist to edif2qmasm to obtain:
+Now we can feed the obtained netlist to edif2qmasm to obtain the code reported in Listing \ref{lst:circ_sat_yosys}.
 \begin{listing}[h]
-	\begin{minted}{text}
-		!include <stdcell>
-		
-		!begin_macro sat
-		!use_macro AND $id00006  # $auto$simplemap.cc:83:simplemap_bitop$83
-		!use_macro NOT $id00004  # $auto$simplemap.cc:38:simplemap_not$82
-		!use_macro OR $id00005  # $auto$simplemap.cc:83:simplemap_bitop$81
-		$id00004.A = $id00005.Y  # $or$sat.v:5$1_Y
-		$id00005.A = b
-		$id00005.B = c
-		$id00006.A = a
-		$id00006.B = $id00004.Y  # $not$sat.v:5$2_Y
-		$id00006.Y = y
-		!end_macro sat
-		
-		!use_macro sat sat
-	\end{minted}
+	\mylisting{.7}{text}{code/qa_prolog/sat_yosis.qmasm}
 	\caption{text}
 	\label{lst:circ_sat_yosys}
 \end{listing}
@@ -441,7 +356,7 @@ During the execution of the complete pipeline we encountered an error caused by 
 	\label{lst:qmasm_error}
 \end{figure}
 
-The error can be seen in Listings \ref{lst:qmasm_error}: edif2qmasm rewrites the netlist generated from (\hyperref[lst:error_verilog]{a}) into the macro (\hyperref[lst:error_def]{b}); here \mintinline{text}|hates/2| is just a comment, the actual name of the macro is \mintinline{text}|id00011|. In (\hyperref[lst:error_verilog]{c}), however, we can see that the macro previously defined is called symbolically and not with its actual name (lines $4$ and $5$). This obviously produces an error: the name \mintinline{text}|hates/2| in the QMASM file has no meaning, it is only a comment.
+The error can be seen in Listings \ref{lst:qmasm_error}: edif2qmasm rewrites the netlist generated from (\hyperref[lst:error_verilog]{a}) into the macro (\hyperref[lst:error_def]{b}); here \mintinline{text}|hates/2| is just a comment, the actual name of the macro is \mintinline{text}|id00011| (specified at line $2$). In (\hyperref[lst:error_verilog]{c}), however, we can see that the macro previously defined is called symbolically and not with its actual name (lines $3$). This obviously produces an error: the name \mintinline{text}|hates/2| in the QMASM file has no meaning, it is only a comment.
 
 \begin{listing}[h]
 	\inputminted{py}{code/qa_prolog/preprocess.py}

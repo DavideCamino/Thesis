@@ -23,13 +23,29 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 
-\definecolor{bg}{rgb}{.95, .95, .95}
+\definecolor{bg}{rgb}{.0, .95, .95}
 \setminted{
 	bgcolor=bg,
 	linenos,
 	tabsize=2,
 	breaklines=true,
 	fontsize=\small
+}
+
+\newcommand{\mylisting}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
+}
+
+\newcommand{\mylistingnonumber}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines, linenos=false]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
 }
 
 
