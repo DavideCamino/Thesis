@@ -74,7 +74,7 @@ If we want to check the first proposition we can orient the apparatus $\mathcal{
 	\item The $z$ component of the spin is $+1$ \emph{and} the $x$ component is $+1$.
 \end{itemize}
 
-Starting with the disjunction. Considering a state prepared, without our knowledge, with $\sigma_z = +1$. If our first measure is along the $z$ axis, $\mathcal{A}$ will always display $+1$ and we can immediately conclude that the proposition is true. If we start measuring the $x$ component, we have a $50\%$ chance that $\mathcal{A}$ displays $+1$ or $-1$; also this measurement destroys the initial state and the measure of $\sigma_z$ becomes non predictable. In this scenario we have a $25\%$ chance of deducing that the proposition is false; figure \ref{fig:tree_dis} shows all the possible measurement results in this case. The\marginpar{The disjunction is not commutative} logical value of a proposition depends on the order in which we perform the measurements.
+Starting with the disjunction. Considering a state prepared, without our knowledge, with $\sigma_z = +1$. If our first measure is along the $z$ axis, $\mathcal{A}$ will always display $+1$ and we can immediately conclude that the proposition is true. If we start measuring the $x$ component, we have a $50\%$ chance that $\mathcal{A}$ displays $+1$ or $-1$; also this measurement destroys the initial state and the measure of $\sigma_z$ becomes non predictable. In this scenario we have a $25\%$ chance of deducing that the proposition is false; Figure~\ref{fig:tree_dis} shows all the possible measurement results in this case. The\marginpar{The disjunction is not commutative} logical value of a proposition depends on the order in which we perform the measurements.
 
 \begin{figure}[h]
 	\centering
@@ -181,7 +181,7 @@ To express a vector we need a basis; we choose $\mathscr{B}=\Set{\Ket{u}, \Ket{d
 \[
 \Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}
 \]
-where $\alpha_u$ and $\alpha_d$ are the components of $\Ket{A}$ along $\Ket{u}$ and $\Ket{d}$, and can be obtained by projection: $\alpha_u = \Braket{u|A}$ and $\alpha_d = \Braket{d|A}$ (as in equation \ref{eqn:decomp}).
+where $\alpha_u$ and $\alpha_d$ are the components of $\Ket{A}$ along $\Ket{u}$ and $\Ket{d}$, and can be obtained by projection: $\alpha_u = \Braket{u|A}$ and $\alpha_d = \Braket{d|A}$ (as in Equation~\ref{eqn:decomp}).
 
 $\Ket{A}$\marginpar{Probability amplitudes} components are complex numbers and their physical meaning is: having a spin prepared in the state $\Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}$\footnote{From now on we use \say{prepared} or \say{measured} as synonyms: every measurement is invasive and can change the spin state, so no matter what was the previous state, after a measurement the state is the one we have measured.}; $\alpha_u^*\alpha_u$ is the probability of measuring $\sigma_z = +1$, while $\alpha_d^*\alpha_d$ is the probability that a measurement of $\sigma_z$ will yield $-1$. Formally we can denote the probability of measuring $+1$ and $-1$ as $P_u$ and $P_d$ respectively and write:
 \begin{align}
@@ -266,7 +266,7 @@ In quantum mechanics the situation is more complex; our intuition is misleading,
 	Machines associated with observables are described by linear operators.
 \end{axiom}
 
-We will show that machines are Hermitian operators, so let's start defining these operators and describing their properties\footnote{The reason why we need this kind of operator will be clear in \ref{sec:principles}.}.
+We will show that machines are Hermitian operators, so let's start defining these operators and describing their properties\footnote{The reason why we need this kind of operator will be clear in Section~\ref{sec:principles}.}.
 
 \subsection{Hermitian operator}
 \noindent Formally, machines modify a state vector in this way:
@@ -346,7 +346,7 @@ The\marginpar{Fundamental theorem} last three properties can be summed up in the
 \end{theorem} 
 
 \subsection{Principles of quantum mechanics}\label{sec:principles}
-Let's introduce the first four principles of quantum mechanics, the ones about observables\footnote{The fifth, and last one, concerns the temporal evolution. It will be discussed later on (\ref{sec:temp_evol}).}.
+Let's introduce the first four principles of quantum mechanics, the ones about observables\footnote{The fifth, and last one, concerns the temporal evolution. It will be discussed later on (Section~\ref{sec:temp_evol}).}.
 \begin{principles}
 	Observables in quantum mechanics are described by linear operators $\mathbf{L}$.
 \end{principles}
@@ -422,7 +422,7 @@ The solution of this system is\footnote{It is easy to verify that this operator 
 \end{pmatrix}.
 \]
 
-\paragraph{Operator $\boldsymbol{\sigma_x}$:} With the same reasoning, we can construct the operator along the $x$ axis. We have already deduced the representations of \emph{right} and \emph{left} in equations \ref{eqn:ket_r} and \vref{eqn:ket_l}. The equations that allow us to construct $\sigma_x$ are:
+\paragraph{Operator $\boldsymbol{\sigma_x}$:} With the same reasoning, we can construct the operator along the $x$ axis. We have already deduced the representations of \emph{right} and \emph{left} in Equations~\ref{eqn:ket_r}~and~\ref{eqn:ket_l}. The equations that allow us to construct $\sigma_x$ are:
 \begin{align*}
 	\begin{pmatrix}
 		(\sigma_x)_{11} &(\sigma_x)_{12}\\
@@ -458,7 +458,7 @@ The solution of this system is:
 \end{pmatrix}.
 \]
 
-\paragraph{Operator $\boldsymbol{\sigma_y}$:} The last direction is along the $y$ axis. Considering the expressions for \emph{in} and \emph{out} given in equations \ref{eqn:ket_i} and \vref{eqn:ket_o}, and following the second principle, we can write:
+\paragraph{Operator $\boldsymbol{\sigma_y}$:} The last direction is along the $y$ axis. Considering the expressions for \emph{in} and \emph{out} given in Equations~\ref{eqn:ket_i}~and~\ref{eqn:ket_o}, and following the second principle, we can write:
 \begin{gather*}
 	\sigma_y \Ket{i} = \Ket{i}\\
 	\sigma_y \Ket{o} = -\Ket{o}.
@@ -559,7 +559,7 @@ It should be pointed out that the theory is in agreement with experimental resul
 	P(-1) = |\Braket{u|\lambda_2}|^2 = \sin^2\frac{\theta}{2}
 \end{gather*}
 
-Lastly,\marginpar{Expectation value} let's calculate the average value for the measurement $\sigma_n$. From the first experiment we have seen in \ref{sec:spin}, we already know that the result of repeated measurements with $\mathcal{A}$ is $\cos\theta$. Let's verify if our model is coherent with the world.
+Lastly,\marginpar{Expectation value} let's calculate the average value for the measurement $\sigma_n$. From the first experiment we have seen in Section~\ref{sec:spin}, we already know that the result of repeated measurements with $\mathcal{A}$ is $\cos\theta$. Let's verify if our model is coherent with the world.
 
 Expected values are obtained as:
 \[
@@ -642,7 +642,7 @@ The\marginpar{Conservation of Distinctions} minus first law assures that during 
 \[
 \Braket{\Psi(t)|\Phi(t)} = 0 \qquad\qquad\forall t \geq 0.
 \]
-If we rewrite this equation using formula \ref{eqn:evol}, we obtain:
+If we rewrite this equation using Formula~\ref{eqn:evol}, we obtain:
 \[
 \Bra{\Psi(0)}\mathbf{U}^\dagger(t) \mathbf{U}(t)\Ket{\Phi(0)} = 0.
 \]
@@ -669,7 +669,7 @@ In\marginpar{Continuity} quantum mechanics we can follow the same path and consi
 \end{equation}
 For now, $i$ is a mere scale factor that later will help us recognize in $\mathbf{H}$ the quantum version of the classical Hamiltonian.
 
-We can now express the infinitesimal evolution of a quantum system by combining equations \ref{eqn:evol} and \ref{eqn:u_eps}:
+We can now express the infinitesimal evolution of a quantum system by combining Equations~\ref{eqn:evol}~and~\ref{eqn:u_eps}:
 \[
 \Ket{\Psi(\epsilon)} = \Ket{\Psi(0)} - i \epsilon\mathbf{H}\Ket{\Psi(0)}.
 \]
@@ -693,7 +693,7 @@ The equation becomes:\marginpar{\\ \  \\Time-dependent \\ Schrödinger equation}
 \end{equation}
 The constant $\hbar$ has units of $\sfrac{kg\cdot m^2}{s}$ and resolves the incompatibility between the two members. This equation is fundamental and is called the \emph{generalized Schrödinger equation}, or time-dependent Schrödinger equation. If we know the Hamiltonian of an undisturbed system, we can know the evolution of the state vector.
 
-If $\mathbf{H}$ represents the energy of the system, we should be able to measure it, so $\mathbf{H}$ has to be an observable. If $\mathbf{H}$ is an observable, it must be a Hermitian operator; let's verify it. Starting from \ref{eqn:unit} and substituting $\mathbf{U}$ with \ref{eqn:u_eps}, we obtain:
+If $\mathbf{H}$ represents the energy of the system, we should be able to measure it, so $\mathbf{H}$ has to be an observable. If $\mathbf{H}$ is an observable, it must be a Hermitian operator; let's verify it. Starting from Equation~\ref{eqn:unit} and substituting $\mathbf{U}$ with Expression~\ref{eqn:u_eps}, we obtain:
 \[
 (\mathbf{I} + i\epsilon\mathbf{H}^\dagger) (\mathbf{I} - i\epsilon\mathbf{H}) = \mathbf{I}.
 \]
@@ -714,7 +714,7 @@ The time derivative\footnote{Derivative of a product: $\mathbf{L}$ doesn't depen
 \frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \Braket{\dot{\Psi}(t)|\mathbf{L}|\Psi(t)} + \Braket{\Psi(t)|\mathbf{L}|\dot{\Psi}(t)}.
 \]
 
-Substituting bra and ket with the time-dependent Schrödinger equation~\ref{eqn:shro} (namely $\Ket{\dot{\Psi}(t)} = \frac{- i}{\hbar}\mathbf{H}\Ket{\Psi(t)}$), we obtain:
+Substituting bra and ket with the time-dependent Schrödinger Equation~\ref{eqn:shro} (namely $\Ket{\dot{\Psi}(t)} = \frac{- i}{\hbar}\mathbf{H}\Ket{\Psi(t)}$), we obtain:
 \[
 \frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \frac{i}{\hbar}\Braket{\Psi(t)|\mathbf{H}\mathbf{L}|\Psi(t)} - \frac{i}{\hbar} \Braket{\Psi(t)|\mathbf{L}\mathbf{H}|\Psi(t)}.
 \]
@@ -741,7 +741,7 @@ or equivalently:
 This equation links variations of the expectation values of an observable ($\mathbf{L}$) to the expectation values of another physical observable  ($-\frac{i}{\hbar}[\mathbf{L},\mathbf{H}]$)\footnote{It is possible to demonstrate that if $\mathbf{L}$ and $\mathbf{H}$ are Hermitian, then $[\mathbf{L}, \mathbf{H}]$ is also Hermitian.}.
 
 \subsection{Conservation of Energy}
-In quantum mechanics, when we say that a quantity is conserved, we mean that the expectation value of that quantity doesn't change. If we look at equation \ref{eqn:d_exp}, the condition for the expectation value not to change is that the commutator between this quantity and the Hamiltonian is zero. It is possible to demonstrate that:
+In quantum mechanics, when we say that a quantity is conserved, we mean that the expectation value of that quantity doesn't change. If we look at Equation~\ref{eqn:d_exp}, the condition for the expectation value not to change is that the commutator between this quantity and the Hamiltonian is zero. It is possible to demonstrate that:
 \begin{theorem}
 	Having an observable $\mathbf{Q}$, if $[\mathbf{Q},\mathbf{H}]=0$, then every power satisfies $[\mathbf{Q}^n,\mathbf{H}] = 0$. This means that the expectation value $\Braket{Q}$ is conserved, and any power of the expectation value $\Braket{Q^n}$ does not change with time.
 \end{theorem}
