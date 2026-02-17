@@ -1,4 +1,5 @@
 \chapter{Environment Setup}
+\label{ch:env}
 In this chapter we describe the environment, libraries and tools we use to execute our tests.
 
 In the following sections we install the SDKs to develop and interact with quantum computers from IBM and D-Wave. We also present two other useful tools to easily write optimization problems.
@@ -29,7 +30,7 @@ The core components are \emph{Qiskit SDK} and \emph{Qiskit Runtime}. The first o
 
 \subsection{Hello World}
 Following the IBM documentation\footnote{https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit} we can install the SDK and the Runtime with:
-\begin{minted}{sh}
+\begin{minted}{text}
 pip install qiskit matplotlib qiskit[visualization]
 pip install qiskit-ibm-runtime
 pip install qiskit-aer
@@ -115,6 +116,7 @@ Where states \mintinline{text}|01| and \mintinline{text}|10| should not be prese
 \subsection{A complete example on real hardware}
 
 \section{D-Wave Ocean}
+\label{sec:ocean}
 To define an optimization problem that can be solved on a D-Wave quantum computer we use the Ocean software stack. Ocean also allows us to interact with D-Wave hardware, submit a problem, and simulate the execution on a classical CPU.
 \begin{figure}[h]
 	\centering
@@ -124,7 +126,7 @@ To define an optimization problem that can be solved on a D-Wave quantum compute
 \end{figure}
 
 All tools that implement the steps needed to solve your problem on a CPU, a D-Wave quantum computer, or a quantum-classical hybrid solver can be installed with:
-\begin{minted}{sh}
+\begin{minted}{text}
 pip install dwave-ocean-sdk
 \end{minted}
 
@@ -230,7 +232,7 @@ Reading from the documentation on the PyQUBO site\footnote{\url{https://pyqubo.r
 	\item Placeholder for parameter tuning.
 \end{itemize}
 
-We can install PyQUBO with \mintinline{py}|pip install pyqubo| and rewrite our MVC problem by defining the Hamiltonian that we want to minimize.
+We can install PyQUBO with \mintinline{text}|pip install pyqubo| and rewrite our MVC problem by defining the Hamiltonian that we want to minimize.
 \begin{listing}[H]
 	\begin{minted}{py}
 from pyqubo import Binary, Placeholder, Constraint
