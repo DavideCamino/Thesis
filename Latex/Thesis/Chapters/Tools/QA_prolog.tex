@@ -112,7 +112,7 @@ Some of the most useful and interesting features of QMASM are:
 
 Thanks to this set of features, QMASM is already a useful abstraction layer that simplifies the development of programs that target an annealer, classical or quantum.
 
-\paragraph{Example:} Let us consider an example that shows the potential of QMASM and that is also useful for the following steps of the pipeline. The satisfiability problem is well known to be an NP-complete problem~\cite{bibid}, so it is a good candidate for our example. We take into account the simple formula:
+\paragraph{Example:} Let us consider an example that shows the potential of QMASM and that is also useful for the following steps of the pipeline. The satisfiability problem is well known to be an NP-complete problem~\cite{garey2002computers}, so it is a good candidate for our example. We take into account the simple formula:
 
 \begin{equation}
 	y = x_1 \land \neg(x_2 \lor x_3)
@@ -263,7 +263,7 @@ In this command we can see that QA-Prolog allows us to query the KB with the exa
 
 Another detail to point out is the parameter \mintinline[escapeinside=@@]{text}|--work-dir="@\textit{<path>}@"|, which specifies the folder in which QA-Prolog outputs all files, and the solver: we use a tabu search algorithm because the simulated annealing implemented in Ocean is not capable of finding a solution even in this small scenario (more considerations about that in the concluding Chapter~\ref{}).
 
-If we inspect the working directory we can see the output of every step of the pipeline; in particular, to see how exactly the KB is rewritten into a Verilog program, in Appendix~\ref{} there is the result of compilation, and it is possible to observe in detail how each fact or rule has been transformed.
+If we inspect the working directory we can see the output of every step of the pipeline; in particular, to see how exactly the KB is rewritten into a Verilog program, in Appendix~\ref{lst:qa_prolog_compilation} there is the result of compilation, and it is possible to observe in detail how each fact or rule has been transformed.
 
 The second example concludes our transformation of the satisfiability problem (Equation~\ref{eqn:simple_logic}); unfortunately, this is not very didactic because the Prolog program suitable for QA-Prolog processing introduces a consistent amount of overhead.
 
