@@ -68,7 +68,7 @@ QA-Prolog also supports some features not present in the basic version of Prolog
 \subsection{Related works}
 There are some other attempts to develop a high-level programming language for quantum computers, both for the quantum gate model and for quantum annealers. 
 
-\emph{Quantum Prolog}~\cite{james2011quantum} demonstrates that one can express the equivalent of a pure version of Prolog over finite relations in terms of a model of discrete quantum computing. This work targets quantum gate computers and focuses on the mathematical equivalence of relational programming and discrete quantum computing over the field of Booleans~\cite{pakin2018performing}.
+\emph{Quantum Prolog}~\cite{james2011quantum} demonstrates that one can express the equivalent of a pure version of Prolog over finite relations in terms of a model of discrete quantum computing. This work targets quantum gate computers and focuses on the mathematical equivalence of relational programming and discrete quantum computing over the field of Booleans~\cite{pakin2018performing}. Quantum Prolog, however, remains a theoretical work that has the goal of proves some mathematical properties, there is no implementation and therefore is not suitable to run experiments.
 
 \emph{C to D-Wave}~\cite{hassan2019c} reuses the pipeline we will discuss, replacing the starting step. The paper addresses the difficulty of programming quantum annealers by presenting a compilation framework that compiles a subset of C code into quantum machine instructions to be executed on a quantum annealer.
 
@@ -173,6 +173,8 @@ qmasm --run --pin="y := true" --solver="sim_anneal" circ_sat.qmasm
 \end{center}
 where \mintinline{text}|circ_sat.qmasm| is the file name of our source code. 
 
+QMASM interfaces directly with the Ocean framework and can query one of the solvers made available by D-Wave. Retrieving the solutions results in a call to Ocean’s library functions very similar to the one shown in Listing~\ref{lst:ising_ex} on line~5. QMASM also offers the possibility to set the annealing time and the number of reads directly from the command line; in this case, the default values were used, which are the default annealing time stetted by D-Wave for the specific solver and $1000$ samples, respectively.
+
 Results are reported in Listing~\ref{lst:qmasm_res}. Here we can see that the solver has correctly found the solution, but only $642$ times out of the default $1000$ samples. This is caused by the stochastic nature of annealing, simulated or quantum. QMASM automatically removed the solutions that do not respect the \mintinline{text}|!assert| directive or do not have the minimum energy.
 
 \begin{listing}[h]
@@ -273,7 +275,7 @@ We can now query the KB to find if there are two people who are friends with:
 
 In this command we can see that QA-Prolog allows us to query the KB with the exact same syntax we would use to interact with a Prolog interpreter. As expected, QA-Prolog \emph{binds} the variables \mintinline{text}|P1| and \mintinline{text}|P2| to Alice and Charlie.
 
-Another detail to point out is the parameter \mintinline[escapeinside=@@]{text}|--work-dir="@\textit{<path>}@"|, which specifies the folder in which QA-Prolog outputs all files and the solver: we use a \emph{tabu search algorithm} because the simulated annealing implemented in Ocean is not capable of finding a solution even in this small scenario (more considerations about that in Chapter~\ref{}).
+Another detail to point out is the parameter \mintinline[escapeinside=@@]{text}|--work-dir="@\textit{<path>}@"|, which specifies the folder in which QA-Prolog outputs all files and the solver: we use a \emph{tabu search algorithm} because the simulated annealing implemented in Ocean is not capable of finding a solution even in this small scenario (more considerations about that in Chapter~\ref{}). From the study reported in \cite{zhang2010measuring}, we can observe that real-world ontologies define a number of classes, individuals, and properties\footnote{That we will transform in facts and rules in Chapter~\ref{label}.} that can be on the order of hundreds of thousands.
 
 If we inspect the working directory we can see the output of every step of the pipeline; in particular, to see how exactly the KB is rewritten into a Verilog program, in Appendix~\ref{lst:qa_prolog_compilation} there is the result of compilation, and it is possible to observe in detail how each fact or rule has been transformed.
 
