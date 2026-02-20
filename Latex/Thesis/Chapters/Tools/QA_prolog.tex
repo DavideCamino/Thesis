@@ -43,6 +43,13 @@ Programming in Prolog consists of:
 
 From these characteristics we can understand what \say{declarative} means: the program is a list of statements about our problem (our domain of interest); the relation between a Prolog program and an ontology is very strict. In Prolog we encode a KB made of facts and rules; in Capter~\ref{} we can see a complete example of rewriting from an OWL ontology into a Prolog KB. Moreover, Prolog is a logic programming language. This means that the core of programming is not to tell the computer what to do, but to tell it what is true and ask it to try to draw conclusions~\cite{clocksin2003programming}. The idea behind logic programming is very interesting; for more details \cite{kowalski1982logic} and \cite{hogger1984introduction} are recommended.
 
+\paragraph{Arithmetic predicates:} To better understand some QA-Prolog features that differ from basic Prolog we explain here how to assert equality between arguments when referring to integer. Predicates offered by Prolog are:
+\begin{itemize}
+	\item \mintinline{text}|+Expr1 =:= +Expr2|: true if expression \mintinline{text}|Expr1| evaluates to a number equal to \mintinline{text}|Expr2|;
+	\item   \mintinline{text}|-Number is +Expr|: true when \mintinline{text}|Number| is the value to which \mintinline{text}|Expr| evaluates.
+\end{itemize}
+Where signs before arguments are \emph{arguments mode indicators}. Sign \mintinline{text}|+| specifies that the following argument must be instantiated, \mintinline{text}|-| indicates that the argument is a output~\cite{SWI2026PrologManual}. This mean that we cannot have variable when using \mintinline{text}|=:=| predicate because everything must be known at the time of evaluation, and using \mintinline{text}|is| the only variable can be the value of \mintinline{text}|Number|; \mintinline{text}|Expr|, on the other hand, has to be known.
+
 \paragraph{Example:} In Listin~\ref{lst:prolog_kb1}, adapted from \cite{learn_prolog_now_online}, we present a basic Prolog program in order to show the syntax and the usage of queries. 
 \begin{listing}[h]
 	\mylisting{.6}{prolog}{code/qa_prolog/prolog_kb1.pl}
@@ -63,7 +70,13 @@ QA-Prolog does not support all the features of Prolog, but enough to make basic 
 
 QA-Prolog supports atoms and positive integers but not floating-point numbers, strings, or lists. It supports arithmetic and relational operations, and rules can reference other rules but not recursively. QA-Prolog supports unification, backtracking, and predicates comprising multiple clauses~\cite{pakin2018performing}.
 
-QA-Prolog also supports some features not present in the basic version of Prolog. In particular, operations can be performed on variables even before they are ground~\cite{pakin2018performing}; this means that QA-Prolog is more powerful in manipulating free variables.
+QA-Prolog also supports some features not present in the basic version of Prolog. In particular, operations can be performed on variables even before they are ground~\cite{pakin2018performing}; this means that QA-Prolog is more powerful in manipulating free variables. 
+
+This feature is useful when manipulating aritmetic operation, in basic prolog we have two operator to express the equality between two expression that are \mintinline{text}|+Expr1 =:= +Expr2| and \mintinline{text}|-Number is +Expr|, where the sign before arguments is the \emph{argument mode indicator}:
+\begin{itemize}
+	\item \mintinline{text}|+| is limited because both expression must be known at the time of evaluation;
+	\item \mintinline{text}|-| is limited because both expression must be known at the time of evaluation;
+\end{itemize}
 
 \subsection{Related works}
 There are some other attempts to develop a high-level programming language for quantum computers, both for the quantum gate model and for quantum annealers. 
@@ -362,16 +375,7 @@ $ python setup.py install
 	\end{minipage}
 \end{center}
 
-Next we need Yosys and GO: Yosys is part of the pipeline, and GO allows us to compile edif2qmasm and QA-Prolog. Both Yosys and GO are available as binary packages for the majority of GNU/Linux distributions; on Arch\footnote{\url{https://archlinux.org/}} they can be installed with:
-\begin{center}
-	\vspace{-.1cm}
-	\begin{minipage}{.5\linewidth}
-		\begin{minted}[linenos=false]{text}
-# pacman -S yosys
-# pacman -S go
-		\end{minted}
-	\end{minipage}
-\end{center}
+Next we need Yosys and GO: Yosys is part of the pipeline, and GO allows us to compile edif2qmasm and QA-Prolog. Both Yosys and GO are available from their official website \url{https://yosyshq.net/} and \url{https://go.dev/}, also on most of GNU/Linux distributions Yosys and GO can be installed directly from the package manager of the distribution.
 
 The \mintinline{text}|go install| command installs Go executables in the default directory \mintinline{text}|$HOME/go/bin|. It is useful to add the bin subdirectory to \mintinline{text}|PATH|. This can be done by editing the \mintinline{text}|.bashrc| file (or the corresponding one for the specific shell), adding:
 \begin{center}
