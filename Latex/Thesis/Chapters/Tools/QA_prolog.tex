@@ -123,7 +123,7 @@ QMASM is a \emph{quantum macro assembler}~\cite{pakin2016quantum}; it processes 
 
 This software can be considered an assembler in the sense that it maps a symbolic representation of the operations (assembly language) to the machine language. QMASM is not only an assembler, but extends its functionality by including macros: parameterized named blocks of assembly language that a program can instantiate multiple times~\cite{pakin2016quantum}.
 
-\paragraph{Feature:} QMASM provides a number of features to simplify low-level D-Wave programming~\cite{pakin2016quantum}. Moreover, we can also use QMASM to assemble a physical Hamiltonian that we can later manipulate or solve using classical methods or other quantum systems.
+\paragraph{Feature:} QMASM provsingides a number of features to simplify low-level D-Wave programming~\cite{pakin2016quantum}. Moreover, we can also use QMASM to assemble a physical Hamiltonian that we can later manipulate or solve using classical methods or other quantum systems.
 
 Some of the most useful and interesting features of QMASM are:
 \begin{itemize}
@@ -134,7 +134,7 @@ Some of the most useful and interesting features of QMASM are:
 	\item QMASM can automatically exclude from the results the solutions known to be incorrect and shows only \say{interesting} \emph{qubits}.
 \end{itemize}
 
-Thanks to this set of features, QMASM is already a useful abstraction layer that simplifies the development of programs that target an annealer, classical or quantum.
+Thanks to thiings set of features, QMASM is already a useful abstraction layer that simplifies the development of programs that target an annealer, classical or quantum.
 
 \paragraph{Example:} Let us consider an example that shows the potential of QMASM and that is also useful for the following steps of the pipeline. The satisfiability problem is well known to be an NP-complete problem~\cite{garey2002computers}, so it is a good candidate for our example. We take into account the simple formula:
 
@@ -143,13 +143,12 @@ Thanks to this set of features, QMASM is already a useful abstraction layer that
 	\label{eqn:simple_logic}
 \end{equation}
 
-QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings~\ref{lst:macros} we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Weights are specified as an Ising problem (Section~\ref{label}), which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}.}.
+QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings~\ref{lst:macros} we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Weights are specified as an Insing problem (Section~\ref{label}), which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}.}.
 
 There are multiple interesting details about these macros:
 \begin{itemize}
 	\item the symbol \mintinline{text}|#| identifies a comment line not processed;
 	\item the symbol \mintinline{text}|$| is used to tag a \emph{qubit} as ancillary: unless explicitly requested by the programmer, the intermediate results are not reported in the solutions;
-	\item compared with what we have done in Listing~\ref{lst:ising_ex}, defining weights is much easier and the result is more readable;
 	\item thanks to the directive \mintinline{text}|!assert| we can inform QMASM about constraints on the solution. This directive does not change the weights, but allows the programmer to exclude from the solutions those that are surely incorrect.
 \end{itemize}
 
@@ -157,21 +156,31 @@ There are multiple interesting details about these macros:
 	\centering
 	\subfloat[\emph{and} gate]
 	{\label{lst:and_gate}
-		\mylistingnonumber{.3}{text}{code/qa_prolog/and.qmasm}
+		\mylistingnumbernear{.28}{text}{code/qa_prolog/and.qmasm}
 	}
+	\quad
 	\subfloat[\emph{not} gate]
 	{\label{lst:not_gate}
-		\mylistingnonumber{.3}{text}{code/qa_prolog/not.qmasm}
+		\mylistingnumbernear{.28}{text}{code/qa_prolog/not.qmasm}
 	}
+	\quad
 	\subfloat[\emph{or} gate]
 	{\label{lst:or_gate}
-		\mylistingnonumber{.3}{text}{code/qa_prolog/or.qmasm}
+		\mylistingnumbernear{.28}{text}{code/qa_prolog/or.qmasm}
 	}
 	\captionof{listing}{Logical operators}
 	\label{lst:macros}
 \end{figure}
 
-It is possible to verify, for each macro in Listings~\ref{lst:macros}, that given a configuration of the input \emph{qubits}, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling.
+Compared with what we have done in Listing~\ref{lst:ising_ex}, defining weights in QMASM is much easier and the result is more readable;
+
+It is possible to verify, for each macro in Listings~\ref{lst:macros}, that given a configuration of the input \emph{qubits}, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling. For example, the explicit polynomial that describe \emph{and} operator (where we have removed the $\$$ symbol for simplicity of reading) is:
+\[
+	\mathbf{H} = -\frac{1}{2}\cdot(A + B) + Y + \frac{1}{2}\cdot(AB) - (AY + BY)
+\]
+Where $A, B, Y \in \set{-1, 1}$ because we are describing an Ising problem.
+
+Listings~\ref{lst:macros}, also, show the usage of directive \mintinline{text}|!assert| (line $3$ of each listing): considering the \emph{or} gate, we impose that in a valid solution $Y = A \lor B$, solutions that not verify this constraint are automatically discarded by QMASM.
 
 We can save these macros in a file named \mintinline{text}|gates.qmasm| and use it to solve our problem. To compute the formula $y = x_1 \land \neg(x_2 \lor x_3)$ we will use some intermediate results: we start with $x_4 = (x_2 \lor x_3)$, then we apply the negation $x_5 = \neg x_4$, and lastly we compute the result as $y = x_1 \land x_5$. 
 

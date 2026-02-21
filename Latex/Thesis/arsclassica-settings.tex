@@ -48,6 +48,14 @@
 	\vspace{-.25cm}
 }
 
+\newcommand{\mylistingnumbernear}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines, numbersep=4pt]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
+}
+
 
 \DeclareMathVersion{alt}
 \SetSymbolFont{operators}{alt}{OT1}{cmr}{m}{n}
