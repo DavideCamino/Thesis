@@ -1,5 +1,23 @@
 \chapter{A quantum ontology}
+In this chapter, we present a complete example of rewriting, starting from an ontology expressed in OWL (Section~\ref{sec:owl}), and arriving at a Prolog formulation suitable for the pipeline presented in the previous chapter.
+
+Following the literature, we begin with the translation of the ontology into Prolog, discussing how to translate concepts such as classes, subclasses, individuals, and relations. We then focus on the incompatibility of this first version with QA-Prolog, highlight the reasons for this incompatibility, and propose possible solutions.
+
+Finally, we present some examples to demonstrate the equivalence of the two transformations and provide observations on the final result obtained after the transformations performed by QA-Prolog.
+
 \section{Ontology structure}
+The ontology we will translate in Prolog is not the one presented in Chapter~\ref{ch:ont} but is a more complex in order to show an example more similar to a real ontology. 
+
+The domain of interest of our ontology is the animal taxonomy, this domain allows us to present a set of classes and subclasses richer than the one we have seen in the family tree example (Section~\ref{sec:ont_ex}). For what concern the relationships we can model relations between classes, such as the concept of prey and predator and relations between individuals, such as parental relationships.
+
+The T-Box of our ontology can be seen in Figure~\ref{}, we define also some individual and their relation to populate our ontology.\footnote{The code for this ontology is available at \url{URL}.}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.9\linewidth]{setup/overview-image}
+	\caption{Ontology T-Box}
+	\label{fig:ont_animal}
+\end{figure}
 \section{Prolog version}
+
 \section{Inference on the ontology}
 \section{Conclusion}
