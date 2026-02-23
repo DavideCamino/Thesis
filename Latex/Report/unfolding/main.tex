@@ -1,0 +1,158 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{dirtytalk}
+\usepackage{xcolor}
+\geometry{top=3cm}
+
+\definecolor{bg}{rgb}{.95, .95, .95}
+\definecolor{myred}{rgb}{1, .8, .8}
+
+\setminted{
+	bgcolor=bg
+}
+
+%opening
+\title{Sull'unfolding}
+\author{Davide Camino}
+
+\begin{document}
+\maketitle
+
+\section{Problema}
+\subsection{Ricorsione}
+Quando si modella un'ontologia ci sono alcune definizioni che sono transitive, come il concetto di \emph{sottoclasse}: 
+\[
+\text{A sottoclasse B} \land \text{B sottoclasse C} \Rightarrow \text{A sottoclasse C}
+\]
+
+Quando si traduce un'ontologia in un linguaggio di programmazione logica come il Prolog è naturale definire il concetto di sottoclasse in modo \emph{ricorsivo}. Come mostrato qui sotto:
+\begin{listing}[h]
+	\centering
+	\begin{minipage}{.5\linewidth}
+		\begin{minted}{Prolog}
+subClass(A, B) :- 
+	subclass(A, B).
+subClass(A, B) :-
+	subclass(A, C),
+	subClass(C, B).
+		\end{minted}
+	\end{minipage}
+	\caption{subClass definition}
+	\label{lst:sub}
+\end{listing}
+
+Dove il predicato \mintinline{text}|subclass(A, B)| viene usato durante la definizione della base di conoscenza (KB) e ci serve come passo base. Il predicato \mintinline{text}|subClass(A, B)| è quello veramente ricorsivo e sarà usato nelle query per testare la relazione di sottoclasse. 
+\subsection{Esempio}
+Consideriamo la KB con la seguente T-Box:\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{/home/dadi/Documents/Tesi/Thesis/Latex/Thesis/Graphics/quantum_ontology/T-Box}
+	\caption{T-Box}
+	\label{fig:t-box}
+\end{figure}
+
+\newpage
+Possiamo tradurre questa struttura in Prolog come segue:
+\begin{listing}[h]
+	\centering
+	\begin{minipage}{.5\linewidth}
+		\begin{minted}{Prolog}
+class(animal).
+class(mammal).
+class(human).
+class(parent).
+class(son).
+class(reptile).
+class(turtle).
+
+subclass(mammal, animal).
+subclass(reptile, animal).
+subclass(turtle, reptile).
+subclass(human, mammal).
+subclass(parent, human).
+subclass(son, human).
+		\end{minted}
+	\end{minipage}
+	\caption{T-Box Definition}
+\end{listing}
+
+Con la definizione di sottoclasse fornita nel Listato~\ref{lst:sub} si ottengono risultati che corrispondo al nostro modello; ad esempio:
+\begin{listing}[h]
+	\centering
+	\begin{minipage}{.5\linewidth}
+		\begin{minted}{Prolog}
+?- subClass(son, animal).
+    true .
+
+?- subclass(turtle, mammal).
+    false.
+		\end{minted}
+	\end{minipage}
+	\caption{Query examples}
+	\label{lst:query}
+\end{listing}
+
+\subsection{Incompatibilità}
+QA-Prolog permette, all'intero di una regola, di far riferimento ad altre regole, ma non in modo ricorsivo. Se si prova a tradurre in Verilog (primo stadio della pipeline) il codice del Listato~\ref{lst:sub} si scatena l'eccezione:
+\begin{listing}[h]
+	\centering
+	\begin{minipage}{.72\linewidth}
+		\begin{minted}[bgcolor=myred]{text}
+panic: runtime error: index out of range [0] with length 0
+		\end{minted}
+	\end{minipage}
+	\caption{Error}
+\end{listing}
+
+\section{Soluzione}
+\subsection{Unfolding}
+Per risolvere il problema si può pensare di fare unfolding della chiamata ricorsiva, in modo che questa non sia più tale e il codice risultante sia compatibile con la pipeline di QA-Prolog.  La soluzione adottata è molto simile a quella del \emph{loop unrolling} implementata dai compilatori moderni per rendere più rapida l'esecuzione del codice macchina.
+
+Per sapere quanto \say{srotolare} la chiamata ricorsiva si possono prendere 2 strade:
+\begin{itemize}
+	\item si decide a priori un numero massimo di ricorsioni e tutto ciò che prevederebbe uno stack di chiamate più profondo non viene catturato;
+	\item si conosce la profondità massima raggiunta dalla KB e si usa quel valore per fermare l'unfolding. 
+\end{itemize}
+
+Il secondo approccio va bene per il concetto di sottoclasse, ma non è indicato per altre proprietà che si potrebbero voler modellare: ad esempio il concetto di \say{} inteso come antenato di un individuo potrebbe basarsi su più di una relazione, quindi fino a quando non faccio inferenza sulla KB non posso sapere qual è la profondità massima.
+
+\subsection{Esempio}
+La nostra ontologia (Figura~\ref{fig:t-box}) ha profondità massima 4, ciò significa che per risalire alla radice da un nodo qualsiasi sono necessarie al massimo 3 chiamate ricorsive. È possibile fare unfolding di queste chiamate e la definizione di sottoclasse si può modificare come segue:
+\begin{listing}[h]
+	\centering
+	\begin{minipage}{.5\linewidth}
+		\begin{minted}{Prolog}
+subclass1(A, B) :-
+	subclass(A, B).
+
+subclass2(A, B) :-
+	subclass(C, B),
+	subclass(A, C).
+
+subclass3(A, B) :-
+	subclass2(C, B),
+	subclass(A, C).
+
+subClass(A, B) :- 
+	subclass1(A, B).
+subClass(A, B) :- 
+	subclass2(A, B).
+subClass(A, B) :- 
+	subclass3(A, B).
+		\end{minted}
+	\end{minipage}
+	\caption{subClass unfolding}
+\end{listing}
+
+Questa modifica sarebbe trasparente all'utente che interroga la KB, si possono infatti ripetere esattamente le stesse query del Listato~\ref{lst:query} ottenendo gli stessi risultati. 
+
+Se, adesso, si prova a fare il parsing del documento con QA-Prolog questa volta la compilazione in Verilog va a buon fine e si riesce a giungere fino al termine della pipeline ottenendo l'Hamiltoniana che rappresenta la nostra KB con annessa query.
+
+\section{Lavoro Futuro}
+In questo piccolo esempio l'unfolding è stato fatto a mano, sarebbe possibile aggiungere una fase di preprocessing alla pipeline di QA-Prolog per automatizzare l'unfolding delle chiamate ricorsive. 
+
+Ovviamente, a prescindere dalla strada scelta per decidere il numero massimo di chiamate ricorsive catturate bisogna tenere conto che ogni unfold comporta la definizione di una nuova clausola, questo aumenta la dimensione dell'Hamiltoniana finale e di conseguenza il numero di \emph{qubit} richiesti per l'esecuzione.
+\end{document}
