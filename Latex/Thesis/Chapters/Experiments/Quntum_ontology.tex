@@ -15,7 +15,7 @@ In this ontology, we describe a small part of the animal kingdom. The more compl
 
 The other classes instead focus feeding habits of animals. We distinguish between prey and predators, and between carnivorous and herbivorous animals (in this small example, for simplicity, we ignore omnivores\footnote{The reason will be clear in the next section.}).
 
-Finally, we consider parental relationships between animals. These link two animals of the same spice with parent-son roles.
+Finally, we consider relationships between animals. Definiamo due tipi di relazioni: relazioni parentali che collegano due animali con ruoli genitore-figlio e relazioni legate all'alimentazione che legano due animali nei ruoli di predatore e preda.
 
 The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define also some individual and their relation to populate our ontology\footnote{The code for this ontology is available at \url{URL}}.
 \begin{figure}[h]
@@ -26,7 +26,7 @@ The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define 
 \end{figure}
 
 \subsection{Ontology constraints}
-In this section, we present the constraints on classes, individuals and relationships represented in our ontology. These constraints allow us to make inference on the ontology and derive new information from what is already present, also thanks to these constraints we can determine if all the information contained in the ontology is consistent with the theoretical model we are describing.
+In this section, we present the constraints on classes and individuals represented in our ontology. These constraints allow us to make inference on the ontology and derive new information from what is already present, also thanks to these constraints we can determine if all the information contained in the ontology is consistent with the theoretical model we are describing.
 
 Constrains defined in animal ontology are:
 \begin{itemize}
@@ -34,10 +34,6 @@ Constrains defined in animal ontology are:
 	\begin{itemize}
 		\item different spices are disjoint classes;
 		\item  carnivore and herbivore are disjoint classes;
-	\end{itemize}
-	\item Constrain on relationship:
-	\begin{itemize}
-		\item only animal of the same spice can be in a parent-son relationship;
 	\end{itemize}
 	\item Constrain on individual:
 	\begin{itemize}
@@ -51,6 +47,13 @@ It should also be clear why we have omitted the omnivores from our description, 
 
 \subsection{Ontology contents}
 We now examine some facts represented in the ontology; these will serve as examples to show how integrity checking of the information collected in the KB and the reasoning processes work.
+
+Cominciamo considerando le classi, come si vede dalla T-Box di Figura~\ref{fig:ont_animal} gli animali che possiamo descrivere sono: sardine, pinguini, foche, orsi polari e renne. Sempre dalla T-Box vediamo che, a parte le renne, tutti gli animali presenti sono carnivori.
+
+Vediamo ora alcuni fatti che riguardano gli individui che popolano la nostra KB:
+\begin{itemize}
+	\item 
+\end{itemize}
 \section{Prolog version}
 
 
