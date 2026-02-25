@@ -5,18 +5,52 @@ Following the literature, we begin with the translation of the ontology into Pro
 
 Finally, we present some examples to demonstrate the equivalence of the two transformations and provide observations on the final result obtained after the transformations performed by QA-Prolog.
 
-\section{Ontology structure}
+\section{Starting ontology}
 The ontology we will translate in Prolog is not the one presented in Chapter~\ref{ch:ont} but is a more complex in order to show an example more similar to a real ontology. 
 
-The domain of interest of our ontology is the animal taxonomy, this domain allows us to present a set of classes and subclasses richer than the one we have seen in the family tree example (Section~\ref{sec:ont_ex}). For what concern the relationships we can model relations between classes, such as the concept of prey and predator and relations between individuals, such as parental relationships.
+The domain of interest of our ontology is the animal kingdom; this domain serves as a pretext for a deeper description than the one shown in the family tree example (Section~\ref{sec:ont_ex}). We will see how to describe animal species, their feeding habits, and the relationships between individuals.
 
-The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define also some individual and their relation to populate our ontology.\footnote{The code for this ontology is available at \url{URL}.}.
+\subsection{Ontology structure}
+In this ontology, we describe a small part of the animal kingdom. The more complex class hierarchy represents the taxonomy of animals; it characterizes living beings with increasing precision until identifying their species.
+
+The other classes instead focus feeding habits of animals. We distinguish between prey and predators, and between carnivorous and herbivorous animals (in this small example, for simplicity, we ignore omnivores\footnote{The reason will be clear in the next section.}).
+
+Finally, we consider parental relationships between animals. These link two animals of the same spice with parent-son roles.
+
+The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define also some individual and their relation to populate our ontology\footnote{The code for this ontology is available at \url{URL}}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.9\linewidth]{setup/overview-image}
 	\caption{Ontology T-Box}
 	\label{fig:ont_animal}
 \end{figure}
+
+\subsection{Ontology constraints}
+In this section, we present the constraints on classes, individuals and relationships represented in our ontology. These constraints allow us to make inference on the ontology and derive new information from what is already present, also thanks to these constraints we can determine if all the information contained in the ontology is consistent with the theoretical model we are describing.
+
+Constrains defined in animal ontology are:
+\begin{itemize}
+	\item Constrain on classes:
+	\begin{itemize}
+		\item different spices are disjoint classes;
+		\item  carnivore and herbivore are disjoint classes;
+	\end{itemize}
+	\item Constrain on relationship:
+	\begin{itemize}
+		\item only animal of the same spice can be in a parent-son relationship;
+	\end{itemize}
+	\item Constrain on individual:
+	\begin{itemize}
+		\item If animal $A$ hunt $B$, $A$ is a predator and carnivore and $B$ is a prey.
+	\end{itemize}
+\end{itemize}
+
+From defined constraints we can see that a prey and predator are not disjoint classes and be a prey does not automatically mean that the animal is a herbivore. This is coherent with the animal kingdom where a certain animal could be both a prey and a predator.
+
+It should also be clear why we have omitted the omnivores from our description, this simplification allows us to describe herbivore and carnivore as disjoint and to infer that an animal that hunt is automatically a carnivore.
+
+\subsection{Ontology contents}
+We now examine some facts represented in the ontology; these will serve as examples to show how integrity checking of the information collected in the KB and the reasoning processes work.
 \section{Prolog version}
 
 
