@@ -15,7 +15,7 @@ In this ontology, we describe a small part of the animal kingdom. The more compl
 
 The other classes instead focus feeding habits of animals. We distinguish between prey and predators, and between carnivorous and herbivorous animals (in this small example, for simplicity, we ignore omnivores\footnote{The reason will be clear in the next section.}).
 
-Finally, we consider relationships between animals. Definiamo due tipi di relazioni: relazioni parentali che collegano due animali con ruoli genitore-figlio e relazioni legate all'alimentazione che legano due animali nei ruoli di predatore e preda.
+Finally, we consider relationships between animals. We define two types of relationships: parental relation that connect two animals in parent–son roles, and relation related to feeding habits that link two animals in the roles of predator and prey.
 
 The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define also some individual and their relation to populate our ontology\footnote{The code for this ontology is available at \url{URL}}.
 \begin{figure}[h]
@@ -48,13 +48,36 @@ It should also be clear why we have omitted the omnivores from our description, 
 \subsection{Ontology contents}
 We now examine some facts represented in the ontology; these will serve as examples to show how integrity checking of the information collected in the KB and the reasoning processes work.
 
-Cominciamo considerando le classi, come si vede dalla T-Box di Figura~\ref{fig:ont_animal} gli animali che possiamo descrivere sono: sardine, pinguini, foche, orsi polari e renne. Sempre dalla T-Box vediamo che, a parte le renne, tutti gli animali presenti sono carnivori.
+Let us begin by considering the classes. As shown in the T-Box of Figure~\ref{fig:ont_animal}, the animals we can describe are: sardines, penguins, seals, polar bears, and reindeer. From T-Box we also see that we have only specified reindeer are herbivorous, and sardines are carnivorous, feeding habits of other spices will be inferred with hunt relationship.
 
-Vediamo ora alcuni fatti che riguardano gli individui che popolano la nostra KB:
+We now examine some facts about the individuals that populate our KB:
 \begin{itemize}
-	\item 
+	\item Beary is a polar bear and hunt Sealy and Penguy;
+	\item Sealy is a seal and hunt Penguy;
+	\item Penguy is a penguin and hunt Sardy;
+	\item Sardy is a sardine;
+	\item Reiny is a reindeer and hunt Sardy; 
 \end{itemize}
+
+From this information, we can deduce that Beary and Reiny are predators; Sealy and Penguy are both predators and prey; and Sardy is prey.
+
+\paragraph{Contraddiction: } A contradiction has also been deliberately introduced into the ontology. From the fact that Reiny hunts, it follows that she is a carnivorous animal; however, her species is labeled as herbivorous. Reiny is therefore both herbivorous and carnivorous. Moreover, herbivores and carnivores are disjoint classes. This makes the KB inconsistent.
+
+If we used a reasoner to verify the consistency of the KB, for example HermiT\cite{glimm2014hermit}, we would obtain an error message informing us that the ontology is inconsistent and that the reasoner’s results cannot therefore be considered reliable.
+
+The reasoner is also able to provide an explanation of the inconsistency (shown in Figure~\ref{fig:protege}\footnote{The figure shows the dialog window of Protégé\cite{musen2015protege}, a widely used ontology editor}), from which it is clear that the problem is that Reiny is simultaneously herbivorous and carnivorous.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{quantum_ontology/protege}
+	\caption{Error dialog in Protégé}
+	\label{fig:protege}
+\end{figure}
+
+We introduced this inconsistency in order to show \textemdash{}in the following sections\textemdash{} how it is also possible in Prolog to detect this type of error and identify contradictions in the KB. If we remove the fact \say{Reiny hunt Sardy} the ontology will return consistent.
+
 \section{Prolog version}
+
 
 
 \section{Inference on the ontology}
