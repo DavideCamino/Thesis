@@ -1,0 +1,9 @@
+subclass(mammal, animal).
+subclass(bird, animal).
+subclass(fish, animal).
+subclass(polar_bear, mammal).
+subclass(seal, mammal).
+subclass(reindeer, mammal).
+subclass(sardine, fish).
+subclass(penguin, bird).
+subclass(reindeer, herbivore).

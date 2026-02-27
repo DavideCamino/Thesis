@@ -349,16 +349,16 @@ During the execution of the complete pipeline we encountered an error caused by 
 	\centering
 	\subfloat[Verilog Code]
 	{\label{lst:error_verilog}
-		\mylisting{.45}{Verilog}{code/qa_prolog/verilog_macro.vl}
+		\mylistingnumbernear{.45}{Verilog}{code/qa_prolog/verilog_macro.vl}
 	}
 	\quad
 	\subfloat[Macro definitions]
 	{\label{lst:error_def}
-		\mylisting{.45}{Verilog}{code/qa_prolog/qmasm_macro}
+		\mylistingnumbernear{.45}{Verilog}{code/qa_prolog/qmasm_macro}
 	}\\
 	\subfloat[Macro usage]
 	{\label{lst:error_use}
-		\mylisting{.7}{Verilog}{code/qa_prolog/qmasm_macro_use}
+		\mylistingnumbernear{.7}{Verilog}{code/qa_prolog/qmasm_macro_use}
 	}
 	\captionof{listing}{Undefined macros error}
 	\label{lst:qmasm_error}
@@ -367,7 +367,7 @@ During the execution of the complete pipeline we encountered an error caused by 
 The error can be seen in Listings~\ref{lst:qmasm_error}: edif2qmasm rewrites the netlist generated from (\hyperref[lst:error_verilog]{a}) into the macro (\hyperref[lst:error_def]{b}); here \mintinline{text}|hates/2| is just a comment, the actual name of the macro is \mintinline{text}|id00011| (specified at line $2$). In (\hyperref[lst:error_verilog]{c}), however, we can see that the macro previously defined is called symbolically and not with its actual name (lines $3$). This obviously produces an error: the name \mintinline{text}|hates/2| in the QMASM file has no meaning, it is only a comment.
 
 \begin{listing}[h]
-	\mylisting{.95}{Verilog}{code/qa_prolog/preprocess.py}
+	\mylisting{.95}{Python}{code/qa_prolog/preprocess.py}
 	\caption{Preprocessor's core}
 	\label{lst:preprocessor}
 \end{listing}

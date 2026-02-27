@@ -3,7 +3,7 @@ In this chapter, we present a complete example of rewriting, starting from an on
 
 Following the literature, we begin with the translation of the ontology into Prolog, discussing how to translate concepts such as classes, subclasses, individuals, and relations. We then focus on the incompatibility of this first version with QA-Prolog, highlight the reasons for this incompatibility, and propose possible solutions.
 
-Finally, we present some examples to demonstrate the equivalence of the two transformations and provide observations on the final result obtained after the transformations performed by QA-Prolog.
+Finally, we present some examples of queries to demonstrate the equivalence of the two transformations and provide observations on the final result obtained after the transformations performed by QA-Prolog.
 
 \section{Starting ontology}
 The ontology we will translate in Prolog is not the one presented in Chapter~\ref{ch:ont} but is a more complex in order to show an example more similar to a real ontology. 
@@ -32,7 +32,6 @@ Constrains defined in animal ontology are:
 \begin{itemize}
 	\item Constrain on classes:
 	\begin{itemize}
-		\item different spices are disjoint classes;
 		\item  carnivore and herbivore are disjoint classes;
 	\end{itemize}
 	\item Constrain on individual:
@@ -48,7 +47,7 @@ It should also be clear why we have omitted the omnivores from our description, 
 \subsection{Ontology contents}
 We now examine some facts represented in the ontology; these will serve as examples to show how integrity checking of the information collected in the KB and the reasoning processes work.
 
-Let us begin by considering the classes. As shown in the T-Box of Figure~\ref{fig:ont_animal}, the animals we can describe are: sardines, penguins, seals, polar bears, and reindeer. From T-Box we also see that we have only specified reindeer are herbivorous, and sardines are carnivorous, feeding habits of other spices will be inferred with hunt relationship.
+Let us begin by considering the classes. As shown in the T-Box of Figure~\ref{fig:ont_animal}, the animals we can describe are: sardines, penguins, seals, polar bears, and reindeer. From T-Box we also see that we have only specified reindeer are herbivorous, feeding habits of other spices can be inferred with hunt relationship.
 
 We now examine some facts about the individuals that populate our KB:
 \begin{itemize}
@@ -56,7 +55,8 @@ We now examine some facts about the individuals that populate our KB:
 	\item Sealy is a seal and hunt Penguy;
 	\item Penguy is a penguin and hunt Sardy;
 	\item Sardy is a sardine;
-	\item Reiny is a reindeer and hunt Sardy; 
+	\item Reiny is a reindeer and hunt Sardy;
+	\item Reiny\_b  and Reiny\_c are reindeer, Reiny\_b is son of Reiny and Reiny\_c is son of Reiny\_b; 
 \end{itemize}
 
 From this information, we can deduce that Beary and Reiny are predators; Sealy and Penguy are both predators and prey; and Sardy is prey.
@@ -77,8 +77,209 @@ The reasoner is also able to provide an explanation of the inconsistency (shown 
 We introduced this inconsistency in order to show \textemdash{}in the following sections\textemdash{} how it is also possible in Prolog to detect this type of error and identify contradictions in the KB. If we remove the fact \say{Reiny hunt Sardy} the ontology will return consistent.
 
 \section{Prolog version}
+To translate the ontology into a Prolog KB, we follow the work presented in~\cite{samuel2008translating}. This article discusses in depth how to replicate the various constructs provided by OWL in order to obtain a logically equivalent KB in Prolog.
+
+In this section, we will see how to translate the concepts of class and subclass, disjoint classes, and relationships between individuals; we will present rules to infer new information, as was done in the ontology. Finally, we will show how to detect errors and inconsistencies in the knowledge base.
+
+Our goal is not to go through the entire translation of an ontology into Prolog, but rather to convince ourselves that such a translation is possible.
+
+The original ontology includes only a small subset of the constructs available in OWL. This is because the translation into Prolog is only the first step; in the following sections, we will modify the Prolog program to make it compatible with QA-Prolog and obtain a representation suitable for a quantum annealer.
+
+Advanced topics such the open world assumption, enumerated classes, existential quantification, cardinality rules, cyclic hierarchies, and  more are covered in~\cite{samuel2008translating}.
+
+\subsection{Classes and subclasses}
+We start our KB describing the T-Box of the ontology: here we define the classes' hierarchy. Listing~\ref{lst:t_box_pl} show how to build the hierarchy: (\hyperref[lst:t_box_pl_class]{a}) is a list of facts that defines the classes; for example, line $1$ can be read as “animal is a class.”; (\hyperref[lst:t_box_pl_subclass]{b}) defines the structure of the classes, again line $1$ is read as “mammal is a subclass of animal.”
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Classes definitions]
+	{\label{lst:t_box_pl_class}
+		\mylistingnumbernear{.45}{Prolog}{code/quantum_ontology/class.pl}
+	}
+	\quad
+	\subfloat[Subclasses definitions]
+	{\label{lst:t_box_pl_subclass}
+		\mylistingnumbernear{.45}{Prolog}{code/quantum_ontology/subclass.pl}
+	}
+	\captionof{listing}{T-Box definition}
+	\label{lst:t_box_pl}
+\end{figure}
+
+We must now create a rule to ensure that the subclass relation satisfies the transitive property:
+\[
+\text{X subclass of Y}\land\text{Y subclass of Z}\Rightarrow\text{X subclass of Z}
+\]
+
+In our ontology, for example,  this rule is needed to establish that a penguin is an animal, but not a mammal. The most natural way, in a logic programming language, to enforce the transitive property is through a recursive definition. Listing~\ref{lst:subclass_rec} shows how the rule is defined: lines $1$ and $2$ implement the base case of the recursion, while lines $4$, $5$, and $6$ implement the recursive call.
+
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_rec.pl}
+	\caption{Recursive definition of subclass predicate}
+	\label{lst:subclass_rec}
+\end{listing}
+
+It is important to point out that the predicate we are defining in Listing~\ref{lst:subclass_rec} is different from the one used in Listing~\ref{lst:t_box_pl}. The predicate \mintinline{text}|subclass(C2, C1)| (where \mintinline{text}|C1| and \mintinline{text}|C2| are classes) is serves to construct the subclass hierarchy with a list of facts. The predicate \mintinline{text}|subClass(C2, C1)| captures the transitive property we are interested in. This one is the predicate that must be used in queries and in any subsequent rules whenever it is necessary to reason over the class hierarchy.
+
+\subsection{Individual and their relationships}
+We define individuals by assigning them to a class; to do so, we use the predicate \mintinline{text}|isa(I, C)| where \mintinline{text}|I| is an individual, \mintinline{text}|C| is a class. Relationships, on the other hand, are defined through the predicate \mintinline{text}|hasproperty(I1, R, I2)| that means individual \mintinline{text}|I1| is in the relation \mintinline{text}|R| with individual \mintinline{text}|I2|. Listing~\ref{lst:a_box_pl} is a collection of facts that populate our knowledge base and define the relationships between individuals.
+\begin{figure}[h]
+	\centering
+	\subfloat[Individuals definitions]
+	{\label{lst:a_box_pl_ind}
+		\mylistingnumbernear{.35}{Prolog}{code/quantum_ontology/individual.pl}
+	}
+	\quad
+	\subfloat[Relationships definitions]
+	{\label{lst:a_box_pl_rel}
+		\mylistingnumbernear{.55}{Prolog}{code/quantum_ontology/relation.pl}
+	}
+	\captionof{listing}{T-Box definition}
+	\label{lst:a_box_pl}
+\end{figure}
+
+The predicate \mintinline{text}|isa(I, C)| allows us to define the class of an individual, but it does not take the class hierarchy into account. For example, we know that Beary is a polar bear, but we cannot infer that he is a mammal or an animal.
+
+To also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
+
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/isa.pl}
+	\caption{isA predicate}
+	\label{lst:isa}
+\end{listing}
+
+As for the predicates \mintinline{text}|subclass(C1, C2)| and \mintinline{text}|subClass(C1, C2)|, also \mintinline{text}|isa(I, C)| must be used only in the definition of an individual's class, while \mintinline{text}|isA(I, C)| is to be used in queries and future rules.
+
+\subsection{Other rules}
+The KB that we have built so far contains classes, individuals, and relationships between individuals; we now want to add rules that allow us to extract new knowledge from the facts contained in the ontology. 
+
+In particular, we now present the rules to assign a class to an individual, to identify the ancestors of an individual, to define 2 classes as disjoint, and to find inconsistencies in the KB.
+
+\paragraph{Assigning a class:} The rules defined in Listing~\ref{lst:class_attr} allow us to assign the class carnivore and predator/prey to an individual. These rules are an example of how logical programming languages are easy to interpret: we can read Listing~\ref{lst:class_attr} as \say{If an animal hunts, it is a carnivore and it is a predator. If it is hunted, it is prey.}
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/class_attribution.pl}
+	\caption{Class attribution rules}
+	\label{lst:class_attr}
+\end{listing}
+
+\paragraph{Ancestors:}  Similarly to what was done for the definition of \mintinline{text}|subClass(C1, C2)|, we can define the predicate \mintinline{text}|ancestor(I1, I2)|. Listing~\ref{lst:ancestor} shows the basic implementation. 
+
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/ancestor.pl}
+	\caption{Ancestor definition}
+	\label{lst:ancestor}
+\end{listing}
+
+Although in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
+\begin{itemize}
+	\item define a predicate that can be expanded with other rules: in Listing~\ref{lst:ancestor} we define only the base step and the recursive call, but by imagining building an ontology that deals with people we can enrich the predicate with numerous rules that reflect family relationships between humans;
+	\item have a predicate that can trigger many recursive calls\footnote{It will be useful in Section~\ref{sec:}}: the number of individuals populating an ontology can be considerable and increase over time; moreover, if complex relationships are also considered \textemdash{}such as those suggested in the previous point\textemdash{} the number of ancestors of an individual can be very high and not easily known a priori.
+\end{itemize}
+
+\paragraph{Disjoint classes and inconsistency:} In our ontology, logical inconsistency is due to the fact that the reindeer Reiny is both herbivorous and carnivorous, but the two classes are disjoint. Let us therefore see how to express this disjointness in Prolog and how to capture the inconsistency in our KB.
+
+Listing~\ref{lst:disjoint} shows how to define 2 disjoint classes and the consequences this has for individuals. At line $1$ we see that to state that carnivores and herbivores are disjoint classes, a single fact is sufficient. The other lines show the consequences that disjointness has on individuals: if the classes \mintinline{text}|C| and \mintinline{text}|C2| are disjoint (line $4$) and \mintinline{text}|I| belongs to class \mintinline{text}|C2| (line $5$), then \mintinline{text}|i| does not belong to class \mintinline{text}|C| (line $3$): \mintinline{text}|logicNot(P)| is a predicate that indicates that the proposition \mintinline{text}|P| is false\footnote{Providing a detailed explanation of this predicate is beyond the scope of this work; in \cite{samuel2008translating} the introduction of \mintinline{text}|logicNot(P)| is justified in order to bring the open world assumption into Prolog.}.
+
+\begin{listing}[h]
+	\mylisting{.65}{Prolog}{code/quantum_ontology/disjoint.pl}
+	\caption{Disjoint classes}
+	\label{lst:disjoint}
+\end{listing}
+
+Identifying the inconsistency of our KB means finding a statement that is both true and false. In particular, Reiny is carnivorous because she hunts (line $5$ Listing~\ref{lst:a_box_pl}), but she cannot be so because she is a reindeer and reindeer are herbivores (line $9$ Listing~\ref{lst:t_box_pl}).
+
+It is possible to identify a proposition that is simultaneously true and false with the rule shown in Listing~\ref{lst:error}. The head of the rule is a list composed of a string (which serves only to print an informational message) and the proposition \mintinline{text}|P|. For the predicate to be true, the proposition \mintinline{text}|P| must be both false and true.
+\begin{listing}[h]
+	\mylistingnonumber{.9}{Prolog}{code/quantum_ontology/error.pl}
+	\caption{Error rule}
+	\label{lst:error}
+\end{listing}
+
+We can now test the consistency of the KB by asking the Prolog interpreter whether there exists a \mintinline{text}|P| that is simultaneously false and true. The result of the query is shown in the following listing:
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.95\linewidth}
+		\begin{minted}[linenos=false]{text}
+?- error(X).
+    X = ['A term cannot be true and false.', isA(reiny, carnivore)].
+		\end{minted}
+	\end{minipage}
+\end{center}
+
+\subsection{Final result}
+Thanks to this translation process, we have obtained a KB expressed in Prolog equivalent to the original ontology expressed in OWL. Although with some simplifications, we were able to implement in Prolog the most important constructs offered by OWL, and we built a set of rules to perform inference on the newly created KB. The translation process can be further generalized to more advanced OWL constructs by following \cite{samuel2008translating}.
+
+The full version of the ontology translated into Prolog is available at \url{URL}.
+
+\section{QA-Prolog version}
+The KB we have just obtained is not compatible with the QA-Prolog pipeline. As presented in Section~\ref{sec:}, QA-Prolog does not implement all the features of Prolog In particular, lists and complex terms are not supported, and rules cannot be recursive.
 
 
 
-\section{Inference on the ontology}
+In our KB there are two rules that are defined recursively: \mintinline{text}|subClass(C1, C2)| and \mintinline{text}|hasproperty(I1, R, I2)|. In this section we will see how to modify these rules in order to make them compatible with the pipeline described in Chapter~\ref{ch:}.
+
+\subsection{Unfolding}
+To eliminate recursion, we can \emph{unfold} the recursive calls. The procedure is analogous to the \emph{loop unrolling} performed by modern compilers to speed up the execution of machine code. Loop unrolling consists of transforming a loop of instructions into a repeated sequence of instructions; this increases the length of the code but reduces the number of loop condition checks.
+
+Unfolding consists of developing the recursion by explicitly repeating the function call; in this way the recursive call is replaced by many calls to the function \mintinline{text}|A| in the function \mintinline{text}|B|.
+
+\paragraph{SubClasses:} To eliminate recursion in the rule \mintinline{text}|subClass(C1, C2)| we can remove the rule with the recursive call, replacing it with a sufficient number of other rules to cover the entire class hierarchy; each new rule adds one call and allows moving one level higher in the hierarchy.
+
+Our ontology has a maximum depth of $3$, therefore at most two recursive calls are needed to start from any node in the class hierarchy and reach the root. Listing~\ref{lst:subclass_qa} shows the updated version of the rule \mintinline{text}|subClass(C1, C2)| (to clarify the procedure, unfolding developed up to three calls, even though only two were necessary to cover the entire class hierarchy).
+
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_qa.pl}
+	\caption{Subclasses unfolding}
+	\label{lst:subclass_qa}
+\end{listing}
+
+\paragraph{Ancestor:} The issue with the predicate \mintinline{text}|hasproperty(I1, R, I2)| concerns the ancestor-successor relationship. Indeed, its definition it was very similar to the rule \mintinline{text}|subClass(C1, C2)|. In this case, however, recursion is also present in the base step, as can be seen in lines $1$ and $2$ of Listing~\ref{lst:ancestor}. Listing~\ref{lst:ancestor_qa} shows a possible solution. Of this code it is important to note:
+\begin{itemize}
+	\item unlike Listing~\ref{lst:subclass_qa}, we define many new predicates: useful if there were multiple ways to define new ancestors starting from those already identified\footnote{Listing~\ref{label} in the appendix shows an example for clarification.};
+	\item the predicate \mintinline{text}|hasProperty(I1, R, I2)| has been added; this must be used in queries, while \mintinline{text}|hasproperty(I1, R, I2)| is used only to define relationships between individuals.
+	\item we stopped, arbitrarily, after $10$ ancestors; in general there is no way to know how many recursive calls should be unfolded to be sure of capturing all the ancestors of an individual.
+\end{itemize}
+
+\begin{listing}[h]
+	\mylisting{.5}{Prolog}{code/quantum_ontology/ancestor_qa.pl}
+	\caption{Ancestor unfolding}
+	\label{lst:ancestor_qa}
+\end{listing}
+
+\subsection{Stopping criterion}
+As previously mentioned, it is not always possible to know in advance how many recursive calls will be performed to capture all the aspects we are interested in. In general, we can distinguish two cases: T-Box and A-Box.
+
+\paragraph{T-Box:} The T-Box describes our domain of interest and should be stable. Once a description of the world suitable for our purpose has been developed, it is rare for it to change; in our case, a modification of the T-Box could occur only if a new species were discovered, which is not very frequent.
+
+If the rules with recursive calls involve the T-Box, it can be possible to know the maximum number of recursive calls needed to capture all relevant information and perform sufficient unfolding to allow an adequate number of function calls.
+
+An example of this stopping criterion was shown in the rewriting of the rule \mintinline{text}|subClass(C1, C2)|. Once the class hierarchy is known, it is possible to compute the maximum depth and use it as a criterion to stop the unfolding process.
+
+\paragraph{A-Box:} The A-Box contains the individuals populating the ontology; for this reason, the A-Box is much more subject to change than the T-Box and, as discussed when presenting the ancestor-descendant relationship, relationships between individuals can also be very complex.
+
+In general, there is no way to establish in advance how many recursive calls are necessary to obtain all the results we expect. Moreover, each time an individual is added to the KB or its relationships are modified, the depth of the recursive calls may change.
+
+With regard to the A-Box, the stopping criterion for unfolding must be decided in advance or estimated through heuristics where possible. It is not possible to know in advance the maximum number of recursive calls without performing reasoning, but this would be counterproductive since the objective of the translation is to perform reasoning on a quantum annealer.
+
+\subsection{Equivalence between the KBs}
+Before replacing the KB with recursive rules with the modified one obtained through unfolding, we must ensure that there is equivalence between the two KBs. To do this, it would be possible to construct a proof based on the principle of induction, possibly with the aid of a proof assistant.
+
+Such a constructive proof is not the objective of this work. To convince ourselves of the equivalence between the representations, we test the behavior of queries that make use of recursive calls on the one hand and unfolding on the other.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Query subclasses]
+	{\label{lst:query_subclass}
+		\mylistingnumbernear{.37}{Prolog}{code/quantum_ontology/query1.pl}
+	}
+	\quad
+	\subfloat[Query ancestor]
+	{\label{lst:query_ancestor}
+		\mylistingnumbernear{.53}{Prolog}{code/quantum_ontology/query2.pl}
+	}
+	\captionof{listing}{Query results}
+	\label{lst:query_unfolding}
+\end{figure}
+
+The unfolding was carried out to be transparent to the user querying the KB; in fact, the queries to establish the class hierarchy and the list of ancestors are the same in the two representations. Listing~\ref{lst:query_unfolding} shows the result of the queries that involve recursive calls. Only one result is reported for each query because, as expected, the results obtained on the two KBs are identical.
+
 \section{Conclusion}
