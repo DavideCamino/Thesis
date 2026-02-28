@@ -309,5 +309,24 @@ Listing~\ref{lst:query_qa} shows the result of the queries that make use of the 
 	\label{lst:query_qa}
 \end{figure}
 
+\section{Risultato finale}
+La KB ottenuta\footnote{Disponibile a \url{URL}.} è compatibile con la pipeline di QA-Prolog. In questa sezione percorriamo tutta la pipeline di trasformazioni fino ad ottenere l'Hamiltoniana che rappresenta la KB con annessa query e discuteremo dei riusltati ottenuti.
+
+Formulare una query è essenziale perchè definisce gli output del nostro programma e ci permette quindi di costriure il ciruito digitale che è il primo passo della pipeline.
+
+Per valutare il risultato della traduzione non consideriamo il risultato della valutazione delle query perchè come già mostrato nell capitolo sulla pipeline alla Sezione~\ref{} i simulatori offerti dal framework Ocean permettono di trovare la soluzione solo per istanze di problemi molto piccole. Quello che considereremo invece è proprio la dimensione del problema di minimizzazione che otteniamo al termine della pipeline, estraendo il numero di qubit che compongono il polinomio da minimizzare e cercando di dare una giustificazione delle diverse dimensioni che otterremo.
+
+\subsection{Query}
+Costruiamo diverse query, che testino diversi fatti e regole definiti nella nostra KB. Consideriamo sia query semplici la ciu risposta può errere trovata semplicemente scorrendo i fatti esplicitamente elencati nella KB sia query via via più complesse che richiedano di applicare una o più regole di inferenza.
+
+Le query che testiamo sono:
+\begin{enumerate}
+	\item \mintinline{Prolog}|?- class(animal).|
+	\item \mintinline{Prolog}|?- class(X).|
+	\item \mintinline{Prolog}|?- subClass(seal, X).|
+	\item \mintinline{Prolog}|?- isA(sardy, X)|
+	\item \mintinline{Prolog}|?- error(X, Y, Z)|	
+	\item \mintinline{Prolog}|?- hasProperty(I1, ancestor, reiny_c).|
+\end{enumerate}
 
 \section{Conclusion}
