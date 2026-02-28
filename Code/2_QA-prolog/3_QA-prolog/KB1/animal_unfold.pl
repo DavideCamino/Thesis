@@ -120,6 +120,7 @@ isNotA(I, C) :-
     disjointClasses(C, C2),
     isA(I, C2).
 
-error(I, C) :- 
+error(I, C, M) :- 
     isA(I, C),
-    isNotA(I, C).
+    isNotA(I, C),
+    M = 'Individual_X_cannot_belong_and_not_belong_to_class_Y'.
