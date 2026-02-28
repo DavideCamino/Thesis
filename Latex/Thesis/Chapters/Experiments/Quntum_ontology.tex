@@ -213,11 +213,28 @@ The full version of the ontology translated into Prolog is available at \url{URL
 \section{QA-Prolog version}
 The KB we have just obtained is not compatible with the QA-Prolog pipeline. As presented in Section~\ref{sec:}, QA-Prolog does not implement all the features of Prolog In particular, lists and complex terms are not supported, and rules cannot be recursive.
 
+In this section we will see how to modify unsupported rules in order to make them compatible with the pipeline described in Chapter~\ref{ch:}.
 
+\subsection{Lists and complex terms}
+In our KB we introduced a single list, in Listing~\ref{lst:error}, exclusively to print an additional message to explain the inconsistent proposition. The list can simply be removed, or we can use an additional variable that will be bound to the message we want to print.
 
-In our KB there are two rules that are defined recursively: \mintinline{text}|subClass(C1, C2)| and \mintinline{text}|hasproperty(I1, R, I2)|. In this section we will see how to modify these rules in order to make them compatible with the pipeline described in Chapter~\ref{ch:}.
+Complex terms are predicates that have one or more predicates as arguments. The complex term present in our KB is \mintinline{text}|logicNot(isA(I, C))| introduced in Listing~\ref{lst:disjoint} line $3$. We used this predicate to state that if an individual belongs to a class \mintinline{text}|C1| disjoint from class \mintinline{text}|C2|, then the individual cannot belong to \mintinline{text}|C2|. 
+
+We can replace the complex term with a new predicate that represents the same concept: \mintinline{text}|isNotA(I, C)|. This new predicate forces us to modify also the rule for capturing inconsistencies in the KB. Listing~\ref{lst:error_qa} shows the final result.
+
+\begin{listing}[h]
+	\mylisting{.9}{Prolog}{code/quantum_ontology/error_qa.pl}
+	\caption{List and complex term removal}
+	\label{lst:error_qa}
+\end{listing}
+
+Eliminating the predicate \mintinline{text}|logicNot(P)| where \mintinline{text}|P| is a proposition, therefore possibly a predicate, forces us to define a new predicate for each statement we want to negate and to test each \emph{predicate}-\emph{predicate\_negation} pair to check for possible inconsistencies.
+
+In our KB, only class membership can generate inconsistency, so a single rule is sufficient. In general, other definitions of the predicate \mintinline{text}|error| may be necessary to account for all possible causes of inconsistency\footnote{However, this also gives us the possibility to define more precise error messages}.
 
 \subsection{Unfolding}
+In our KB there are two rules that are defined recursively: \mintinline{text}|subClass(C1, C2)| and \mintinline{text}|hasproperty(I1, R, I2)|. 
+
 To eliminate recursion, we can \emph{unfold} the recursive calls. The procedure is analogous to the \emph{loop unrolling} performed by modern compilers to speed up the execution of machine code. Loop unrolling consists of transforming a loop of instructions into a repeated sequence of instructions; this increases the length of the code but reduces the number of loop condition checks.
 
 Unfolding consists of developing the recursion by explicitly repeating the function call; in this way the recursive call is replaced by many calls to the function \mintinline{text}|A| in the function \mintinline{text}|B|.
@@ -261,25 +278,36 @@ In general, there is no way to establish in advance how many recursive calls are
 With regard to the A-Box, the stopping criterion for unfolding must be decided in advance or estimated through heuristics where possible. It is not possible to know in advance the maximum number of recursive calls without performing reasoning, but this would be counterproductive since the objective of the translation is to perform reasoning on a quantum annealer.
 
 \subsection{Equivalence between the KBs}
-Before replacing the KB with recursive rules with the modified one obtained through unfolding, we must ensure that there is equivalence between the two KBs. To do this, it would be possible to construct a proof based on the principle of induction, possibly with the aid of a proof assistant.
+Before replacing the KB with unsupported construct and recursive rules with the modified one, we must ensure that there is equivalence between the two KBs. 
 
-Such a constructive proof is not the objective of this work. To convince ourselves of the equivalence between the representations, we test the behavior of queries that make use of recursive calls on the one hand and unfolding on the other.
+To show equivalence between recursive calls and the unfolded version, it would be possible to construct a proof based on the principle of induction, possibly with the aid of a proof assistant.
+
+Such a constructive proof is not the objective of this work. To convince ourselves of the equivalence and to take into account also other modification, we test the behavior of queries that make use rewritten rules to ensure their correctness.
+
+As far as possible, the unfolding process was carried out so as to make it transparent to the end user. The result was achieved with regard to queries related to the subclass hierarchy and the retrieval of an individual's ancestors.
+
+As for error detection, however, the various rules that define the predicate \mintinline{text}|error| may have different numbers of parameters. For each number of parameters it will be necessary to test the predicate\footnote{not for each definition of the predicate; for example, if there are two definitions with $3$ parameters and one with $4$, it will be necessary to test \mintinline{text}|error| twice.}, in order to ensure that all inconsistencies are identified.
+
+Listing~\ref{lst:query_qa} shows the result of the queries that make use of the modified rules to make them compatible with the QA-Prolog pipeline. The result of the queries is as expected: we obtained all and only the results that we would also have obtained by querying the original KB. This intuitively convinces us of the equivalence of the two KBs.
 
 \begin{figure}[h]
 	\centering
-	\subfloat[Query subclasses]
+	\subfloat[Subclasses]
 	{\label{lst:query_subclass}
 		\mylistingnumbernear{.37}{Prolog}{code/quantum_ontology/query1.pl}
 	}
 	\quad
-	\subfloat[Query ancestor]
+	\subfloat[Ancestor]
 	{\label{lst:query_ancestor}
 		\mylistingnumbernear{.53}{Prolog}{code/quantum_ontology/query2.pl}
+	}\\
+	\subfloat[Error]
+	{\label{lst:query_error}
+		\mylistingnumbernear{.9}{Prolog}{code/quantum_ontology/query3.pl}
 	}
 	\captionof{listing}{Query results}
-	\label{lst:query_unfolding}
+	\label{lst:query_qa}
 \end{figure}
 
-The unfolding was carried out to be transparent to the user querying the KB; in fact, the queries to establish the class hierarchy and the list of ancestors are the same in the two representations. Listing~\ref{lst:query_unfolding} shows the result of the queries that involve recursive calls. Only one result is reported for each query because, as expected, the results obtained on the two KBs are identical.
 
 \section{Conclusion}
