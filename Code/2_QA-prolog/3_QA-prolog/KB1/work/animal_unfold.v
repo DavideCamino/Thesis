@@ -51,6 +51,55 @@
 `define subClass                                             6'd40
 `define subclass                                             6'd41
 
+// Define ancestor2(atom, atom).
+module \ancestor2/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor1/2 \ancestor1_YLjvd/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_hmCXY/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor3(atom, atom).
+module \ancestor3/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor2/2 \ancestor2_PrMcz/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_ZyWLy/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor5(atom, atom).
+module \ancestor5/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor4/2 \ancestor4_fGCus/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_GJyGd/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define error(atom, atom, atom).
+module \error/3 (A, B, C, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  input [5:0] C;
+  output Valid;
+  wire [2:0] $v1;
+  \isA/2 \isA_JSxki/2 (A, B, $v1[0]);
+  \isNotA/2 \isNotA_cUnKI/2 (A, B, $v1[1]);
+  assign $v1[2] = C == `Individual_X_cannot_belong_and_not_belong_to_class_Y;
+  assign Valid = &$v1;
+endmodule
+
 // Define class(atom).
 module \class/1 (A, Valid);
   input [5:0] A;
@@ -119,6 +168,158 @@ module \subclass/2 (A, B, Valid);
   assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5 | &$v6 | &$v7 | &$v8 | &$v9;
 endmodule
 
+// Define subClass(atom, atom).
+module \subClass/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  wire $v1;
+  \subclass/2 \subclass_PsMLj/2 (A, B, $v1);
+  (* keep *) wire [5:0] E;
+  wire [1:0] $v2;
+  \subclass/2 \subclass_VOWRP/2 (A, E, $v2[0]);
+  \subclass/2 \subclass_dsvpg/2 (E, B, $v2[1]);
+  (* keep *) wire [5:0] J;
+  (* keep *) wire [5:0] K;
+  wire [2:0] $v3;
+  \subclass/2 \subclass_lbtlL/2 (A, J, $v3[0]);
+  \subclass/2 \subclass_mXiMQ/2 (J, K, $v3[1]);
+  \subclass/2 \subclass_OUfqM/2 (K, B, $v3[2]);
+  assign Valid = &$v1 | &$v2 | &$v3;
+endmodule
+
+// Define ancestor1(atom, atom).
+module \ancestor1/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  wire $v1;
+  \hasproperty/3 \hasproperty_rRIeQ/3 (B, `sonOf, A, $v1);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor7(atom, atom).
+module \ancestor7/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor6/2 \ancestor6_gZHuJ/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_lwkZb/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define isNotA(atom, atom).
+module \isNotA/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \disjointClasses/2 \disjointClasses_jrcam/2 (B, C, $v1[0]);
+  \isA/2 \isA_mbaLT/2 (A, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor4(atom, atom).
+module \ancestor4/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor3/2 \ancestor3_rwUJX/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_QJDyt/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor8(atom, atom).
+module \ancestor8/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor7/2 \ancestor7_dONDx/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_ihABe/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor9(atom, atom).
+module \ancestor9/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor8/2 \ancestor8_rhAmX/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_ZdEuU/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define hasProperty(atom, atom, atom).
+module \hasProperty/3 (A, B, C, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  input [5:0] C;
+  output Valid;
+  wire $v1;
+  \hasproperty/3 \hasproperty_lTqQC/3 (A, B, C, $v1);
+  wire [1:0] $v2;
+  assign $v2[0] = B == `ancestor;
+  \ancestor_unfold/2 \ancestor_unfold_tbPRF/2 (A, C, $v2[1]);
+  assign Valid = &$v1 | &$v2;
+endmodule
+
+// Define isA(atom, atom).
+module \isA/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  wire $v1;
+  \isa/2 \isa_YYOpx/2 (A, B, $v1);
+  (* keep *) wire [5:0] E;
+  wire [1:0] $v2;
+  \isa/2 \isa_KsRWs/2 (A, E, $v2[0]);
+  \subClass/2 \subClass_TDEEV/2 (E, B, $v2[1]);
+  (* keep *) wire [5:0] J;
+  wire [1:0] $v3;
+  assign $v3[0] = B == `carnivore;
+  \hasproperty/3 \hasproperty_nEcvG/3 (A, `hunt, J, $v3[1]);
+  (* keep *) wire [5:0] T;
+  wire [1:0] $v4;
+  assign $v4[0] = B == `predator;
+  \hasproperty/3 \hasproperty_FDiAJ/3 (A, `hunt, T, $v4[1]);
+  (* keep *) wire [5:0] AN;
+  wire [1:0] $v5;
+  assign $v5[0] = B == `prey;
+  \hasproperty/3 \hasproperty_eCPZy/3 (AN, `hunt, A, $v5[1]);
+  assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5;
+endmodule
+
+// Define Query(atom, atom, atom).
+module Query (X, Y, Z, Valid);
+  input [5:0] X;
+  input [5:0] Y;
+  input [5:0] Z;
+  output Valid;
+  wire $v1;
+  \error/3 \error_cDWyo/3 (X, Y, Z, $v1);
+  assign Valid = &$v1;
+endmodule
+
+// Define disjointClasses(atom, atom).
+module \disjointClasses/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  wire [1:0] $v1;
+  assign $v1[0] = A == `carnivore;
+  assign $v1[1] = B == `herbivore;
+  assign Valid = &$v1;
+endmodule
+
 // Define isa(atom, atom).
 module \isa/2 (A, B, Valid);
   input [5:0] A;
@@ -146,6 +347,44 @@ module \isa/2 (A, B, Valid);
   assign $v7[0] = A == `penguy;
   assign $v7[1] = B == `penguin;
   assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5 | &$v6 | &$v7;
+endmodule
+
+// Define ancestor6(atom, atom).
+module \ancestor6/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  (* keep *) wire [5:0] C;
+  wire [1:0] $v1;
+  \ancestor5/2 \ancestor5_FCVYM/2 (A, C, $v1[0]);
+  \hasproperty/3 \hasproperty_hyzfi/3 (B, `sonOf, C, $v1[1]);
+  assign Valid = &$v1;
+endmodule
+
+// Define ancestor_unfold(atom, atom).
+module \ancestor_unfold/2 (A, B, Valid);
+  input [5:0] A;
+  input [5:0] B;
+  output Valid;
+  wire $v1;
+  \ancestor1/2 \ancestor1_llnwF/2 (A, B, $v1);
+  wire $v2;
+  \ancestor2/2 \ancestor2_pdoeU/2 (A, B, $v2);
+  wire $v3;
+  \ancestor3/2 \ancestor3_mszNI/2 (A, B, $v3);
+  wire $v4;
+  \ancestor4/2 \ancestor4_hKudX/2 (A, B, $v4);
+  wire $v5;
+  \ancestor5/2 \ancestor5_GZHso/2 (A, B, $v5);
+  wire $v6;
+  \ancestor6/2 \ancestor6_luUSO/2 (A, B, $v6);
+  wire $v7;
+  \ancestor7/2 \ancestor7_WnUye/2 (A, B, $v7);
+  wire $v8;
+  \ancestor8/2 \ancestor8_sdEfH/2 (A, B, $v8);
+  wire $v9;
+  \ancestor9/2 \ancestor9_xkQcJ/2 (A, B, $v9);
+  assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5 | &$v6 | &$v7 | &$v8 | &$v9;
 endmodule
 
 // Define hasproperty(atom, atom, atom).
@@ -183,243 +422,4 @@ module \hasproperty/3 (A, B, C, Valid);
   assign $v7[1] = B == `sonOf;
   assign $v7[2] = C == `reiny_b;
   assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5 | &$v6 | &$v7;
-endmodule
-
-// Define subClass(atom, atom).
-module \subClass/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  wire $v1;
-  \subclass/2 \subclass_TwthE/2 (A, B, $v1);
-  (* keep *) wire [5:0] E;
-  wire [1:0] $v2;
-  \subclass/2 \subclass_GvnRa/2 (A, E, $v2[0]);
-  \subclass/2 \subclass_bVqFW/2 (E, B, $v2[1]);
-  (* keep *) wire [5:0] J;
-  (* keep *) wire [5:0] K;
-  wire [2:0] $v3;
-  \subclass/2 \subclass_CQgoW/2 (A, J, $v3[0]);
-  \subclass/2 \subclass_GCxKx/2 (J, K, $v3[1]);
-  \subclass/2 \subclass_Yeacl/2 (K, B, $v3[2]);
-  assign Valid = &$v1 | &$v2 | &$v3;
-endmodule
-
-// Define disjointClasses(atom, atom).
-module \disjointClasses/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  wire [1:0] $v1;
-  assign $v1[0] = A == `carnivore;
-  assign $v1[1] = B == `herbivore;
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor3(atom, atom).
-module \ancestor3/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor2/2 \ancestor2_hVIPO/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_LgGDh/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor4(atom, atom).
-module \ancestor4/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor3/2 \ancestor3_WBVHk/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_diLHk/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor6(atom, atom).
-module \ancestor6/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor5/2 \ancestor5_Mifel/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_hjcFX/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor8(atom, atom).
-module \ancestor8/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor7/2 \ancestor7_UmxBH/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_vsSTe/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define error(atom, atom, atom).
-module \error/3 (A, B, C, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  input [5:0] C;
-  output Valid;
-  wire [2:0] $v1;
-  \isA/2 \isA_xquav/2 (A, B, $v1[0]);
-  \isNotA/2 \isNotA_hxYXc/2 (A, B, $v1[1]);
-  assign $v1[2] = C == `Individual_X_cannot_belong_and_not_belong_to_class_Y;
-  assign Valid = &$v1;
-endmodule
-
-// Define Query(atom, atom, atom).
-module Query (Z, X, Y, Valid);
-  input [5:0] Z;
-  input [5:0] X;
-  input [5:0] Y;
-  output Valid;
-  wire $v1;
-  \error/3 \error_NaNNY/3 (X, Y, Z, $v1);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor1(atom, atom).
-module \ancestor1/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  wire $v1;
-  \hasproperty/3 \hasproperty_wkNtW/3 (B, `sonOf, A, $v1);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor5(atom, atom).
-module \ancestor5/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor4/2 \ancestor4_PVdsC/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_bTPsi/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor7(atom, atom).
-module \ancestor7/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor6/2 \ancestor6_OLSpL/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_pVNoX/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor_unfold(atom, atom).
-module \ancestor_unfold/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  wire $v1;
-  \ancestor1/2 \ancestor1_YRwNR/2 (A, B, $v1);
-  wire $v2;
-  \ancestor2/2 \ancestor2_rZQWx/2 (A, B, $v2);
-  wire $v3;
-  \ancestor3/2 \ancestor3_nuUUb/2 (A, B, $v3);
-  wire $v4;
-  \ancestor4/2 \ancestor4_NahfR/2 (A, B, $v4);
-  wire $v5;
-  \ancestor5/2 \ancestor5_TyqNP/2 (A, B, $v5);
-  wire $v6;
-  \ancestor6/2 \ancestor6_XoGBZ/2 (A, B, $v6);
-  wire $v7;
-  \ancestor7/2 \ancestor7_IaDCq/2 (A, B, $v7);
-  wire $v8;
-  \ancestor8/2 \ancestor8_Cgxmp/2 (A, B, $v8);
-  wire $v9;
-  \ancestor9/2 \ancestor9_yuNmn/2 (A, B, $v9);
-  assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5 | &$v6 | &$v7 | &$v8 | &$v9;
-endmodule
-
-// Define isNotA(atom, atom).
-module \isNotA/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \disjointClasses/2 \disjointClasses_sDBaD/2 (B, C, $v1[0]);
-  \isA/2 \isA_RFeYA/2 (A, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor2(atom, atom).
-module \ancestor2/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor1/2 \ancestor1_gUJvA/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_OwLVE/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define ancestor9(atom, atom).
-module \ancestor9/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  (* keep *) wire [5:0] C;
-  wire [1:0] $v1;
-  \ancestor8/2 \ancestor8_Eiomq/2 (A, C, $v1[0]);
-  \hasproperty/3 \hasproperty_DNgkI/3 (B, `sonOf, C, $v1[1]);
-  assign Valid = &$v1;
-endmodule
-
-// Define hasProperty(atom, atom, atom).
-module \hasProperty/3 (A, B, C, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  input [5:0] C;
-  output Valid;
-  wire $v1;
-  \hasproperty/3 \hasproperty_WLXvV/3 (A, B, C, $v1);
-  wire [1:0] $v2;
-  assign $v2[0] = B == `ancestor;
-  \ancestor_unfold/2 \ancestor_unfold_MAfur/2 (A, C, $v2[1]);
-  assign Valid = &$v1 | &$v2;
-endmodule
-
-// Define isA(atom, atom).
-module \isA/2 (A, B, Valid);
-  input [5:0] A;
-  input [5:0] B;
-  output Valid;
-  wire $v1;
-  \isa/2 \isa_hoEJg/2 (A, B, $v1);
-  (* keep *) wire [5:0] E;
-  wire [1:0] $v2;
-  \isa/2 \isa_TTLAr/2 (A, E, $v2[0]);
-  \subClass/2 \subClass_vJOzv/2 (E, B, $v2[1]);
-  (* keep *) wire [5:0] J;
-  wire [1:0] $v3;
-  assign $v3[0] = B == `carnivore;
-  \hasproperty/3 \hasproperty_HjpTG/3 (A, `hunt, J, $v3[1]);
-  (* keep *) wire [5:0] T;
-  wire [1:0] $v4;
-  assign $v4[0] = B == `predator;
-  \hasproperty/3 \hasproperty_lsVkA/3 (A, `hunt, T, $v4[1]);
-  (* keep *) wire [5:0] AN;
-  wire [1:0] $v5;
-  assign $v5[0] = B == `prey;
-  \hasproperty/3 \hasproperty_ZKdLo/3 (AN, `hunt, A, $v5[1]);
-  assign Valid = &$v1 | &$v2 | &$v3 | &$v4 | &$v5;
 endmodule

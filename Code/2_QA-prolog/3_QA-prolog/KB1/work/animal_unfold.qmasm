@@ -616,111 +616,111 @@
   !use_macro NAND $id00304  # $abc$1539$auto$blifparse.cc:396:parse_blif$1541
   !use_macro NOT $id00303  # $abc$1539$auto$blifparse.cc:396:parse_blif$1540
   !use_macro OAI3 $id00306  # $abc$1539$auto$blifparse.cc:396:parse_blif$1543
-  !use_macro id00018 $id00307  # subclass_CQgoW/2
-  !use_macro id00018 $id00308  # subclass_GCxKx/2
-  !use_macro id00018 $id00309  # subclass_GvnRa/2
-  !use_macro id00018 $id00310  # subclass_TwthE/2
-  !use_macro id00018 $id00311  # subclass_Yeacl/2
-  !use_macro id00018 $id00312  # subclass_bVqFW/2
-  $id00303.A = $id00307.Valid  # $v3[0]
-  $id00304.A = $id00308.Valid  # $v3[1]
-  $id00304.B = $id00311.Valid  # $v3[2]
+  !use_macro id00018 $id00307  # subclass_OUfqM/2
+  !use_macro id00018 $id00308  # subclass_PsMLj/2
+  !use_macro id00018 $id00309  # subclass_VOWRP/2
+  !use_macro id00018 $id00310  # subclass_dsvpg/2
+  !use_macro id00018 $id00311  # subclass_lbtlL/2
+  !use_macro id00018 $id00312  # subclass_mXiMQ/2
+  $id00303.A = $id00311.Valid  # $v3[0]
+  $id00304.A = $id00312.Valid  # $v3[1]
+  $id00304.B = $id00307.Valid  # $v3[2]
   $id00305.A = $id00309.Valid  # $v2[0]
-  $id00305.B = $id00312.Valid  # $v2[1]
-  $id00305.C = $id00310.Valid  # $v1
+  $id00305.B = $id00310.Valid  # $v2[1]
+  $id00305.C = $id00308.Valid  # $v1
   $id00306.A = $id00303.Y  # $abc$1539$new_n8_
   $id00306.B = $id00304.Y  # $abc$1539$new_n9_
   $id00306.C = $id00305.Y  # $abc$1539$new_n10_
-  $id00307.A[0] = $id00309.A[0]  # A[5] in the HDL
-  $id00307.A[0] = $id00310.A[0]  # A[5] in the HDL
-  $id00307.A[0] = A[0]  # A[5] in the HDL
-  $id00307.A[1] = $id00309.A[1]  # A[4] in the HDL
-  $id00307.A[1] = $id00310.A[1]  # A[4] in the HDL
-  $id00307.A[1] = A[1]  # A[4] in the HDL
-  $id00307.A[2] = $id00309.A[2]  # A[3] in the HDL
-  $id00307.A[2] = $id00310.A[2]  # A[3] in the HDL
-  $id00307.A[2] = A[2]  # A[3] in the HDL
-  $id00307.A[3] = $id00309.A[3]  # A[2] in the HDL
-  $id00307.A[3] = $id00310.A[3]  # A[2] in the HDL
-  $id00307.A[3] = A[3]  # A[2] in the HDL
-  $id00307.A[4] = $id00309.A[4]  # A[1] in the HDL
-  $id00307.A[4] = $id00310.A[4]  # A[1] in the HDL
-  $id00307.A[4] = A[4]  # A[1] in the HDL
-  $id00307.A[5] = $id00309.A[5]  # A[0] in the HDL
-  $id00307.A[5] = $id00310.A[5]  # A[0] in the HDL
-  $id00307.A[5] = A[5]  # A[0] in the HDL
-  $id00308.A[0] = $id00307.B[0]  # J[5]
-  $id00308.A[1] = $id00307.B[1]  # J[4]
-  $id00308.A[2] = $id00307.B[2]  # J[3]
-  $id00308.A[3] = $id00307.B[3]  # J[2]
-  $id00308.A[4] = $id00307.B[4]  # J[1]
-  $id00308.A[5] = $id00307.B[5]  # J[0]
-  $id00309.A[0] = $id00310.A[0]  # A[5] in the HDL
+  $id00307.A[0] = $id00312.B[0]  # K[5]
+  $id00307.A[1] = $id00312.B[1]  # K[4]
+  $id00307.A[2] = $id00312.B[2]  # K[3]
+  $id00307.A[3] = $id00312.B[3]  # K[2]
+  $id00307.A[4] = $id00312.B[4]  # K[1]
+  $id00307.A[5] = $id00312.B[5]  # K[0]
+  $id00307.B[0] = $id00308.B[0]  # B[5] in the HDL
+  $id00307.B[0] = $id00310.B[0]  # B[5] in the HDL
+  $id00307.B[0] = B[0]  # B[5] in the HDL
+  $id00307.B[1] = $id00308.B[1]  # B[4] in the HDL
+  $id00307.B[1] = $id00310.B[1]  # B[4] in the HDL
+  $id00307.B[1] = B[1]  # B[4] in the HDL
+  $id00307.B[2] = $id00308.B[2]  # B[3] in the HDL
+  $id00307.B[2] = $id00310.B[2]  # B[3] in the HDL
+  $id00307.B[2] = B[2]  # B[3] in the HDL
+  $id00307.B[3] = $id00308.B[3]  # B[2] in the HDL
+  $id00307.B[3] = $id00310.B[3]  # B[2] in the HDL
+  $id00307.B[3] = B[3]  # B[2] in the HDL
+  $id00307.B[4] = $id00308.B[4]  # B[1] in the HDL
+  $id00307.B[4] = $id00310.B[4]  # B[1] in the HDL
+  $id00307.B[4] = B[4]  # B[1] in the HDL
+  $id00307.B[5] = $id00308.B[5]  # B[0] in the HDL
+  $id00307.B[5] = $id00310.B[5]  # B[0] in the HDL
+  $id00307.B[5] = B[5]  # B[0] in the HDL
+  $id00308.A[0] = $id00309.A[0]  # A[5] in the HDL
+  $id00308.A[0] = $id00311.A[0]  # A[5] in the HDL
+  $id00308.A[0] = A[0]  # A[5] in the HDL
+  $id00308.A[1] = $id00309.A[1]  # A[4] in the HDL
+  $id00308.A[1] = $id00311.A[1]  # A[4] in the HDL
+  $id00308.A[1] = A[1]  # A[4] in the HDL
+  $id00308.A[2] = $id00309.A[2]  # A[3] in the HDL
+  $id00308.A[2] = $id00311.A[2]  # A[3] in the HDL
+  $id00308.A[2] = A[2]  # A[3] in the HDL
+  $id00308.A[3] = $id00309.A[3]  # A[2] in the HDL
+  $id00308.A[3] = $id00311.A[3]  # A[2] in the HDL
+  $id00308.A[3] = A[3]  # A[2] in the HDL
+  $id00308.A[4] = $id00309.A[4]  # A[1] in the HDL
+  $id00308.A[4] = $id00311.A[4]  # A[1] in the HDL
+  $id00308.A[4] = A[4]  # A[1] in the HDL
+  $id00308.A[5] = $id00309.A[5]  # A[0] in the HDL
+  $id00308.A[5] = $id00311.A[5]  # A[0] in the HDL
+  $id00308.A[5] = A[5]  # A[0] in the HDL
+  $id00308.B[0] = $id00310.B[0]  # B[5] in the HDL
+  $id00308.B[0] = B[0]  # B[5] in the HDL
+  $id00308.B[1] = $id00310.B[1]  # B[4] in the HDL
+  $id00308.B[1] = B[1]  # B[4] in the HDL
+  $id00308.B[2] = $id00310.B[2]  # B[3] in the HDL
+  $id00308.B[2] = B[2]  # B[3] in the HDL
+  $id00308.B[3] = $id00310.B[3]  # B[2] in the HDL
+  $id00308.B[3] = B[3]  # B[2] in the HDL
+  $id00308.B[4] = $id00310.B[4]  # B[1] in the HDL
+  $id00308.B[4] = B[4]  # B[1] in the HDL
+  $id00308.B[5] = $id00310.B[5]  # B[0] in the HDL
+  $id00308.B[5] = B[5]  # B[0] in the HDL
+  $id00309.A[0] = $id00311.A[0]  # A[5] in the HDL
   $id00309.A[0] = A[0]  # A[5] in the HDL
-  $id00309.A[1] = $id00310.A[1]  # A[4] in the HDL
+  $id00309.A[1] = $id00311.A[1]  # A[4] in the HDL
   $id00309.A[1] = A[1]  # A[4] in the HDL
-  $id00309.A[2] = $id00310.A[2]  # A[3] in the HDL
+  $id00309.A[2] = $id00311.A[2]  # A[3] in the HDL
   $id00309.A[2] = A[2]  # A[3] in the HDL
-  $id00309.A[3] = $id00310.A[3]  # A[2] in the HDL
+  $id00309.A[3] = $id00311.A[3]  # A[2] in the HDL
   $id00309.A[3] = A[3]  # A[2] in the HDL
-  $id00309.A[4] = $id00310.A[4]  # A[1] in the HDL
+  $id00309.A[4] = $id00311.A[4]  # A[1] in the HDL
   $id00309.A[4] = A[4]  # A[1] in the HDL
-  $id00309.A[5] = $id00310.A[5]  # A[0] in the HDL
+  $id00309.A[5] = $id00311.A[5]  # A[0] in the HDL
   $id00309.A[5] = A[5]  # A[0] in the HDL
-  $id00310.A[0] = A[0]  # A[5] in the HDL
-  $id00310.A[1] = A[1]  # A[4] in the HDL
-  $id00310.A[2] = A[2]  # A[3] in the HDL
-  $id00310.A[3] = A[3]  # A[2] in the HDL
-  $id00310.A[4] = A[4]  # A[1] in the HDL
-  $id00310.A[5] = A[5]  # A[0] in the HDL
-  $id00310.B[0] = $id00311.B[0]  # B[5] in the HDL
-  $id00310.B[0] = $id00312.B[0]  # B[5] in the HDL
+  $id00310.A[0] = $id00309.B[0]  # E[5]
+  $id00310.A[1] = $id00309.B[1]  # E[4]
+  $id00310.A[2] = $id00309.B[2]  # E[3]
+  $id00310.A[3] = $id00309.B[3]  # E[2]
+  $id00310.A[4] = $id00309.B[4]  # E[1]
+  $id00310.A[5] = $id00309.B[5]  # E[0]
   $id00310.B[0] = B[0]  # B[5] in the HDL
-  $id00310.B[1] = $id00311.B[1]  # B[4] in the HDL
-  $id00310.B[1] = $id00312.B[1]  # B[4] in the HDL
   $id00310.B[1] = B[1]  # B[4] in the HDL
-  $id00310.B[2] = $id00311.B[2]  # B[3] in the HDL
-  $id00310.B[2] = $id00312.B[2]  # B[3] in the HDL
   $id00310.B[2] = B[2]  # B[3] in the HDL
-  $id00310.B[3] = $id00311.B[3]  # B[2] in the HDL
-  $id00310.B[3] = $id00312.B[3]  # B[2] in the HDL
   $id00310.B[3] = B[3]  # B[2] in the HDL
-  $id00310.B[4] = $id00311.B[4]  # B[1] in the HDL
-  $id00310.B[4] = $id00312.B[4]  # B[1] in the HDL
   $id00310.B[4] = B[4]  # B[1] in the HDL
-  $id00310.B[5] = $id00311.B[5]  # B[0] in the HDL
-  $id00310.B[5] = $id00312.B[5]  # B[0] in the HDL
   $id00310.B[5] = B[5]  # B[0] in the HDL
-  $id00311.A[0] = $id00308.B[0]  # K[5]
-  $id00311.A[1] = $id00308.B[1]  # K[4]
-  $id00311.A[2] = $id00308.B[2]  # K[3]
-  $id00311.A[3] = $id00308.B[3]  # K[2]
-  $id00311.A[4] = $id00308.B[4]  # K[1]
-  $id00311.A[5] = $id00308.B[5]  # K[0]
-  $id00311.B[0] = $id00312.B[0]  # B[5] in the HDL
-  $id00311.B[0] = B[0]  # B[5] in the HDL
-  $id00311.B[1] = $id00312.B[1]  # B[4] in the HDL
-  $id00311.B[1] = B[1]  # B[4] in the HDL
-  $id00311.B[2] = $id00312.B[2]  # B[3] in the HDL
-  $id00311.B[2] = B[2]  # B[3] in the HDL
-  $id00311.B[3] = $id00312.B[3]  # B[2] in the HDL
-  $id00311.B[3] = B[3]  # B[2] in the HDL
-  $id00311.B[4] = $id00312.B[4]  # B[1] in the HDL
-  $id00311.B[4] = B[4]  # B[1] in the HDL
-  $id00311.B[5] = $id00312.B[5]  # B[0] in the HDL
-  $id00311.B[5] = B[5]  # B[0] in the HDL
-  $id00312.A[0] = $id00309.B[0]  # E[5]
-  $id00312.A[1] = $id00309.B[1]  # E[4]
-  $id00312.A[2] = $id00309.B[2]  # E[3]
-  $id00312.A[3] = $id00309.B[3]  # E[2]
-  $id00312.A[4] = $id00309.B[4]  # E[1]
-  $id00312.A[5] = $id00309.B[5]  # E[0]
-  $id00312.B[0] = B[0]  # B[5] in the HDL
-  $id00312.B[1] = B[1]  # B[4] in the HDL
-  $id00312.B[2] = B[2]  # B[3] in the HDL
-  $id00312.B[3] = B[3]  # B[2] in the HDL
-  $id00312.B[4] = B[4]  # B[1] in the HDL
-  $id00312.B[5] = B[5]  # B[0] in the HDL
+  $id00311.A[0] = A[0]  # A[5] in the HDL
+  $id00311.A[1] = A[1]  # A[4] in the HDL
+  $id00311.A[2] = A[2]  # A[3] in the HDL
+  $id00311.A[3] = A[3]  # A[2] in the HDL
+  $id00311.A[4] = A[4]  # A[1] in the HDL
+  $id00311.A[5] = A[5]  # A[0] in the HDL
+  $id00312.A[0] = $id00311.B[0]  # J[5]
+  $id00312.A[1] = $id00311.B[1]  # J[4]
+  $id00312.A[2] = $id00311.B[2]  # J[3]
+  $id00312.A[3] = $id00311.B[3]  # J[2]
+  $id00312.A[4] = $id00311.B[4]  # J[1]
+  $id00312.A[5] = $id00311.B[5]  # J[0]
   Valid = $id00306.Y
   A[5] A[3] A[1] B[2] B[4] B[0] A[4] A[2] A[0] B[3] B[5] B[1] -> A[0] A[2] A[4] B[3] B[1] B[5] A[1] A[3] A[5] B[2] B[0] B[4]
 !end_macro id00016
@@ -737,14 +737,14 @@
   !use_macro NOT $id00341  # $abc$1496$auto$blifparse.cc:396:parse_blif$1498
   !use_macro OAI3 $id00349  # $abc$1496$auto$blifparse.cc:396:parse_blif$1506
   !use_macro OR $id00347  # $abc$1496$auto$blifparse.cc:396:parse_blif$1504
-  !use_macro id00017 $id00350  # hasproperty_HjpTG/3
-  !use_macro id00017 $id00351  # hasproperty_ZKdLo/3
-  !use_macro id00017 $id00352  # hasproperty_lsVkA/3
-  !use_macro id00015 $id00353  # isa_TTLAr/2
-  !use_macro id00015 $id00354  # isa_hoEJg/2
-  !use_macro id00016 $id00355  # subClass_vJOzv/2
+  !use_macro id00017 $id00350  # hasproperty_FDiAJ/3
+  !use_macro id00017 $id00351  # hasproperty_eCPZy/3
+  !use_macro id00017 $id00352  # hasproperty_nEcvG/3
+  !use_macro id00015 $id00353  # isa_KsRWs/2
+  !use_macro id00015 $id00354  # isa_YYOpx/2
+  !use_macro id00016 $id00355  # subClass_TDEEV/2
   $id00340.A = $id00342.A  # B[0] in the HDL
-  $id00340.B = $id00350.Valid  # $v3[1]
+  $id00340.B = $id00352.Valid  # $v3[1]
   $id00340.C = $id00351.Valid  # $v5[1]
   $id00341.A = $id00340.Y  # $abc$1496$new_n14_
   $id00342.B = $id00340.D  # B[4] in the HDL
@@ -755,7 +755,7 @@
   $id00345.A = $id00341.Y  # $abc$1496$new_n15_
   $id00345.B = $id00343.Y  # $abc$1496$new_n17_
   $id00345.C = $id00344.Y  # $abc$1496$new_n18_
-  $id00345.D = $id00352.Valid  # $v4[1]
+  $id00345.D = $id00350.Valid  # $v4[1]
   $id00347.B = $id00346.Y  # $abc$1496$new_n20_
   $id00348.A = $id00353.Valid  # $v2[0]
   $id00348.B = $id00355.Valid  # $v2[1]
@@ -985,8 +985,8 @@
 # id00013
 !begin_macro id00013
   !use_macro AND $id00379  # $abc$1507$auto$blifparse.cc:396:parse_blif$1508
-  !use_macro id00014 $id00380  # disjointClasses_sDBaD/2
-  !use_macro id00012 $id00381  # isA_RFeYA/2
+  !use_macro id00014 $id00380  # disjointClasses_jrcam/2
+  !use_macro id00012 $id00381  # isA_mbaLT/2
   $id00379.A = $id00380.Valid  # $v1[0]
   $id00379.B = $id00381.Valid  # $v1[1]
   $id00380.A[0] = B[0]  # B[5] in the HDL
@@ -1020,8 +1020,8 @@
   !use_macro NOR $id00384  # $abc$1434$auto$blifparse.cc:396:parse_blif$1435
   !use_macro NOR $id00385  # $abc$1434$auto$blifparse.cc:396:parse_blif$1436
   !use_macro NOR $id00388  # $abc$1434$auto$blifparse.cc:396:parse_blif$1439
-  !use_macro id00012 $id00391  # isA_xquav/2
-  !use_macro id00013 $id00392  # isNotA_hxYXc/2
+  !use_macro id00012 $id00391  # isA_JSxki/2
+  !use_macro id00013 $id00392  # isNotA_cUnKI/2
   $id00386.A = $id00384.Y  # $abc$1434$new_n10_
   $id00386.B = $id00385.Y  # $abc$1434$new_n11_
   $id00387.A = $id00391.Valid  # $v1[0]
@@ -1077,7 +1077,7 @@
 !end_macro id00011
 
 !begin_macro Query
-  !use_macro id00011 $id00399  # error_NaNNY/3
+  !use_macro id00011 $id00399  # error_cDWyo/3
   $id00399.A[0] = X[0]  # X[5] in the HDL
   $id00399.A[1] = X[1]  # X[4] in the HDL
   $id00399.A[2] = X[2]  # X[3] in the HDL
