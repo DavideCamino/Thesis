@@ -328,5 +328,33 @@ Le query che testiamo sono:
 	\item \mintinline{Prolog}|?- error(X, Y, Z)|	
 	\item \mintinline{Prolog}|?- hasProperty(I1, ancestor, reiny_c).|
 \end{enumerate}
+Nei risultati faremo riferimento alle query direttamente con il numero associato in questo elenco.
+\subsection{Risultati}
+\begin{wrapfigure}{r}{.6\linewidth}
+	\centering
+	\vspace{-.5cm}
+	\includegraphics[width=.95\linewidth]{quantum_ontology/dimension}
+	\caption{Problem dimension}
+\end{wrapfigure}
+Come si vede dalla Figura~\ref{} il numero di \emph{qubits} necessari a rappresentare il problema varia notevolemnte dalle poche decine delle prime query a quasi diecimila \emph{qubits} della query riguardante gli antenati di un individuo.
+
+La grande differenza nel numero di \emph{qubits} utilizzati è dovuta alla complessità della query, a quanti fatti e a quante regole si deve ricorrere per poter trovare la soluzione della query. 
+
+Per query semplici come le prime 2 è sufficiente scorrere l'elenco dei fatti. La query $3$, che genera un problema con $1072$ variabili booleane, richiede la costruzione di tutta la gerarchia delle classi. Anche la query $4$ ($2013$ \emph{qubits}) necessita della gerarchia delle classi, inoltre bisogna considerare anche tutte le regole che ci permettono di definire un individuo come appartenente a una certa classe (regole del Listato~\ref{}).
+
+La query $5$ aggiunge a tutte le regole necessarie a trovare la soluzione alla query $4$  anche la disgiunzione tra le classi e la regola che definisce le inconsistenze. Si passa così a $3812$ variabili. La query $6$ infine fa uso delle relazioni tra individui e in particolare necessita della relazione che definisce gli antenati di cui è stato fatto unfolding nel Listato~\ref{}. Proprio per colpa dell'unfolding il numero di regole sale molto, di conseguenza cresce notevolmente anche la dimensione del problema: fino a $9519$ \emph{qubits}.
+
+Dai risultati ottenuti è chiaro che a seconda della query otteniamo Hamiltoniane di dimensioni molto differenti, questo è vantaggioso perchè ci permette di non considerare tutta la KB per ogni query, ma di estrarre solo la parte necessaria a rispondere alla nostra particolare domanda.
+
+Ci si può allora interrogare quale step della pipeline sia responsabile di questa estrazione. Osservando i file nella cartella di lavoro di QA-Prolog si può notare come il file in Verilog sia uguale per tutte le query, mentre il file EDIF sintetizzato da Yosys sia radicalmente diverso da una query all'altra.
+
+L'ottimizzazione, quindi, avviene a livello di circuito logico, una volta definito l'output del nostro circuito attaverso la query Yosis (Sezione~\ref{}) è in grado di scartare tutti quei pezzi del circuito descritto in Verilog che non sono necessari a definire l'output (non sono collegati, nel senso circiutale, all'output). Questo passaggio, come evidenziato dal grafico in Figura~\ref{} è in grado di abbattere notevolemente la dimensione del problema.
 
 \section{Conclusion}
+In questo capitolo abbiamo mostrato come si può passare da un'ontologia espressa in OWL a una KB espressa in Prolog sulla quale sia possibile evidenziare inconsistenze nei fatti e fare ragionamento come sull'ontologia di partenza.
+
+Abbiamo richiamato alcune delle limitazioni di QA-Prolog mostrando come impattavano sulla nostra traduzione, abbiamo proposto delle soluzioni che ci hanno portato a risccrivere alcune regole, ma soprattutto a  fare unfolding delle chiamate ricorsive.
+
+Infine abbiamo mosrtato che la KB ottenuta è effettivamente compatibile con la pipeline di QA-Prolog percorrendo tutti gli step fino ad ottenere una Hamiltoniana di cui abbiamo discusso le dimensioni correlandole alla query e di coinseguenza ai fatti e alle regole necessari per rispondere alla query stessa.
+
+Questo capitolo può essere visto ad alto livello come uno step aggiuntivo a monte della pipeline: QA-Prolog, attraverso riscritture successive in diversi formati che logicamente rappresentano sempre los stesso problema con la stessa soluzione parte da una KB in Prolog per giungere a una rappresentazione adatta ad un quantum annealer. In questo capitolo abbiamo aggiunto la riscrittura da OWL a Prolog aumentando così di uno step la catena di riscritture.
