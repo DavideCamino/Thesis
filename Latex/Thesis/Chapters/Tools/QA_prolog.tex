@@ -1,4 +1,5 @@
 \chapter{QA-Prolog}
+\label{ch:qa_p}
 QA-Prolog is a tool that allows one to write a program in a logic programming language and execute it on a quantum annealer. QA-Prolog also retrieves the results returned by the quantum annealer and presents them in a natural and comprehensible way.
 
 In this chapter we introduce the project and give some pointers to other related works. We describe extensively the pipeline of transformations starting from a Prolog code and ending with a Hamiltonian $\mathbf{H}_f$, as we have described in Section~\ref{}. Next we present our contribution to the project, discussing the changes we have made to the original QA-Prolog code to restore compatibility with the modern framework used to interface with the D-Wave quantum annealer and to support the latest version of the library used in the project.
@@ -78,6 +79,7 @@ We can query our KB, asking for example if Yolanda is happy. In SWI-Prolog~\cite
 By analogous reasoning it should be clear why the result of \mintinline{text}|?- smile(X).| is \mintinline{text}|X = mia; X = yolanda.|, where \mintinline{text}|;| means logical disjunction: \emph{or}.
 
 \subsection{Features of QA-Prolog}
+\label{sec:feature_qa_p}
 QA-Prolog does not support all the features of Prolog, but enough to make basic logic programming possible~\cite{pakin2018performing}.
 
 QA-Prolog supports atoms and positive integers but not floating-point numbers, strings, or lists. It supports arithmetic and relational operations, and rules can reference other rules but not recursively. QA-Prolog supports unification, backtracking, and predicates comprising multiple clauses~\cite{pakin2018performing}.
@@ -217,6 +219,7 @@ Results are reported in Listing~\ref{lst:qmasm_res}. Here we can see that the so
 QMASM already offers some powerful abstractions to work with quantum annealers. Now we add two additional layers that allow a programming style more similar to the paradigms computer scientists are used to, while preserving strong control over variable dimensions and therefore over the number of \emph{qubits} used.
 
 \subsection{Yosys and edif2qmasm}
+\label{sec:yosys_edif2qmasm}
 These steps of the pipeline take as input a \emph{Verilog HDL} (Hardware Description Language) program and transform it into a symbolic Hamiltonian. 
 
 We aggregate two steps because Yosys is not a tool developed for this pipeline and is used mostly to optimize the intermediate results of the transformations. Also, Yosys and edif2qmasm work on the same logical entity: a digital circuit that, in these steps of the pipeline, is converted into a symbolic Hamiltonian.
@@ -283,6 +286,7 @@ Comparing the automatically generated Listing~\ref{lst:circ_sat_yosys} and the m
 Even if it is less readable, we can comment on the code in Listing~\ref{lst:circ_sat_yosys}. At lines $4$, $5$, and $6$ we declare that we need the macros \mintinline{text}|AND|, \mintinline{text}|NOT|, and \mintinline{text}|OR|, giving to each macro a name like \mintinline[escapeinside=@@]{text}|$id@\textit{<number>}@|\footnote{The symbol \mintinline{text}|$| tells QMASM that we are not interested in the value of \emph{qubits} inside the macro.}. At line $7$ we assign as input \mintinline{text}|A| of the macro \mintinline{text}|NOT| the output \mintinline{text}|Y| of the macro \mintinline{text}|OR|. Given these hints, the rest of the code should be clear.
 
 \subsection{QA-Prolog}
+\label{sec:qa_p_query}
 This is the last step of the pipeline, the one that provides the maximum level of abstraction from the hardware that finds the solution to our problem.
 
 QA-Prolog, like edif2qmasm, is written in GO~\cite{pakin2018performing, pakin2019targeting} and compiles a Prolog program to a Verilog one; each fact or rule is converted into a module. Once QA-Prolog has compiled the Prolog source code, including the query that can be specified on the command line, into Verilog, QA-Prolog invokes Yosys, edif2qmasm, and QMASM, as illustrated in Figure~\ref{fig:pipeline}~\cite{pakin2018performing}.
