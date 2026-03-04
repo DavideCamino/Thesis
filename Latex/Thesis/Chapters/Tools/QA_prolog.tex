@@ -16,9 +16,9 @@ As we have shown in Chapters~\ref{}~and~\ref{}, programming a quantum computer i
 
 On a quantum annealer we have to define a cost function, without constraints (which must be transformed into a penalty function). Even if there are libraries that allow us to express these functions in an easier way, we need at least to find a QUBO representation of our problem.
 
-Even worse is the situation on quantum gate-based computers. The programmer has to build a quantum circuit gate by gate, an approach similar to what is done with FPGAs (Field Programmable Gate Arrays)~\cite{farooq2012fpga}. We can indeed see a strong analogy:
+Even worse is the situation on quantum gate-based computers. The programmer has to build a quantum circuit gate by gate, an approach similar to what is done with FPGAs (Field Programmable Gate Arrays)~\cite{farooq2012fpga}. We can indeed see a strong analogy summed up in Table~\ref{tab:fpga}.
 
-\begin{table}[]
+\begin{table}[h]
 	\centering
 	\begin{tabular}{cp{.05\linewidth}c}
 		\toprule
@@ -31,19 +31,20 @@ Even worse is the situation on quantum gate-based computers. The programmer has 
 		I/O blocks connected to logic                                                                        & & \begin{tabular}[c]{@{}c@{}}input \emph{qubits} and output \\ \emph{qubits} that can be measured\end{tabular} \\
 		\bottomrule
 	\end{tabular}
+	\caption{Parallelism between FPGA and quantum gate}
+	\label{tab:fpga}
 \end{table}
+
 FPGAs are components that the majority of computer scientists are not used to and are probably out of the interest of a programmer. In the same way, the hardness of programming a quantum computer could be a significant deterrent to attracting new researchers in the field.
 
 Today some \say{high-level gates} are available that wrap multiple low-level gates into useful patterns. There also exist, both for quantum gate-based computers and quantum annealers, some templates of well-known problems that need only fine-tuning to be useful for a specific problem. 
 
 Despite these sorts of abstractions, programming a quantum computer is difficult and very close to machine language.
 
-The goal of QA-Prolog is to have a tool that allows programming in a high-level style, with a powerful \emph{logic programming language}, quantum computers.
-
 \subsection{Prolog}
-We can see QA-Prolog as a compiler from Prolog to $\mathbf{H}_f$, where the ground state of $\mathbf{H}_f$ is the solution of our Prolog program. Before starting with the compilation process, it is useful to understand the main characteristics of Prolog, because it is not an imperative programming language like C or Java, but a \emph{declarative} one like SQL, moreover, Prolog is a logic programming language. This means that the core of programming is not to tell the computer what to do, but to tell it what is true and ask it to try to draw conclusions~\cite{clocksin2003programming}. 
+We can see QA-Prolog as a compiler from Prolog to $\mathbf{H}_f$, where the ground state of $\mathbf{H}_f$ is the solution of our Prolog program. Before starting with the compilation process, it is useful to understand the main characteristics of Prolog, because it is not an imperative programming language like C or Java, but a \emph{declarative} one like SQL, moreover, Prolog is a \emph{logic programming language}. This means that the core of programming is not to tell the computer what to do, but to tell it what is true and ask it to try to draw conclusions~\cite{clocksin2003programming}. 
 
-Discussing in detail characteristics of Prolog and logic programming language are out of scope of this work, more information about Prolog can be found in  \emph{Programming in PROLOG}~\cite{clocksin2003programming} and \emph{Learn Prolog Now!}~\cite{learn_prolog_now_online}, for the ones interested in logic programming language \emph{Logic for problem solving}\cite{kowalski1982logic} and \emph{Introduction to logic programming}\cite{hogger1984introduction} are recommended.
+Discussing in detail the characteristics of Prolog and logic programming languages is out of scope of this work. More information about Prolog can be found in  \emph{Programming in PROLOG}~\cite{clocksin2003programming} and \emph{Learn Prolog Now!}~\cite{learn_prolog_now_online}. For the ones interested in logic programming language \emph{Logic for problem solving}\cite{kowalski1982logic} and \emph{Introduction to logic programming}\cite{hogger1984introduction} are recommended.
 
 In Prolog we do not specify step by step an algorithm that resolves our problem, we describe instead the formal relationship between the objects in our problem and which relations have to be true in our solution~\cite{clocksin2003programming}.
 
@@ -54,7 +55,7 @@ Programming in Prolog consists of:
 	\item asking questions (\emph{queries}) about objects and their relationships.
 \end{itemize}
 
-From these characteristics we can understand what \say{declarative} means: the program is a list of statements about our problem (our domain of interest); the relation between a Prolog program and an ontology is very strict. In Prolog we encode a KB made of facts and rules; in Capter~\ref{} we can see a complete example of rewriting from an OWL ontology into a Prolog KB\footnote{Knowledge Base}.
+From these characteristics we can understand what \say{declarative} means: the program is a list of statements about our problem (our domain of interest); the relation between a Prolog program and an ontology is very strict. In Prolog we encode a KB\footnote{Knowledge Base} made of facts and rules; in Capter~\ref{ch:qa_ont} we can see a complete example of rewriting from an OWL ontology into a Prolog KB.
 
 \paragraph{Arithmetic predicates:}\label{par:arithmetic} To better understand some QA-Prolog features that differ from basic Prolog we explain here how to assert equality between arguments when referring to integer. Predicates offered by Prolog are:
 \begin{itemize}
@@ -63,7 +64,7 @@ From these characteristics we can understand what \say{declarative} means: the p
 \end{itemize}
 Where signs before arguments are \emph{arguments mode indicators}. Sign \mintinline{text}|+| specifies that the following argument must be instantiated, \mintinline{text}|-| indicates that the argument is a output~\cite{SWI2026PrologManual}. This mean that we cannot have variables when using \mintinline{text}|=:=| predicate because everything must be known at the time of evaluation. Using \mintinline{text}|is| the only variable can be the value of \mintinline{text}|Number|; \mintinline{text}|Expr|, on the other hand, has to be known.
 
-\paragraph{Example:} Now we present a basic Prolog program in order to show the syntax and the usage of queries. We encode a KB about a party, we describe two people, Yolanda and Mia, asserting what are they doing and giving some rules to derive other informations about our small scenario.
+\paragraph{Example:} Now we present a basic Prolog program in order to show the syntax and the usage of queries. We encode a KB about a party, we describe two people, Yolanda and Mia, asserting what they are doing, and giving some rules to derive other information about our small scenario.
 \begin{listing}[h]
 	\mylisting{.6}{prolog}{code/qa_prolog/prolog_kb1.pl}
 	\caption{Basic KB}
@@ -109,7 +110,7 @@ The chain of transformations is shown in Figure~\ref{fig:pipeline}, where the la
 	\label{fig:pipeline}
 \end{wrapfigure}
 
-From a high-level point of view, the pipeline rewrites the initial KB expressed in Prolog into different objects. The logical meaning of the entities we build during the pipeline is:
+From a high-level point of view, the pipeline rewrites an initial KB expressed in Prolog into different objects. The logical meaning of the entities we build during the pipeline is:
 \begin{enumerate}
 	\item Prolog program (KB); 
 	\item High-level digital circuit in Verilog;
@@ -293,7 +294,7 @@ QA-Prolog, like edif2qmasm, is written in GO~\cite{pakin2018performing, pakin201
 
 QMASM executes the user’s program on a D-Wave system or on a simulator and reports the value of each symbol appearing in the QMASM source file. QA-Prolog maps these lists of Booleans back to integers and named atoms, associates those values with variables named in the user’s query, and reports all variables and their values to the user just as a typical Prolog environment would~\cite{pakin2018performing}.
 
-\paragraph{Examples: } The first example we present shows a small KB that can be summarized as \say{the enemy of my enemy is my friend}. 
+\paragraph{Example 1: } The first example we present shows a small KB that can be summarized as \say{the enemy of my enemy is my friend}. 
 
 \begin{listing}[h]
 	\mylisting{.6}{prolog}{code/qa_prolog/enemy.pl}
@@ -312,11 +313,10 @@ In this command we can see that QA-Prolog allows us to query the KB with the exa
 
 Another detail to point out is the parameter \mintinline[escapeinside=@@]{text}|--work-dir="@\textit{<path>}@"|, which specifies the folder in which QA-Prolog outputs all files and the solver: we use a \emph{tabu search algorithm} because the simulated annealing implemented in Ocean is not capable of finding a solution even in this small scenario\footnote{More considerations about that in Chapter~\ref{}.}. We say small because, from the study reported in \cite{zhang2010measuring}, we can observe that real-world ontologies define a number of classes, individuals, and properties\footnote{That we will transform in facts and rules in Chapter~\ref{label}.} that can be on the order of hundreds of thousands.
 
+By inspecting the working directory, we can check the output of each step of the pipeline. In Appendix~\ref{lst:qa_prolog_compilation} is shown the rewritten of a Prolog KB into a Verilog program: it is possible to observe in detail how each fact or rule has been transformed.
 If we inspect the working directory we can see the output of every step of the pipeline; in particular, to see how exactly the KB is rewritten into a Verilog program, in Appendix~\ref{lst:qa_prolog_compilation} there is the result of compilation, and it is possible to observe in detail how each fact or rule has been transformed.
 
-The second example concludes our transformation of the satisfiability problem (Equation~\ref{eqn:simple_logic}); unfortunately, this is not very didactic because the Prolog program suitable for QA-Prolog processing introduces a consistent amount of overhead.
-
-Indeed, we have to implement logical operators by defining their truth tables, then assemble the operators in our logical formula. Listing~\ref{lst:sat_prolog} shows the implementation we use in our test.
+\paragraph{Example 2: }The second example concludes our transformation of the satisfiability problem (Equation~\ref{eqn:simple_logic}); unfortunately, this is not very didactic because the Prolog program suitable for QA-Prolog processing introduces a consistent amount of overhead. This is due to the fact that we have to implement logical operators by defining their truth tables, then assemble the operators in our logical formula. Listing~\ref{lst:sat_prolog} shows the implementation we use in our test.
 \begin{listing}[h]
 	\mylisting{.6}{prolog}{code/qa_prolog/sat.pl}
 	\caption{Satisfiability in Prolog}

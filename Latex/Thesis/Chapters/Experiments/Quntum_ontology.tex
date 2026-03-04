@@ -1,4 +1,5 @@
 \chapter{A quantum ontology}
+\label{ch:qa_ont}
 In this chapter, we present a complete example of rewriting, starting from an ontology expressed in OWL (Section~\ref{sec:owl}), and arriving at a Prolog formulation suitable for the pipeline presented in the previous chapter.
 
 Following the literature, we begin with the translation of the ontology into Prolog, discussing how to translate concepts such as classes, subclasses, individuals, and relations. We then focus on the incompatibility of this first version with QA-Prolog, highlight the reasons for this incompatibility, and propose possible solutions.
@@ -6,14 +7,12 @@ Following the literature, we begin with the translation of the ontology into Pro
 We present some examples of queries to demonstrate the equivalence of the two transformations. Finally we provide observations on the final result obtained after the transformations performed by QA-Prolog.
 
 \section{Starting ontology}
-The ontology we will translate in Prolog is not the one presented in Chapter~\ref{ch:ont} but is a more complex one in order to show an example more similar to a real ontology. 
-
 The domain of interest of our ontology is the animal kingdom; this domain serves as a pretext for a deeper description than the one shown in the family tree example (Section~\ref{sec:ont_ex}). We will see how to describe animal species, their feeding habits, and the relationships between individuals.
 
 \subsection{Ontology structure}
 In this ontology, we describe a small part of the animal kingdom. The more complex class hierarchy represents the taxonomy of animals: it characterizes living beings with increasing precision until identifying their species.
 
-The other classes focus, instead, on feeding habits of animals. We distinguish between prey and predators, and between carnivorous and herbivorous animals (in this small example, for simplicity, we ignore omnivores\footnote{The reason will be clear in the next section.}).
+The other classes focus, instead, on feeding habits of animals. We distinguish between prey and predators, and between carnivorous and herbivorous animals (in this small example, for simplicity, we ignore omnivores. The reason will be clear in the next section).
 
 Finally, we consider relationships between animals. We define two types of relationships: parental relation that connect two animals in parent–son roles, and relation related to feeding habits that link two animals in the roles of predator and prey.
 
@@ -61,7 +60,7 @@ We now examine some facts about the individuals that populate our KB:
 
 From this information, we can deduce that Beary and Reiny are predators, Sealy and Penguy are both predators and prey; and Sardy is a prey.
 
-\paragraph{Contraddiction: } A contradiction has also been deliberately introduced into the ontology. From the fact that Reiny hunts, it follows that she is a carnivorous animal; however, her species is labeled as herbivorous. Reiny is therefore both herbivorous and carnivorous. Moreover, herbivores and carnivores are disjoint classes. This makes the KB inconsistent.
+\paragraph{Contradiction: } A contradiction has also been deliberately introduced into the ontology. From the fact that Reiny hunts, it follows that she is a carnivorous animal; however, her species is labeled as herbivorous. Reiny is therefore both herbivorous and carnivorous. Moreover, herbivores and carnivores are disjoint classes. This makes the KB inconsistent.
 
 If we used a reasoner to verify the consistency of the KB, for example HermiT~\cite{glimm2014hermit}, we would obtain an error message informing us that the ontology is inconsistent and that the reasoner’s results cannot therefore be considered reliable.
 
@@ -90,20 +89,22 @@ Advanced topics such as the open world assumption, enumerated classes, existenti
 \subsection{Classes and subclasses}
 We start our KB describing the T-Box of the ontology: here we define the classes' hierarchy. Listing~\ref{lst:t_box_pl} shows how to build the hierarchy: (\hyperref[lst:t_box_pl_class]{a}) is a list of facts that defines the classes (for example, line $1$ can be read as “animal is a class.”), (\hyperref[lst:t_box_pl_subclass]{b}) defines the structure of the classes (line $1$ is read as “mammal is a subclass of animal.”).
 
-\begin{figure}[h]
+\begin{listing}[h]
 	\centering
-	\subfloat[Classes definitions]
-	{\label{lst:t_box_pl_class}
-		\mylistingnumbernear{.45}{Prolog}{code/quantum_ontology/class.pl}
-	}
-	\quad
-	\subfloat[Subclasses definitions]
-	{\label{lst:t_box_pl_subclass}
-		\mylistingnumbernear{.45}{Prolog}{code/quantum_ontology/subclass.pl}
-	}
-	\captionof{listing}{T-Box definition}
+	\begin{sublisting}[c]{0.45\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/class.pl}
+		\caption{Classes definitions}
+		\label{lst:t_box_pl_class}
+	\end{sublisting}
+	\qquad
+	\begin{sublisting}[c]{0.45\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/subclass.pl}
+		\caption{Subclasses definitions}
+		\label{lst:t_box_pl_subclass}
+	\end{sublisting}
+	\caption{T-Box definition}
 	\label{lst:t_box_pl}
-\end{figure}
+\end{listing}
 
 We must now create a rule to ensure that the subclass relation satisfies the transitive property:
 \[
@@ -122,24 +123,29 @@ It is important to point out that the predicate we are defining in Listing~\ref{
 
 \subsection{Individuals and their relationships}
 We define individuals by assigning them to a class; to do so, we use the predicate \mintinline{text}|isa(I, C)| where \mintinline{text}|I| is an individual, \mintinline{text}|C| is a class. Relationships, on the other hand, are defined through the predicate \mintinline{text}|hasproperty(I1, R, I2)| that means individual \mintinline{text}|I1| is in the relation \mintinline{text}|R| with individual \mintinline{text}|I2|. Listing~\ref{lst:a_box_pl} is a collection of facts that populate our KB, and that define the relationships between individuals.
-\begin{figure}[h]
+
+\begin{listing}[h]
 	\centering
-	\subfloat[Individuals definitions]
-	{\label{lst:a_box_pl_ind}
-		\mylistingnumbernear{.35}{Prolog}{code/quantum_ontology/individual.pl}
-	}
-	\quad
-	\subfloat[Relationships definitions]
-	{\label{lst:a_box_pl_rel}
-		\mylistingnumbernear{.55}{Prolog}{code/quantum_ontology/relation.pl}
-	}
-	\captionof{listing}{T-Box definition}
+	\begin{sublisting}[c]{0.35\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/individual.pl}
+		\caption{Individuals definitions}
+		\label{lst:a_box_pl_ind}
+	\end{sublisting}
+	\qquad
+	\begin{sublisting}[c]{0.55\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/relation.pl}
+		\caption{Relationships definitions}
+		\label{lst:a_box_pl_rel}
+	\end{sublisting}
+	\caption{A-Box definition}
 	\label{lst:a_box_pl}
-\end{figure}
+\end{listing}
+
+
 
 The predicate \mintinline{text}|isa(I, C)| allows us to define the class of an individual, but it does not take the class hierarchy into account. For example, we know that Beary is a polar bear, but we cannot infer that he is a mammal or an animal.
 
-To also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, permit to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
+To also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, permits to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
 
 \begin{listing}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/isa.pl}
@@ -152,7 +158,7 @@ As for the predicates \mintinline{text}|subclass(C1, C2)| and \mintinline{text}|
 \subsection{Other rules}
 The KB that we have built so far contains classes, individuals, and relationships between individuals; we now want to add rules that allow us to extract new knowledge from the facts contained in the ontology. 
 
-In particular, we now present the rules to: assign a class to an individual, identify the ancestors of an individual, define 2 classes as disjoint, and find inconsistencies in the KB.
+In particular, we now present the rules to: assign a class to an individual, identify the ancestors of an individual, define two classes as disjoint, and find inconsistencies in the KB.
 
 \paragraph{Assigning a class:} The rules defined in Listing~\ref{lst:class_attr} allow us to assign the class carnivore and predator/prey to an individual. These rules are an example of how logical programming languages are easy to interpret: we can read Listing~\ref{lst:class_attr} as \say{If an animal hunts, it is a carnivore and it is a predator. If it is hunted, it is a prey.}
 \begin{listing}[h]
@@ -177,7 +183,9 @@ Although in an ontology that deals with the animal kingdom this predicate may se
 
 \paragraph{Disjoint classes and inconsistency:} In our ontology, logical inconsistency is due to the fact that the reindeer Reiny is both herbivorous and carnivorous, but the two classes are disjoint. Let us therefore see how to express this disjointness in Prolog and how to capture the inconsistency in our KB.
 
-Listing~\ref{lst:disjoint} shows how to define 2 disjoint classes and the consequences this has for individuals. At line $1$ we see that to state that carnivores and herbivores are disjoint classes, a single fact is sufficient. The other lines show the consequences that disjointness has on individuals: if the classes \mintinline{text}|C| and \mintinline{text}|C2| are disjoint (line $4$) and \mintinline{text}|I| belongs to class \mintinline{text}|C2| (line $5$), then \mintinline{text}|I| does not belong to class \mintinline{text}|C| (line $3$). \mintinline{text}|logicNot(P)| is a predicate that indicates that the proposition \mintinline{text}|P| is false\footnote{Providing a detailed explanation of this predicate is beyond the scope of this work; in \cite{samuel2008translating} the introduction of \mintinline{text}|logicNot(P)| is justified in order to bring the open world assumption into Prolog.}.
+Listing~\ref{lst:disjoint} shows how to define two disjoint classes and the consequences this has for individuals. At line $1$ we see that to state that carnivores and herbivores are disjoint classes, a single fact is sufficient. The other lines show the consequences that disjointness has on individuals: if the classes \mintinline{text}|C| and \mintinline{text}|C2| are disjoint (line $4$) and \mintinline{text}|I| belongs to class \mintinline{text}|C2| (line $5$), then \mintinline{text}|I| does not belong to class \mintinline{text}|C| (line $3$). \mintinline{text}|logicNot(P)| is a predicate that indicates that the proposition \mintinline{text}|P| is false. 
+
+Providing a detailed explanation of \mintinline{text}|logicNot(P)| predicate is beyond the scope of this work; in \cite{samuel2008translating} the introduction of \mintinline{text}|logicNot(P)| is justified in order to bring the open world assumption into Prolog.
 
 \begin{listing}[h]
 	\mylisting{.65}{Prolog}{code/quantum_ontology/disjoint.pl}
@@ -240,7 +248,7 @@ Unfolding consists of developing the recursion by explicitly repeating the funct
 
 \paragraph{SubClasses:} To eliminate recursion in the rule \mintinline{text}|subClass(C1, C2)| we can remove the rule with the recursive call, replacing it with a sufficient number of other rules to cover the entire class hierarchy; each new rule adds one call and allows moving one level higher in the hierarchy.
 
-Our ontology has a maximum depth of $3$, therefore at most two recursive calls are needed to start from any node in the class hierarchy and reach the root. Listing~\ref{lst:subclass_qa} shows the updated version of the rule \mintinline{text}|subClass(C1, C2)| (to clarify the procedure, unfolding is developed up to three calls, even though only two were necessary to cover the entire class hierarchy).
+Our ontology has a maximum depth of three, therefore at most two recursive calls are needed to start from any node in the class hierarchy and reach the root. Listing~\ref{lst:subclass_qa} shows the updated version of the rule \mintinline{text}|subClass(C1, C2)| (to clarify the procedure, unfolding is developed up to three calls, even though only two were necessary to cover the entire class hierarchy).
 
 \begin{listing}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_qa.pl}
@@ -251,8 +259,8 @@ Our ontology has a maximum depth of $3$, therefore at most two recursive calls a
 \paragraph{Ancestor:} The issue with the predicate \mintinline{text}|hasproperty(I1, R, I2)| concerns the ancestor-descendant relationship. Indeed, its definition was very similar to the rule \mintinline{text}|subClass(C1, C2)|. In this case, however, recursion is also present in the base step, as can be seen in lines $1$ and $2$ of Listing~\ref{lst:ancestor}. Listing~\ref{lst:ancestor_qa} shows a possible solution. About this code it is important to note:
 \begin{itemize}
 	\item unlike Listing~\ref{lst:subclass_qa}, we define many new predicates: this is useful if there were multiple ways to define new ancestors starting from those already identified\footnote{Listing~\ref{lst:ancestor_ext} in the appendix shows an example for clarification.};
-	\item the predicate \mintinline{text}|hasProperty(I1, R, I2)| has been added: this must be used in queries, while \mintinline{text}|hasproperty(I1, R, I2)| is used only to define relationships between individuals.
-	\item we stopped, arbitrarily, after $10$ ancestors; in general there is no way to know how many recursive calls should be unfolded to be sure of capturing all the ancestors of an individual.
+	\item the predicate \mintinline{text}|hasProperty(I1, R, I2)| has been added: this must be used in queries, while \mintinline{text}|hasproperty(I1, R, I2)| is used only to define relationships between individuals;
+	\item we stopped, arbitrarily, after building a family tree of depth ten; in general there is no way to know how many recursive calls should be unfolded to be sure of capturing all the ancestors of an individual.
 \end{itemize}
 
 \begin{listing}[h]
@@ -262,7 +270,7 @@ Our ontology has a maximum depth of $3$, therefore at most two recursive calls a
 \end{listing}
 
 \subsection{Stopping criterion}
-As mentioned above, it is not always possible to know in advance how many recursive calls will be performed to capture all the aspects we are interested in. In general, we can distinguish two cases: T-Box and A-Box.
+As mentioned above, it is not always possible to know in advance how many recursive calls will be performed to capture all the aspects we are interested in. Here we discuss some stopping criteria looking only at the KB\footnote{For a performance analysis of the impact of unfolding see Section\ref{sec:unfold_performance}.}. In general, we can distinguish two cases: T-Box and A-Box.
 
 \paragraph{T-Box:} The T-Box describes our domain of interest and should be stable. Once a description of the world suitable for our purpose has been developed, it is rare for it to change; in our case, a modification of the T-Box could occur only if new species were discovered, which is not frequent.
 
@@ -285,35 +293,49 @@ Such a constructive proof is not the objective of this work. To convince ourselv
 
 As far as possible, the unfolding process was carried out so as to make it transparent to the end user. The result was achieved with regard to queries related to the subclass hierarchy and the retrieval of an individual's ancestors.
 
-As for error detection, however, the various rules that define the predicate \mintinline{text}|error| may have different numbers of parameters. For each number of parameters it will be necessary to test the predicate\footnote{Not for each definition of the predicate; for example, if there are two definitions with $3$ parameters and one with $4$, it will be necessary to test \mintinline{text}|error| twice.} in order to ensure that all inconsistencies are identified.
+As for error detection, however, the various rules that define the predicate \mintinline{text}|error| may have a different number of parameters. For each number of parameters it will be necessary to test the predicate in order to ensure that all inconsistencies are identified. We have not to test for each definition of the predicate; for example, if there are two definitions with $3$ parameters and one with $4$, it will be necessary to test \mintinline{text}|error| twice.
 
-Listing~\ref{lst:query_qa} shows the result of the queries that use the modified rules to make them compatible with the QA-Prolog pipeline. The result of the queries is as expected: we obtained all and only the results that we would also have obtained by querying the original KB. This intuitively convinces us of the equivalence of the two KBs.
+Listing~\ref{lst:query_qa} shows the queries, that use the modified rules to make them compatible with the QA-Prolog pipeline, and their results:
+\begin{itemize}
+	\item In (\hyperref[lst:query_subclass]{a}) we retrieve all superclasses of reindeer, using the unfolded version of \mintinline{text}|subClass(C1, C2)| predicate;
+	\item In (\hyperref[lst:query_ancestor]{b}) we construct the family tree of the individual Reiny\_c to test the new version of \mintinline{text}|subClass(C1, C2)|;
+	\item In (\hyperref[lst:query_error]{c}) we use the predicate \mintinline{text}|error(X, Y, Z)| with the definition that avoids list and complex terms.
+\end{itemize}
 
-\begin{figure}[h]
+\begin{listing}[h]
 	\centering
-	\subfloat[Subclasses]
-	{\label{lst:query_subclass}
-		\mylistingnumbernear{.37}{Prolog}{code/quantum_ontology/query1.pl}
-	}
-	\quad
-	\subfloat[Ancestor]
-	{\label{lst:query_ancestor}
-		\mylistingnumbernear{.53}{Prolog}{code/quantum_ontology/query2.pl}
-	}\\
-	\subfloat[Error]
-	{\label{lst:query_error}
-		\mylistingnumbernear{.9}{Prolog}{code/quantum_ontology/query3.pl}
-	}
-	\captionof{listing}{Query results}
+	\begin{sublisting}[c]{0.35\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/query1.pl}
+		\caption{Subclasses}
+		\label{lst:query_subclass}
+	\end{sublisting}
+	\qquad
+	\begin{sublisting}[c]{0.55\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/query2.pl}
+		\caption{Ancestor}
+		\label{lst:query_ancestor}
+	\end{sublisting}
+	
+	\vspace{.2cm}
+	\begin{sublisting}[c]{0.9\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/query3.pl}
+		\caption{Error}
+		\label{lst:query_error}
+	\end{sublisting}
+	\caption{Query results}
 	\label{lst:query_qa}
-\end{figure}
+\end{listing}
+
+The result of the queries is as expected: we obtained all and only the results that we would also have obtained by querying the original KB. This intuitively convinces us of the equivalence of the two KBs.
 
 \section{Final result}
 The obtained KB\footnote{Available at \url{https://github.com/DavideCamino/Thesis/blob/main/Code/2_QA-prolog/3_QA-prolog/KB1/animal_unfold.pl}.} is compatible with the QA-Prolog pipeline. In this section we go through the entire transformation pipeline until obtaining the Hamiltonian that represents the KB together with the associated query, and we discuss the results obtained.
 
 Formulating a query is essential because it defines the outputs of our program and, therefore, allows us to build the digital circuit, which is the first step of the pipeline.
 
-To evaluate the result of the translation, we do not consider the outcome of the query evaluation because, as already shown in the chapter on the pipeline in Section~\ref{sec:qa_p_query}, the simulators offered by the Ocean framework are able to find the solution only for very small problem instances. What we consider instead is the dimension of the minimization problem obtained at the end of the pipeline, extracting the number of qubits composing the polynomial to be minimized, and attempting to provide a justification for the different dimensions we obtain.
+To evaluate the result of the translation, we do not consider the outcome of the query evaluation because, as already shown in the chapter on the pipeline in Section~\ref{sec:qa_p_query}, the simulators offered by the Ocean framework are able to find the solution only for very small problem instances and we will see, in Section~\ref{sec:qa_ont_result}, that we will obtain instances of problems with a very large number of \emph{qubits}. 
+
+What we consider instead is the dimension of the minimization problem obtained at the end of the pipeline, extracting the number of qubits composing the polynomial to be minimized, and attempting to provide a justification for the different dimensions we obtain.
 
 \subsection{Query}
 We construct different queries that test different facts and rules defined in our KB. We consider both simple queries, whose answer can be found simply by scanning the facts explicitly listed in the KB, and increasingly complex queries that require applying one or more inference rules.
@@ -330,6 +352,7 @@ The queries we test are:
 In the results we will refer to the queries directly by the number associated with them in this list.
 
 \subsection{Results}
+\label{sec:qa_ont_result}
 \begin{wrapfigure}{r}{.6\linewidth}
 	\centering
 	\vspace{-.5cm}
@@ -350,6 +373,85 @@ From the obtained results, it is clear that, depending on the query, we obtain H
 One may then ask which step of the pipeline is responsible for this extraction. By observing the files in the QA-Prolog working directory, it can be noted that the Verilog file is the same for all queries, whereas the EDIF file, synthesized by Yosys (Section~\ref{sec:yosys_edif2qmasm}), is radically different from one query to another.
 
 The optimization therefore occurs at the level of the logic circuit: once the output of our circuit has been defined through the query, Yosys is able to discard all those parts of the circuit described in Verilog that are not necessary to define the output. Yosys generates a EDIF file using only the Verilog module connected, in circuit term, to the output. This step, as highlighted by the graph in Figure~\ref{fig:prob_size}, is able to significantly reduce the dimension of the problem.
+
+\subsection{Impact of unfolding on performance}
+\label{sec:unfold_performance}
+If we observe Listing~\ref{lst:subclass_qa} and Listing~\ref{lst:ancestor_qa}, we can see that the unfolding of the two predicates, \mintinline{text}|subClass(C1, C2)| and \mintinline{text}|hasProperty(I1, ancestor, I2)|, is very similar. However, the dimension of the problem generated by the queries that use these predicates (queries $3$ and $6$ in Figure~\ref{fig:prob_size}) is significantly different. The main difference between the two predicates is the number of times the unfolding has been carried out.
+
+In this section we study the dimension of the problem generated by the QA-Prolog pipeline as a function of the number of recursive calls unfolded. In order to isolate as much as possible the impact of unfolding, we consider the minimal KB and the query shown in Listing~\ref{lst:unfold_test}.
+
+\begin{listing}[h]
+	\centering
+	\begin{sublisting}[c]{0.40\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/small_kb.pl}
+		\caption{Prolog File (KB)}
+	\end{sublisting}
+	\qquad
+	\begin{sublisting}[c]{0.50\linewidth}
+		\sublistingnumber{Prolog}{code/quantum_ontology/small_q.pl}
+		\caption{Query}
+	\end{sublisting}
+	\caption{Input unfold}
+	\label{lst:unfold_test}
+\end{listing}
+
+QA-Prolog imposes a maximum number of clauses in the body of a rule, in order to exceed this limit, we are forced to develop the unfolding as we did for the relation \mintinline{text}|hasProperty(I1, ancestor, I2)| (Listing~\ref{lst:ancestor_qa}).
+
+\begin{listing}[h]
+	\mylisting{.9}{Python}{code/quantum_ontology/gen_unfold.py}
+	\caption{Core script unfolding}
+	\label{lst:unfolding_script}
+\end{listing}
+
+Since we know the only recursive rule of the KB, we can automate the unfolding process. Listing~\ref{lst:unfolding_script} shows the core of the rule generation: for \mintinline{text}|n_unfold| times (line $2$) we generate a new rule (line $3$) using the rule defined in the previous iteration \textemdash{}or at line $1$ during the first iteration\textemdash{} (line $4$), then adding one level (line $5$).
+
+The problem sizes, in terms of the number of Boolean variables, were evaluated for trees of depth ranging from two up to twenty. To perform these experiments, not only the generation of the rules was automated, but also the execution of the experiment itself\footnote{the code is available at \url{URL}.}. 
+
+
+
+\paragraph{Qualitative results:} In Figure~\ref{fig:unfold}, it is possible to observe the impact of unfolding on the problem dimensions. As can be noted, as the number of rules increases, the number of \emph{qubits} required to represent the problem also increases.
+
+\begin{wrapfigure}{l}{.6\linewidth}
+	\centering
+	\vspace{-.5cm}
+	\includegraphics[width=.95\linewidth]{quantum_ontology/unfold}
+	\caption{Unfold impact on size}
+	\label{fig:unfold}
+\end{wrapfigure}Another qualitative observation that we can make by looking at this graph is that the number of variables is correlated with the number of rules independently of the class hierarchy. In fact, the KB (Listing~\ref{lst:unfold_test}) we are considering has a maximum depth of two, having only two classes (one subclass of the other). We can therefore deduce that Yosys is able to optimize the circuit by discarding all components not connected to the output, but it is not able to select the rules actually necessary to reach the answer to the query.
+
+\paragraph{Quantitative results:} To quantitatively understand the impact of unfolding on the dimension of the final Hamiltonian, we attempt to fit the experimentally obtained points. To perform the fitting, we use the least squares method by minimizing the statistical variable $\chi^2$. The classes of functions tested were:
+\begin{itemize}
+	\item first-degree polynomial: linear function;
+	\item second-degree polynomial: parabola;
+	\item exponential function.
+\end{itemize}
+
+The function that best interpolates the experimental points is the second-degree polynomial. Figure~\ref{fig:unfold_fitting_1} shows the result of the fitting. A very high value of $\chi^2$ can be observed; this would lead us to reject the hypothesis that a parabola correctly interpolates the experimental data. However, it should be recalled that the $\chi^2$ test assumes that a reasonable estimate of the error associated with each measurement is available~\cite{filatrella2009elaborazione}, whereas in this case we cannot associate any error even by repeating the test many times. The conclusion we can nevertheless reach is that among the classes of functions studied, the parabola is the one that best interpolates the data.
+
+By observing more closely the graph in Figure~\ref{fig:unfold}, we can notice what appears to be a jump in the distribution of the points (between point $10$ and $11$). We can therefore try to consider two different quadratic functions that approximate respectively the first set of points and the second. Figure~\ref{fig:unfold_fitting_2} shows the result of this hypothesis. 
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[c]{0.49\linewidth}
+		\includegraphics[width=\linewidth]{quantum_ontology/unfold_fit1}
+		\caption{Single fitting)}
+		\label{fig:unfold_fitting_1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{0.49\linewidth}
+		\includegraphics[width=\linewidth]{quantum_ontology/unfold_fit2}
+		\caption{Double fitting}
+		\label{fig:unfold_fitting_2}
+	\end{subfigure}
+	\caption{Fitted data}
+	\label{fig:unfold_fitting}
+\end{figure}
+
+In this case we observe a very low $\chi^2$ for both interpolating functions. Again, such a result should surprise us because obtaining such a good fit starting from an experimental data distribution is highly unlikely. 
+
+In our case, such a low value indicates that the collected data lie perfectly on a parabola, and the absence of experimental error makes this agreement exact. The \say{jump} in the data distribution could be due to the internal representation of the rules. Below a certain number of rules, they are identified with a certain number of \emph{qubits}; once this limit is exceeded, more \emph{qubits} are required to identify each rule. 
+
+If this hypothesis is correct, we should expect further jumps in the trend of the number of variables, but the growth will nevertheless always remain quadratic. Moreover, the continuous segments will each be twice as long as the previous one, because each extra \emph{qubit} allows doubling the number of unique identifiers for the rules.
 
 \section{Conclusion}
 In this chapter we have shown how it is possible to move from an ontology expressed in OWL to a KB expressed in Prolog on which it is possible to highlight inconsistencies in the facts and perform reasoning as on the original ontology.
