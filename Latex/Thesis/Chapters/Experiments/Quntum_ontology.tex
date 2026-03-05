@@ -399,17 +399,17 @@ QA-Prolog imposes a maximum number of clauses in the body of a rule, in order to
 
 \begin{listing}[h]
 	\mylisting{.9}{Python}{code/quantum_ontology/gen_unfold.py}
-	\caption{Core script unfolding}
+	\caption{Unfolding script's core}
 	\label{lst:unfolding_script}
 \end{listing}
 
-Since we know the only recursive rule of the KB, we can automate the unfolding process. Listing~\ref{lst:unfolding_script} shows the core of the rule generation: for \mintinline{text}|n_unfold| times (line $2$) we generate a new rule (line $3$) using the rule defined in the previous iteration \textemdash{}or at line $1$ during the first iteration\textemdash{} (line $4$), then adding one level (line $5$).
+Since we know the only recursive rule of the KB, we can automate the unfolding process. Listing~\ref{lst:unfolding_script} shows the core of the rule generation: for \mintinline{text}|n_unfold| times (line $2$) we generate a new rule (line $3$) using the rule defined in the previous iteration\footnote{Or at line $1$ during the first iteration.} (line $4$), then adding one level (line $5$).
 
-The problem sizes, in terms of the number of Boolean variables, were evaluated for trees of depth ranging from two up to twenty. To perform these experiments, not only the generation of the rules was automated, but also the execution of the experiment itself\footnote{the code is available at \url{URL}.}. 
+The problem's size, in terms of the number of Boolean variables, was evaluated for trees of depth ranging from two to twenty. To perform these experiments, not only the generation of the rules was automated but also the execution of the experiment itself\footnote{The code is available at \url{https://github.com/DavideCamino/Thesis/blob/main/Code/2_QA-prolog/3_QA-prolog/KB2/animal.ipynb}.}. 
 
 
 
-\paragraph{Qualitative results:} In Figure~\ref{fig:unfold}, it is possible to observe the impact of unfolding on the problem dimensions. As can be noted, as the number of rules increases, the number of \emph{qubits} required to represent the problem also increases.
+\paragraph{Qualitative results:} In Figure~\ref{fig:unfold}, it is possible to observe the impact of unfolding on the problem dimensions. As can be noted, as the number of rules increases, the number of \emph{qubits} required to represent the problem increases as well.
 
 \begin{wrapfigure}{l}{.6\linewidth}
 	\centering
@@ -417,7 +417,7 @@ The problem sizes, in terms of the number of Boolean variables, were evaluated f
 	\includegraphics[width=.95\linewidth]{quantum_ontology/unfold}
 	\caption{Unfold impact on size}
 	\label{fig:unfold}
-\end{wrapfigure}Another qualitative observation that we can make by looking at this graph is that the number of variables is correlated with the number of rules independently of the class hierarchy. In fact, the KB (Listing~\ref{lst:unfold_test}) we are considering has a maximum depth of two, having only two classes (one subclass of the other). We can therefore deduce that Yosys is able to optimize the circuit by discarding all components not connected to the output, but it is not able to select the rules actually necessary to reach the answer to the query.
+\end{wrapfigure}Another qualitative observation that can be made is that the number of variables is correlated with the number of rules independently of the class hierarchy. In fact, the KB (Listing~\ref{lst:unfold_test}) we are considering has a maximum depth of two, having only two classes (one subclass of the other). We can therefore deduce that Yosys is able to optimize the circuit by discarding all components not connected to the output, but it is not able to select the rules actually necessary to reach the answer to the query.
 
 \paragraph{Quantitative results:} To quantitatively understand the impact of unfolding on the dimension of the final Hamiltonian, we attempt to fit the experimentally obtained points. To perform the fitting, we use the least squares method by minimizing the statistical variable $\chi^2$. The classes of functions tested were:
 \begin{itemize}
@@ -426,7 +426,7 @@ The problem sizes, in terms of the number of Boolean variables, were evaluated f
 	\item exponential function.
 \end{itemize}
 
-The function that best interpolates the experimental points is the second-degree polynomial. Figure~\ref{fig:unfold_fitting_1} shows the result of the fitting. A very high value of $\chi^2$ can be observed; this would lead us to reject the hypothesis that a parabola correctly interpolates the experimental data. However, it should be recalled that the $\chi^2$ test assumes that a reasonable estimate of the error associated with each measurement is available~\cite{filatrella2009elaborazione}, whereas in this case we cannot associate any error even by repeating the test many times. The conclusion we can nevertheless reach is that among the classes of functions studied, the parabola is the one that best interpolates the data.
+The function that best interpolates the experimental points is the second-degree polynomial. Figure~\ref{fig:unfold_fitting_1} shows the result of the fitting. A very high value of $\chi^2$ can be observed; this would lead us to reject the hypothesis that a parabola correctly interpolates the experimental data. However, it should be recalled that the $\chi^2$ test assumes that a reasonable estimate of the error associated with each measurement is available~\cite{filatrella2009elaborazione}: in this case we cannot associate any error to the measurement even by repeating the test many times. The conclusion we can nevertheless reach is that, among the classes of functions studied, the parabola is the one that best interpolates the data.
 
 By observing more closely the graph in Figure~\ref{fig:unfold}, we can notice what appears to be a jump in the distribution of the points (between point $10$ and $11$). We can therefore try to consider two different quadratic functions that approximate respectively the first set of points and the second. Figure~\ref{fig:unfold_fitting_2} shows the result of this hypothesis. 
 
@@ -451,13 +451,15 @@ In this case we observe a very low $\chi^2$ for both interpolating functions. Ag
 
 In our case, such a low value indicates that the collected data lie perfectly on a parabola, and the absence of experimental error makes this agreement exact. The \say{jump} in the data distribution could be due to the internal representation of the rules. Below a certain number of rules, they are identified with a certain number of \emph{qubits}; once this limit is exceeded, more \emph{qubits} are required to identify each rule. 
 
-If this hypothesis is correct, we should expect further jumps in the trend of the number of variables, but the growth will nevertheless always remain quadratic. Moreover, the continuous segments will each be twice as long as the previous one, because each extra \emph{qubit} allows doubling the number of unique identifiers for the rules.
+If this hypothesis is correct, we should expect further jumps in the trend of the number of variables, but the growth will always remain quadratic. Moreover, the continuous segments will each be twice as long as the previous one, because each extra \emph{qubit} allows doubling the number of unique identifiers for the rules.
 
 \section{Conclusion}
 In this chapter we have shown how it is possible to move from an ontology expressed in OWL to a KB expressed in Prolog on which it is possible to highlight inconsistencies in the facts and perform reasoning as on the original ontology.
 
 We have recalled some of the limitations of QA-Prolog, showing how they impacted our translation; we proposed solutions that led us to rewrite some rules, and, above all, to unfold recursive calls.
 
-Finally, we showed that the obtained KB is effectively compatible with the QA-Prolog pipeline by going through all the steps until obtaining a Hamiltonian, whose dimensions we discussed by relating them to the query and consequently to the facts and rules necessary to answer that query.
+We showed that the obtained KB is effectively compatible with the QA-Prolog pipeline by going through all the steps until obtaining a Hamiltonian, whose dimensions we discussed by relating them to the query and consequently to the facts and rules necessary to answer that query.
+
+Finally, we have studied the impact of unfolding over the problem dimension. We have obtained a quadratic growing of the Boolean variable used to represent our problem as a function of the number of recursive calls unfolded.
 
 At a high level, this chapter can be seen as an additional upstream step of the pipeline: QA-Prolog, through successive rewritings into different formats that logically always represent the same problem with the same solution, starts from a KB in Prolog and reaches a representation suitable for a quantum annealer. In this chapter we added the rewriting from OWL to Prolog, increasing by one step the chain of rewritings.

@@ -1,17 +1,17 @@
-and(false, false, false).
-and(false, true, false).
-and(true, false, false).
-and(true, true, true).
+logicAnd(false, false, false).
+logicAnd(false, true,  false).
+logicAnd(true,  false, false).
+logicAnd(true,  true,  true).
 
-not(false, true).
-not(true, false).
+logicNot(false, true).
+logicNot(true,  false).
 
-or(false, false, false).
-or(false, true, true).
-or(true, false, true).
-or(true, true, true).
+logicOr(false, false, false).
+logicOr(false, true,  true).
+logicOr(true,  false, true).
+logicOr(true,  true,  true).
 
-sat(A, B, C, Y) :-
-	or(B, C, X),
-	not(X, Z),
-	and(A, Z, Y).
+satFormula(A, B, C, Y) :-
+	logicOr(B, C, X),
+	logicNot(X, Z),
+	logicAnd(A, Z, Y).
