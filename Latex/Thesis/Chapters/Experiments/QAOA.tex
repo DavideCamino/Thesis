@@ -1,5 +1,44 @@
 \chapter{QAOA}
+Nei capitolo precedenti ci siamo concentrati sull'ottenere una Hamiltoniana il cui ground staterappresentasse la soluzione del nostro problema. Implicitamente o espicitamente facevamo riferimento ai quantum annealer come macchine per trovare la configurazione che minimizzasse l'energia.
+
+In questo capitolo mostreremo come passare da un problema formulato per quantum annealer a un problema formulato per computer quantum gate based attraverso l'algoritmo \emph{Quantum Approximation Optrimization Algoritm} (QAOA) Proposto per la prima volta da Farhi et al. in~\cite{bibid}.
+
+Iniziamo descrivendo l'algoritmo QAOA evidenziando vantaggi e svantaggi teorici rispetto a QAC\footnote{Quantum Adiabatic Computing (Sezione~\ref{})} . Mostreremo poi come sia possibile tradurre un problema formulato in forma QUBO (Sezione~\ref{}), ottenuto al termine dalla pipeline di QA-Prolog, in un problema adatto ai quantum gate based computer di IBM.
+
+Infine testeremo la traduzione proposta, mostreremo alcuni risultati sperimentali discutendoli.
 \section{QAOA}
-\section{From QUBO to Pauli operator}
+\section{From QAC to QAOA}
+In questa sezione mostriamo come sia possibile passare da un problema in forma QUBO a un problema adatto al framework Quiskit di IBM. Prima di cominciare chiariamo meglio quale sia il punto di partenza e di arrivo della trasformazione.
+
+\subsection{Obbiettivo}
+Al termine della pipeline di QA-Prolog otteniamo un problema in forma QUBO, in questa rappresentazione le variabili $x_i$da ottimizzare appatengono all'insieme $\set{0, 1}$. 
+
+Quando passiamo all'architettura quantum gate based il valore misurato dei \emph{qubits} appartiene all'insieme $\set{-1, 1}$. Dobbiamo quindi passare da una rappesentazione in forma QUBO a un problema in forma Ising.
+
+Per poter usare i quantum computer di IBM è inoltre necessario passare da una rappresentazione matriciale dell'Hamiltoniana agli operatori di pauli per costriure il polinomio che vogliamo minimizzare.
+
+Per ricapitolare per poter rendere compatibile l'output della pipeline di QA-Prolog con l'algoritmo QAOA implementato su computer IBM dobbiamo:
+\begin{itemize}
+	\item Passare da foma QUBO a Forma Ising;
+	\item passare da rappresentazione matriciale a rappresentazione con operatori di Pauli.
+\end{itemize}
+
+\subsection{From QUBO to Ising}
+Nella Sezione~\ref{} abbiamo visto che una traduzione da problema in forma QUBO a forma Ising esiste sempre. È possibile implementare questa traduzione manualmente seguendo~\cite{bibid}, in questo caso useremo l'implementazione fornita dalla libreria Python \mintinline{text}|qubovert|.
+
+\begin{listing}[h]
+	\mylisting{.8}{Python}{code/qaoa/qubo_to_ising.py}
+	\caption{text}
+	\label{lst:qubo_ising}
+\end{listing}
+
+Il Listato~\ref{lst:qubo_ising} mostra come sia possibile passare da una formulazione all'altra tramite la libreria \mintinline{text}|qubovert|:
+\begin{enumerate}
+	\item costruiamo un problema QUBO avendo come input l'output della pipeline di QA-Prolog (\mintinline{text}|qubo_mat|);
+	\item trasformiamo il problema QUBO in forma Ising
+	\item estraiamo il dizionario che assegna i coefficienti numerici $a_i$ nella Formula~\ref{};
+	\item scariamo il termine noto;
+	\item costriuamo la matrice con i pesi del problema in forma Ising.
+\end{enumerate}
 \section{Experiments}
 \section{Conclusion}
