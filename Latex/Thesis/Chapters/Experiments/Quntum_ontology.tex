@@ -417,7 +417,8 @@ The problem's size, in terms of the number of Boolean variables, was evaluated f
 	\includegraphics[width=.95\linewidth]{quantum_ontology/unfold}
 	\caption{Unfold impact on size}
 	\label{fig:unfold}
-\end{wrapfigure}Another qualitative observation that can be made is that the number of variables is correlated with the number of rules independently of the class hierarchy. In fact, the KB (Listing~\ref{lst:unfold_test}) we are considering has a maximum depth of two, having only two classes (one subclass of the other). We can therefore deduce that Yosys is able to optimize the circuit by discarding all components not connected to the output, but it is not able to select the rules actually necessary to reach the answer to the query.
+\end{wrapfigure}
+Another qualitative observation that can be made is that the number of variables is correlated with the number of rules independently of the class hierarchy. In fact, the KB (Listing~\ref{lst:unfold_test}) we are considering has a maximum depth of two, having only two classes (one subclass of the other). We can therefore deduce that Yosys is able to optimize the circuit by discarding all components not connected to the output, but it is not able to select the rules actually necessary to reach the answer to the query.
 
 \paragraph{Quantitative results:} To quantitatively understand the impact of unfolding on the dimension of the final Hamiltonian, we attempt to fit the experimentally obtained points. To perform the fitting, we use the least squares method by minimizing the statistical variable $\chi^2$. The classes of functions tested were:
 \begin{itemize}

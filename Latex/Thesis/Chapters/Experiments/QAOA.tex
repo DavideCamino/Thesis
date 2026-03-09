@@ -41,5 +41,87 @@ Il Listato~\ref{lst:qubo_ising} mostra come sia possibile passare da una formula
 	\item costriuamo la matrice con i pesi del problema in forma Ising.
 \end{enumerate}
 L'aspetto più unteressante di questo procedimento è lo scarto del termine noto, questo valore serve per allineare il ground state del problema in Forma QUBO e Ising (Equazione~\ref{}) alla stessa energia. Siccome il nostro obbiettivo trovare il ground state, a prescindere dal suo valore possiamo ignorare questo offset e considerare soli i coefficienti delle variabili.
+
+\subsection{From matrix to Pauli operator}
+Nella sezione precedente abbiamo ottenuto una rappresentazione matriciale del problema di minimizzazione. Non è possibile utilizzare direttamente questa matrice nel framework Qiskit di IBM, ma dobbiamo trasformarla in una fuzione costo rappresentata da osservabili attraverso operatori di Pauli.
+
+Consideriamo l'Hamiltoniana $\mathbf{H}$ triangolare superiore che descrive il nostro problema in forma Ising. Ogni elemento appartenente alla diagonale $h_{i,i}$ viene tradotto in un gate che misura la componente $Z$ del \emph{qubit} $i$ e applica la trasformazione identità a tutti gli altri \emph{qubits}. Gli elementi $h_{i,j}$\footnote{Con $j>i$ perchè $\mathbf{H}$ è triangolare superiore.} vengono trasformati in gate che misurano lo spin lungo l'asse $Z$ dei \emph{qubits} $i$ e $j$ e applicano l'operatore identità agli altri \emph{qubits}. 
+
+Come osservato nella Sezione~\ref{} non è necessario che il polinomio da minimizzare sia al più di secondo grado. La trasformazione appena descritta infatti permette di considerare il valore di più di due \emph{qubits} per volta misurando la componente $Z$ di tutti quelli a cui siamo interessati. In questo lavoro, tuttavia, abbiamo la garanzia di trattare solo polinomi di secondo grado perché siamo partiti da un problema in forma QUBO, la cui rappresentazione matriciale combina al massimo il valore di due \emph{qubits}.
+
+Seguendo il tutorial di IBM\footnote{Disponibile a \url{URL}} trasformamo la matrice che descrive il problema in forma Ising operatori di Pauli. Il Listato~\ref{lst:pauli_op} mostra come sia possibile automatizzare tale riscrittura. Alla linea $4$ generiamo l'osservabiel per gli elementi sulla diagonale, alla linea $6$ l'osservabile per gli altri elementi della matrice.
+\begin{listing}[h]
+	\mylisting{.9}{Python}{code/qaoa/matrix_to_pauli.py}
+	\caption{text}
+	\label{lst:pauli_op}
+\end{listing}
+
+Possiamo infine costruire la funzione costo a partire dalla lista di tutti gli osservabili che abbiamo descritto. Per fare questo usaimo una funzione di libreria messa a disposizione da Qiskit. Il Listato~\ref{lst:cost_func} mostra come ottenere la funzione costo, dove \mintinline{text}|pauli_list| sono le gli operatori di Pauli che abbiamo generato con il Listato~\ref{lst:pauli_op} e \mintinline{text}|n_qubits| il numero di \emph{qubits} che descrivono il nustro problema.
+\begin{listing}[h]
+	\mylistingnonumber{.95}{Python}{code/qaoa/cost_func.py}
+	\caption{text}
+	\label{lst:cost_func}
+\end{listing}
+
+\subsection{Circuito finale}
+Come visto nella Sezione~\ref{} l'algoritmo QAOA non utilizza direttamente la funzione costo, ma i gate paraemtrici $555555555$ e $5555555555555555$ ripetuti un cero numero di volte. 
+
+Qiskit mette a disposizione del programmatore un costruttore per generare il quantum circuit che implementi l'algoritmo QAOA; questo costruttore permette di specificare:
+\begin{itemize}
+	\item funzione costo: quella ottenuta nel Listato~\ref{lst:cost_func};
+	\item numero di ripetizioni;
+	\item stato iniziale: sotto forma di quantum circuit. Se non viene specificato nessuno stato iniziale si applica a ogni \emph{qubit} la porta di Hadamard per partire da uno stato con soprvrapposizione massima;
+	\item operatore di mixing: da usare al posto della rotazione-$X$ globale di default. Questo parametro può essere specificato come operatore base oppure come quantum circuit.
+\end{itemize}
+
+Il circuto termina misurando il valore dei \emph{qubits} per ottenere una stima del minimo della funzione costo, ovvero una stima del ground state dell'Hamiltoniana $\mathbf{H}$. Il Listato~\ref{lst:circ_build} mostra la costruzione del circuito.
+
+\begin{listing}[h]
+	\mylisting{.85}{Python}{code/qaoa/circ_build.py}
+	\caption{text}
+	\label{lst:circ_build}
+\end{listing}
+
+\paragraph{Esempio:} Consideriamo un problema descritto da tre \emph{qubits} e due ripetizioni del blocco base di QAOA. La Figura \ref{} mostra: in~\hyperref[fig:cost_mat]{a} la matrice che descrive il prolema; in \hyperref[fig:qaoa_1]{b} il circuito in versione compatta; in \hyperref[fig:qaoa_2]{c} il circuito espanso per osservare come i coefficienti della matrice sono stati tradotti in osservabili.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[c]{0.3\linewidth}
+		\centering
+		\begin{tikzpicture}
+			\node (a) at (0,0) {
+				$
+				\mathbf{H} = 
+				\begin{pmatrix}
+					1&0&1\\
+					0&1&1\\
+					0&0&0
+				\end{pmatrix}
+				$
+			};
+		\end{tikzpicture}
+		\caption{Text}
+		\label{fig:cost_mat}
+	\end{subfigure}
+	\qquad
+	\begin{subfigure}[c]{0.55\linewidth}
+		\includegraphics[width=\linewidth]{qaoa/qaoa_1}
+		\caption{text}
+		\label{fig:qaoa_1}
+	\end{subfigure}\\
+	\vspace{.5cm}
+	\begin{subfigure}[c]{\linewidth}
+		\includegraphics[width=\linewidth]{qaoa/qaoa_2}
+		\caption{Text}
+		\label{fig:qaoa_2}
+	\end{subfigure}
+	\caption{Text}
+	\label{fig:qaoa_circ}
+\end{figure}
+
+Quadrando con attenzione gli operatori che costituiscono il gate $5555555555$ (primo e terzo blocco nella Figura~\ref{fig:qaoa_2}) possiamo notare che l'ordine dei qubit è invertito. Ad esempio l'operatore $IIZ$ rappresenta l'elemento di $\mathbf{H}$ in posizione $(0,0)$ e l'operatore $ZZI$ l'elemento in posizione $(1,2)$. Questa considerazione è da tenere presente quando leggeremo i risultati del circuito.
+
+\subsection{Ottimizzazione dei parametri}
+
 \section{Experiments}
 \section{Conclusion}
