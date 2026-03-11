@@ -1,136 +1,142 @@
 \chapter{QAOA}
-Nei capitolo precedenti ci siamo concentrati sull'ottenere una Hamiltoniana il cui ground state rappresentasse la soluzione del nostro problema. Implicitamente o espicitamente facevamo riferimento ai quantum annealer come macchine per trovare la configurazione che minimizzasse l'energia.
+In the previous chapters we focused on obtaining a Hamiltonian whose ground state represented the solution to our problem. Implicitly or explicitly we referred to quantum annealers as machines for finding the configuration that minimizes the energy.
 
-In questo capitolo mostreremo come passare da un problema formulato per quantum annealer a un problema formulato per computer quantum gate based attraverso l'algoritmo \emph{Quantum Approximation Optrimization Algoritm} (QAOA) Proposto per la prima volta da Farhi et al. in~\cite{bibid}.
+In this chapter we will show how to move from a problem formulated for quantum annealers to a problem formulated for quantum gate based computers through the \emph{Quantum Approximation Optimization Algorithm} (QAOA), proposed for the first time by Farhi et al. in~\cite{farhi2014quantum}.
 
-Iniziamo descrivendo l'algoritmo QAOA evidenziando vantaggi e svantaggi teorici rispetto a QAC\footnote{Quantum Adiabatic Computing (Sezione~\ref{})} . Mostreremo poi come sia possibile tradurre un problema formulato in forma QUBO (Sezione~\ref{}), ottenuto al termine dalla pipeline di QA-Prolog, in un problema adatto ai quantum gate based computer di IBM.
+We begin by describing the QAOA algorithm, highlighting theoretical advantages and disadvantages with respect to QAC\footnote{Quantum Adiabatic Computing (Section~\ref{}).}. We will then show how it is possible to translate a problem formulated in QUBO form (Section~\ref{}), obtained at the end of the QA-Prolog pipeline, into a problem suitable for IBM quantum gate based computers.
 
-Infine testeremo la traduzione proposta e mostreremo alcuni risultati sperimentali discutendoli.
+Finally, we will test the proposed translation and present some experimental results, discussing them.
 \section{QAOA}
-L'algoritmo QAOA è ispirato al QAC, entrambi tentano di trovare l'uatovalore minimo di una matrice che rappresenta l'energia di un sistema fisico~\cite{fakhimi2023quantum}. Questa matrice descrive un osservabile, di conseguenza è un operatore Hermitiano e in particolare è l'Hamiltonana $\mathbf{H}$ del sistema. L'autovalore più piccolo di $\mathbf{H}$ è l'energia minima del sistema che si può essere misurata per questo è detta ground state energy.
+The QAOA algorithm is inspired by QAC; both attempt to find the minimum eigenvalue of a matrix that represents the energy of a physical system~\cite{fakhimi2023quantum}. This matrix describes an observable, consequently it is a Hermitian operator and in particular it is the Hamiltonian $\mathbf{H}$ of the system. The smallest eigenvalue of $\mathbf{H}$ is the minimum energy of the system that can be measured; for this reason it is called the ground state energy.
 
-Come descritto nella Sezione~\ref{} il QAC viene eseguito su un quantum annealer che parte da una Hamiltonana di cui e facile conoscere il graound state ed evolve, adiabaticamente (per rimanere nel ground state) verso l'Hamiltoniana con ground state ignoto. Il tempo di evoluzione da un'Hamiltonana all'altra può essere esponenziale\cite{farhi2014quantum}, inoltre generalmente la probabilità di successo di QAC non aumenta all'aumentare del tempo di annealing.
+As described in Section~\ref{} QAC is executed on a quantum annealer that starts from a Hamiltonian whose ground state is easy to know and evolves, adiabatically (to remain in the ground state), towards the Hamiltonian with unknown ground state~\cite{fakhimi2023quantum}. The evolution time from one Hamiltonian to another can be exponential\cite{farhi2014quantum}; moreover, generally the success probability of QAC does not increase as the annealing time increases.
 
-Il QAOA targetta macchine quantum gate based e una volta ottimizzati i suoi parametri la bontà del risultato crese all'aumentare del numero di iterazioni, dette \emph{livelli}.
+QAOA targets quantum gate based machines and, once its parameters are optimized, the quality of the result increases as the number of iterations, called \emph{levels}, increases.
 
-\subsection{Circuito}
-L'algoritmo QAOA comincia con uno stato $\Ket{s}$ con sovrapposizione massima. È possibile ottenere questo stato partendo dallo stato con $n$ \emph{qubit} a zero ($\Ket{0}$) e applicando ad ogniuno la porta di Hadamard (H)~\cite{fakhimi2023quantum}, denotiamo questo operatore con $H^{\otimes n}$. 
+\subsection{Circuit}
+\label{sec:qaoa_circ}
+The QAOA algorithm begins with a state $\Ket{s}$ with maximum superposition. It is possible to obtain this state starting from the state with $n$ \emph{qubits} set to zero ($\Ket{0}$) and applying the Hadamard gate ($H$) to each of them~\cite{fakhimi2023quantum}; we denote this operator with $H^{\otimes n}$. 
 
-Il circuito è poi costituito da $p$ livelli tutti uguali. Ogni livello è composto da due operatori: 
+The circuit then consists of $p$ identical levels. Each level is composed of two operators: 
 \begin{itemize}
-	\item phase separation operator: $U_P(\gamma) = e ^{-i\gamma\mathbf{H}}$ dove $\mathbf{H}$ è l'amiltoniana del sistema e $\gamma \in [0, 2\pi]$ è un parametro;
-	\item mixing operator:  $U_M(\beta) = e ^{-i\beta B}$ dove B è l'operatore che applica il Pauli Gates X a ogni \emph{qubit} e $\beta \in [0, \pi]$ è un parametro.
+	\item \emph{phase separation operator}: $U_P(\gamma) = e ^{-i\gamma\mathbf{H}}$ where $\mathbf{H}$ is the Hamiltonian of the system, and $\gamma \in [0, 2\pi]$ is a parameter;
+	\item \emph{mixing operator}:  $U_M(\beta) = e ^{-i\beta B}$ where $B$ is the operator that applies the Pauli Gates $X$ to every \emph{qubit}, and $\beta \in [0, \pi]$ is a parameter.
 \end{itemize}
-L'operatore $U_(P\gamma)$ simula $\mathbf{H}$, mentre $U_M(\beta)$, che non commuta con $U_P(\gamma)$\footnote{$U_P(\gamma) \times U_M(\beta) \neq U_M(\beta) \times U_P(\gamma)$.}, permette di modificare la distribuzione di probalbilità dell'output~\cite{fakhimi2023quantum}. 
+The operator $U_P(\gamma)$ simulates $\mathbf{H}$, while $U_M(\beta)$, which does not commute with $U_P(\gamma)$\footnote{$U_P(\gamma) \times U_M(\beta) \neq U_M(\beta) \times U_P(\gamma)$.}, allows modifying the probability distribution of the output~\cite{fakhimi2023quantum}. 
 
-Usare i Pauli Gates X non è l'unico modo per costriure il mixing operator, in \cite{wang2020xy, hadfield2019quantum} si esplorano altri mixing operetor.
+Using Pauli Gates X is not the only way to construct the mixing operator; in \cite{wang2020xy, hadfield2019quantum} other mixing operators are explored.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.8\linewidth]{qaoa/qaoa}
-	\caption{\cite{blekos2024review}}
+	\caption{QAOA scheme~\cite{blekos2024review}}
 	\label{fig:qaoa}
 \end{figure}
 
-La Figura~\ref{fig:qaoa} mostra lo schema generale dell'algoritmo QAOA considerando $p$ livelli.
+Figure~\ref{fig:qaoa} shows the general scheme of the QAOA algorithm considering $p$ levels.
 
-Chiamati $\vec{\gamma} = (\gamma_1, \gamma_2,\dots,\gamma_p)$ e$\vec{\beta} = (\beta_1, \beta_2,\dots,\beta_p)$, indichiamo con $\Ket{\psi(\vec{\gamma},\vec{\beta})}$ the \emph{ansatz} (una stima della soluzione) del QAOA. L'ansatz è definita come:
-\[
-	\Ket{\psi(\vec{\gamma},\vec{\beta})} = U_M(\beta_p)U_P(\gamma_p)\cdots U_M(\beta_1)U_P(\gamma_1)\Ket{s}
-\]
-Il circuito termina con la misurazione, il valore atteso di questa misura è:
-\[
-F(\vec{\gamma},\vec{\beta}) =\Braket{\psi(\vec{\gamma},\vec{\beta}) | \mathbf{H} | \psi(\vec{\gamma},\vec{\beta})}
-\]
+Given $\vec{\gamma} = (\gamma_1, \gamma_2,\dots,\gamma_p)$ and $\vec{\beta} = (\beta_1, \beta_2,\dots,\beta_p)$, we denote with $\Ket{\psi(\vec{\gamma},\vec{\beta})}$ the \emph{ansatz} (an estimate of the solution) of QAOA. The ansatz is defined as:
+\begin{equation}
+\Ket{\psi(\vec{\gamma},\vec{\beta})} = U_M(\beta_p)U_P(\gamma_p)\cdots U_M(\beta_1)U_P(\gamma_1)\Ket{s}.
+\label{eq:qaoa_state}
+\end{equation}
+The circuit ends with the measurement; the expected value of this measurement is:
+\begin{equation}
+F(\vec{\gamma},\vec{\beta}) =\Braket{\psi(\vec{\gamma},\vec{\beta}) | \mathbf{H} | \psi(\vec{\gamma},\vec{\beta})}.
+\label{eq:qaoa_value}
+\end{equation}
 
-$F(\vec{\gamma},\vec{\beta})$ rappresenta il valore atteso di $\mathbf{H}$ nello stato $\Ket{\psi(\vec{\gamma},\vec{\beta})}$~\cite{fakhimi2023quantum}. Nella pratica questo valore si ottiene eseguendo molto volte il quantum circuit come vedremo più avanti. Oltre al valore dell'energia del sisema la misura dei \emph{qubits} fornisce anche un'assegnazione delle variabili che rappresenta una possibile soluzione del problema.
+$F(\vec{\gamma},\vec{\beta})$ represents the expected value of $\mathbf{H}$ in the state $\Ket{\psi(\vec{\gamma},\vec{\beta})}$~\cite{fakhimi2023quantum}. Once implemented this value is obtained by executing the quantum circuit many times, we will see this later. In addition to the value of the system energy, the measurement of the \emph{qubits} also provides an assignment of the variables that represents a possible solution to the problem.
 
 The QAOA’s performance depends on the number of levels; given optimal parameters of QAOA, the algorithm asymptotically converges to optimal solutions as the number of levels grows\cite{farhi2014quantum}.
 
-\subsection{Ottimizzazione dei parametri}
-QAOA requires tuning the parameters to maximize the expected objective value for a given number of levels.
+\subsection{Parameter optimization}
+\label{sec:param_opt}
+QAOA requires tuning the parameters to minimize the expected objective value for a given number of levels. Formally the best parameter ($\vec{\gamma^*}$ and $\vec{\beta^*}$) are defined as:
 \[
-	(\vec{\gamma^*},\vec{\beta^*}) = \argmin_{\vec{\gamma},\vec{\beta}} F(\vec{\gamma},\vec{\beta}) 
+(\vec{\gamma^*},\vec{\beta^*}) = \argmin_{\vec{\gamma},\vec{\beta}} F(\vec{\gamma},\vec{\beta}) 
 \]
 This parameter tuning problem is nonconvex and NP-hard~\cite{fakhimi2023quantum}. Even with one level, the gradient of $F(\vec{\gamma},\vec{\beta})$  vanishes rapidly; this phenomenon is known as the barren plateau~\cite{arrasmith2021effect, mcclean2018barren}. The barren plateau expands exponentially as the number of qubits
 grows, making the tuning process even more challenging~\cite{mcclean2018barren}.
 
-Nonostante la difficoltà nell'ottimizzare i parametri l'algoritmo QAOA prensenta numerosi aspetti interessanti e la riceca in questo ambito è ancora mlto attiva. Nel nostro lavoro ci da la possibilità di cambiare architettura di rferimento e provare a risolvere un problema in forma QUBO ottenuto con la pipeline di QA-Prolog con quantum gate based computer. Nelle prossime sezioni vedremo come implementare nella pratica l'algoritmo QAOA.
+The parameter optimization process is executed on a classical CPU rather than on a quantum computer. This makes QAOA a hybrid algorithm~\cite{fakhimi2023quantum}.
+
+\paragraph{Conclusion:} Despite the difficulty in optimizing the parameters, QAOA algorithm presents numerous interesting aspects and research in this field is very active. In our work it gives us the possibility to change the reference architecture, and attempt to solve a QUBO-formulated problem \textemdash{}obtained with the QA-Prolog pipeline\textemdash{} using quantum gate based computers. In the next sections we will see how to practically implement the QAOA algorithm.
 
 \section{From QAC to QAOA}
-Nella sezione preceente ci siamo concetrati sugli aspetti teorici dell'algoritmo QAOA. In questa sezione invece mostriamo come usare il Framework Qiskit di IBM per risolvere un problema di minimizzazione come quelli ottenuti al termine della pipeline di QA-Prolog. Vedremo cioè come implementare praticamente l'algoritmo QAOA.
+In the previous section we focused on the theoretical aspects of the QAOA algorithm. In this section instead we show how to use IBM's Qiskit Framework to solve a minimization problem such as those obtained at the end of the QA-Prolog pipeline.
 
-\subsection{Obbiettivo}
-Al termine della pipeline di QA-Prolog otteniamo un problema in forma QUBO, in questa rappresentazione le variabili $x_i$da ottimizzare appatengono all'insieme $\set{0, 1}$. Quando passiamo all'architettura quantum gate based il valore misurato dei \emph{qubits} appartiene all'insieme $\set{-1, 1}$. Dobbiamo quindi passare da una rappesentazione in forma QUBO a un problema in forma Ising. Qiskit inoltre prevede che la matrice $\mathbf{H}$ sia espressa come operatori di Pauli.
+\subsection{Objective}
+At the end of the QA-Prolog pipeline we obtain a problem in QUBO form: in this representation the variables $x_i$ to be optimized belong to the set $\set{0, 1}$. When we move to the quantum gate based architecture, the measured value of the \emph{qubits} belongs to the set $\set{-1, 1}$. We must therefore move from a representation in QUBO form to a problem in Ising form. Qiskit also requires that the matrix $\mathbf{H}$ is expressed as Pauli operators.
 
-Con questi passaggi abbiamo reso compatbile l'output di QA-Prolog con l'input dell'algoritmo QAOA. Per completare l'implementazione dobbiamo poi ottimizzare i parametri definiti nell'Equazione~\ref{} in modo ma minimizzare il valore atteso di $\mathbf{H}$. Infine, dopo aver trovato i parametri ottimi campioneremero il risultato del quantum circuit un'ultima volta per ottenere il risultato del nostro problema.
+With these steps we have made the output of QA-Prolog compatible with the input of the QAOA algorithm. To complete the implementation we must then optimize the parameters defined in Equations~\ref{eq:qaoa_state}~and~\ref{eq:qaoa_value} in order to minimize the expected value of $\mathbf{H}$. Finally, after finding the optimal parameters we will sample the result of the quantum circuit one last time to obtain the result of our problem.
 
-Per ricapitolare per implementare l'algoritmo QAOA con Qiskit partendo dall'output della pipeline di QA-prolog dobbiamo:
+To summarize, to implement the QAOA algorithm we must:
 \begin{itemize}
-	\item passare da foma QUBO a Forma Ising;
-	\item esprimere l'osservabile $\mathbf{H}$ con operatori di Pauli;
-	\item ottimizzare i parametri dell'Equazione~\ref{};
-	\item campionare il quantum circuit ottimizzato.
+	\item move from QUBO form to Ising form;
+	\item express the observable $\mathbf{H}$ using Pauli operators;
+	\item optimize the parameters of Equation~\ref{};
+	\item sample the optimized quantum circuit.
 \end{itemize}
 
 \subsection{From QUBO to Ising}
-Nella Sezione~\ref{} abbiamo visto che una traduzione da problema in forma QUBO a forma Ising esiste sempre. È possibile implementare questa traduzione manualmente seguendo~\cite{bibid}, in questo caso useremo l'implementazione fornita dalla libreria Python \mintinline{text}|qubovert|.
+In Section~\ref{} we saw that a translation from a problem in QUBO form to Ising form always exists. It is possible to implement this translation manually following~\cite{bibid}; in this case we will use the implementation provided by the Python library \mintinline{text}|qubovert|.
 
 \begin{listing}[h]
 	\mylisting{.8}{Python}{code/qaoa/qubo_to_ising.py}
-	\caption{text}
+	\caption{From QUBO form to Ising}
 	\label{lst:qubo_ising}
 \end{listing}
 
-Il Listato~\ref{lst:qubo_ising} mostra come sia possibile passare da una formulazione all'altra tramite la libreria \mintinline{text}|qubovert|:
+Listing~\ref{lst:qubo_ising} shows how it is possible to move from one formulation to the other using the \mintinline{text}|qubovert| library:
 \begin{enumerate}
-	\item costruiamo un problema QUBO avendo come input l'output della pipeline di QA-Prolog (\mintinline{text}|qubo_mat|);
-	\item trasformiamo il problema QUBO in forma Ising;
-	\item estraiamo il dizionario che assegna i coefficienti numerici $a_i$ nella Formula~\ref{};
-	\item scariamo il termine noto;
-	\item costriuamo la matrice con i pesi del problema in forma Ising.
+	\item we build a QUBO problem using as input the output of the QA-Prolog pipeline (\mintinline{text}|qubo_mat|);
+	\item we transform the QUBO problem into Ising form;
+	\item we extract the dictionary that assigns the numerical coefficients $a_i$ in Formula~\ref{};
+	\item we discard the constant term;
+	\item we construct the matrix with the weights of the problem in Ising form.
 \end{enumerate}
-L'aspetto più unteressante di questo procedimento è lo scarto del termine noto, questo valore serve per allineare il ground state del problema in Forma QUBO e Ising (Equazione~\ref{}) alla stessa energia. Siccome il nostro obbiettivo trovare il ground state, a prescindere dal suo valore possiamo ignorare questo offset e considerare soli i coefficienti delle variabili.
+The most interesting aspect of this procedure is the removal of the constant term; this value is used to align the ground state of the problem in QUBO form and Ising form (Equation~\ref{}) to the same energy. Since our objective is to find the ground state, regardless of its value, we can ignore this offset and consider only the coefficients of the variables.
 
 \subsection{Hamiltonian as Pauli operator}
-Consideriamo l'Hamiltoniana $\mathbf{H}$ triangolare superiore che descrive il nostro problema in forma Ising. Ogni elemento appartenente alla diagonale $h_{i,i}$ viene tradotto in un gate che misura la componente $Z$ del \emph{qubit} $i$ e applica la trasformazione identità a tutti gli altri \emph{qubits}\footnote{L'operatore che misura la componente $Z$ è $\sigma_z$ (Equazione~\ref{eqn:pauli_op}), qesto operatore è sia Hermitiano che unitario, quindi descrive sia un'osservabile che un quantum gate valido. Lo stesso vale per l'operatore identità.}. Gli elementi $h_{i,j}$\footnote{Con $j>i$ perchè $\mathbf{H}$ è triangolare superiore.} vengono trasformati in gate che misurano lo spin lungo l'asse $Z$ dei \emph{qubits} $i$ e $j$ e applicano l'operatore identità agli altri \emph{qubits}. 
+Consider the upper triangular Hamiltonian $\mathbf{H}$ that describes our problem in Ising form. Each element belonging to the diagonal $h_{i,i}$ is translated into a gate that measures the $Z$ component of the \emph{qubit} $i$ and applies the identity transformation to all the other \emph{qubits}\footnote{The operator that measures the $Z$ component is $\sigma_z$ (Equation~\ref{eqn:pauli_op}); this operator is both Hermitian and Unitary, therefore it describes both an observable and a valid quantum gate. The same holds for the identity operator.}. The elements $h_{i,j}$\footnote{With $j>i$ because $\mathbf{H}$ is upper triangular.} are transformed into gates that measure the spin along the $Z$ axis of the \emph{qubits} $i$ and $j$, and apply the identity operator to the other \emph{qubits}. 
 
-Seguendo il tutorial di IBM~\cite{ibm_qaoa_tutorial} trasformiamo la matrice che descrive il problema in forma Ising operatori di Pauli. Il Listato~\ref{lst:pauli_op} mostra come sia possibile automatizzare tale riscrittura. Alla linea $4$ generiamo l'osservabile per gli elementi sulla diagonale, alla linea $6$ l'osservabile per gli altri elementi della matrice.
+Following the IBM tutorial~\cite{ibm_qaoa_tutorial} we transform the matrix that describes the problem in Ising form into Pauli operators. Listing~\ref{lst:pauli_op} shows how it is possible to automate this rewriting. At line $4$ we generate the observable for the elements on the diagonal and at line $6$ the observable for the other elements of the matrix.
 \begin{listing}[h]
 	\mylisting{.9}{Python}{code/qaoa/matrix_to_pauli.py}
-	\caption{text}
+	\caption{Genearating Pauli operator}
 	\label{lst:pauli_op}
 \end{listing}
 
-Possiamo infine costruire un osservabile unico a partire dalla lista di operatori di Pauli che abbiamo appena costruito. Per fare questo usaimo una funzione di libreria messa a disposizione da Qiskit. Il Listato~\ref{lst:cost_func} mostra come ottenere la funzione costo, dove \mintinline{text}|pauli_list| sono le gli operatori di Pauli che abbiamo generato con il Listato~\ref{lst:pauli_op} e \mintinline{text}|n_qubits| il numero di \emph{qubits} che descrivono il nustro problema.
+We can finally construct a single observable starting from the list of Pauli operators that we have just built. To do this we use a library function provided by Qiskit. Listing~\ref{lst:cost_func} shows how to obtain the cost function, where \mintinline{text}|pauli_list| are the Pauli operators that we generated with Listing~\ref{lst:pauli_op}, and \mintinline{text}|n_qubits| is the number of \emph{qubits} that describe our problem.
 \begin{listing}[h]
-	\mylistingnonumber{.95}{Python}{code/qaoa/cost_func.py}
-	\caption{text}
+	\mylistingnonumber{1}{Python}{code/qaoa/cost_func.py}
+	\caption{Defining cost function}
 	\label{lst:cost_func}
 \end{listing}
 
-\subsection{Circuito finale}
-Come visto nella Sezione~\ref{} l'algoritmo QAOA non utilizza direttamente la funzione costo, ma i gate paraemtrici $555555555$ e $5555555555555555$ ripetuti un cero numero di volte. 
+\subsection{Final circuit}
+As seen in Section~\ref{sec:qaoa_circ} the QAOA algorithm does not directly use the cost function, but the parametric gates $U_P(\gamma)$ and $U_M(\beta)$ repeated a certain number of times. 
 
-Qiskit mette a disposizione del programmatore un costruttore per generare il quantum circuit che implementi l'algoritmo QAOA; questo costruttore permette di specificare:
+Qiskit provides the programmer with a constructor to generate the quantum circuit that implements the QAOA algorithm; this constructor allows specifying:
 \begin{itemize}
-	\item funzione costo: quella ottenuta nel Listato~\ref{lst:cost_func};
-	\item numero di ripetizioni;
-	\item stato iniziale: sotto forma di quantum circuit. Se non viene specificato nessuno stato iniziale si applica a ogni \emph{qubit} la porta di Hadamard per partire da uno stato con soprvrapposizione massima;
-	\item operatore di mixing: questo parametro può essere specificato come operatore base oppure come quantum circuit, se non viene specificato nessun parametro si applica il gate Not\ref{}
+	\item cost function: the one obtained in Listing~\ref{lst:cost_func};
+	\item number of repetitions;
+	\item initial state: in the form of a quantum circuit. If no initial state is specified, the Hadamard gate is applied to each \emph{qubit};
+	\item mixing operator: this parameter can be specified as a base operator or as a quantum circuit. If no parameter is specified the Not gate~\ref{} is applied.
 \end{itemize}
 
-Il circuto termina misurando il valore dei \emph{qubits}. Il Listato~\ref{lst:circ_build} mostra la costruzione del circuito.
+The circuit ends by measuring the value of the \emph{qubits}. Listing~\ref{lst:circ_build} shows the construction of the circuit.
 
 \begin{listing}[h]
 	\mylisting{.85}{Python}{code/qaoa/circ_build.py}
-	\caption{text}
+	\caption{Circuit construction}
 	\label{lst:circ_build}
 \end{listing}
 
-\paragraph{Esempio:} Consideriamo un problema descritto da tre \emph{qubits} e due ripetizioni del blocco base di QAOA. La Figura \ref{fig:qaoa_circ} mostra: in~\hyperref[fig:cost_mat]{a} la matrice che descrive il prolema; in \hyperref[fig:qaoa_1]{b} il circuito in versione compatta; in \hyperref[fig:qaoa_2]{c} il circuito espanso per osservare come i coefficienti della matrice sono stati tradotti in osservabili.
+\paragraph{Example:} Consider a problem described by three \emph{qubits} and the QAOA algorithm with two levels. Figure \ref{fig:qaoa_circ} shows: in~\hyperref[fig:cost_mat]{a} the matrix that describes the problem; in \hyperref[fig:qaoa_1]{b} the circuit in compact form; in \hyperref[fig:qaoa_2]{c} the circuit expanded to observe how the coefficients of the matrix have been translated into observables.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[c]{0.3\linewidth}
 		\centering
@@ -146,140 +152,146 @@ Il circuto termina misurando il valore dei \emph{qubits}. Il Listato~\ref{lst:ci
 				$
 			};
 		\end{tikzpicture}
-		\caption{Text}
+		\caption{Hamiltonian matrix}
 		\label{fig:cost_mat}
 	\end{subfigure}
 	\qquad
 	\begin{subfigure}[c]{0.55\linewidth}
 		\includegraphics[width=\linewidth]{qaoa/qaoa_1}
-		\caption{text}
+		\caption{Compact form}
 		\label{fig:qaoa_1}
 	\end{subfigure}\\
 	\vspace{.5cm}
 	\begin{subfigure}[c]{\linewidth}
 		\includegraphics[width=\linewidth]{qaoa/qaoa_2}
-		\caption{Text}
+		\caption{Expanded form}
 		\label{fig:qaoa_2}
 	\end{subfigure}
-	\caption{Text}
+	\caption{QAOA circuit}
 	\label{fig:qaoa_circ}
 \end{figure}
 
-Quadrando con attenzione gli operatori che costituiscono il gate $5555555555$ (primo e terzo blocco nella Figura~\ref{fig:qaoa_2}) possiamo notare che l'ordine dei qubit è invertito. Ad esempio l'operatore $IIZ$ rappresenta l'elemento di $\mathbf{H}$ in posizione $(0,0)$ e l'operatore $ZZI$ l'elemento in posizione $(1,2)$. Questa considerazione è da tenere presente quando leggeremo i risultati del circuito.
+By carefully examining the operators that constitute the gate $U_P(\gamma)$ (first and third block in Figure~\ref{fig:qaoa_2}) we can observe that the order of the qubits is inverted. For example, the operator $IIZ$ represents the element of $\mathbf{H}$ in position $(0,0)$: $I$ is the identity gate applied to the third and second \emph{qubits}, and $Z$ is the Pauli Gate $Z$ applied to the first \emph{qubit}. The operator $ZZI$ represent the element in position $(1,2)$. This observation must be kept in mind when reading the results of the circuit.
 
-\subsection{Ottimizzazione dei parametri}
-Definiamo una funzione per ricavare il costo  $F(\vec{\beta}, \vec{\gamma})$ (Equazione~\ref{}) come valore attteso del risultato dell'esecuzione del quantum circuit definito prima. Questo costo va minimizzato ottimizzando i parametri $\vec{\beta}$ e $ \vec{\gamma}$. Seguendo \cite{ibm_qaoa_tutorial} utilizziamo la libreria Python \mintinline{text}|scipy| per minimizzare $F(\vec{\beta}, \vec{\gamma})$.
+\subsection{Parameter optimization}
+We define a procedure to obtain the cost $F(\vec{\gamma}, \vec{\beta})$ (Equation~\ref{eq:qaoa_value}) as the expected value of the result of executing the quantum circuit defined earlier. This cost must be minimized by optimizing the parameters $\vec{\gamma}$ and $\vec{\beta}$. Following \cite{ibm_qaoa_tutorial}, we use the Python library \mintinline{text}|scipy| to minimize $F(\vec{\gamma}, \vec{\beta})$.
 
 \begin{listing}[h]
 	\mylisting{.95}{Python}{code/qaoa/cost_func_physic.py}
-	\caption{text}
+	\caption{$F(\vec{\gamma}, \vec{\beta})$ estimation}
 	\label{lst:cost_func_physical}
 \end{listing}
 
-Il Listato~\ref{lst:cost_func_physical} mostra come ricavare $F(\vec{\beta}, \vec{\gamma})$ come valore atteso:
+Listing~\ref{lst:cost_func_physical} shows how to obtain $F(\vec{\gamma}, \vec{\beta})$ as an expected value:
 \begin{itemize}
-	\item alla linea $5$ creiamo un \emph{primitive unified blocks} (\mintinline{text}|pub|): una tripla contenente il circuito da eseguire (\mintinline{text}|ansatz|), l'osservabile da misurare (\mintinline{text}|isa_hamiltonian|) e i paramteri del circuito (\mintinline{text}|params|);
-	\item alla linea $6$ stimiamo $F(\vec{\beta}, \vec{\gamma})$ eseguendo multiple run del circuito;
-	\item da linea $7$ a $9$ recuperiamo e ritorniamo il risultato.
+	\item at line $5$ we create a \emph{primitive unified block} (\mintinline{text}|pub|): a triple containing the circuit to execute (\mintinline{text}|ansatz|), the observable to measure (\mintinline{text}|isa_hamiltonian|) and the circuit parameters (\mintinline{text}|params|);
+	\item at line $6$ we estimate $F(\vec{\gamma}, \vec{\beta})$ by executing multiple runs of the circuit\footnote{The shot's number is an attribute of the \mintinline{text}|estimator| object that we define in Listing~\ref{lst:minimize}.};
+	\item from line $7$ to $9$ we retrieve and return the result.
 \end{itemize}
+
 \begin{listing}[h]
 	\mylisting{.95}{Python}{code/qaoa/minimize.py}
-	\caption{text}
+	\caption{$\vec{\gamma}$ and $\vec{\beta}$ optimization}
 	\label{lst:minimize}
 \end{listing}
 
-Il Listato~\ref{lst:minimize} mostra il processo di minimizzazione: creiamo uno stimatore che esegue $1000$ run del circuito (linee $2$ e $3$) e usiamo la funzione di libreria \mintinline{text}|scipy.optimize.minimize|\footnote{La ui documentazione è dispnibile a \url{URL}.} per minimizzare $F(\vec{\beta}, \vec{\gamma})$ ottimizzando i parametri  $\vec{\beta}$ e $ \vec{\gamma}$. Infine creiamo il circuito ottimizzato assegnado al circuito parametrico il valore dei parametri ottimizzati (linea $12$). In questo listato, \mintinline{text}|candidate_circuit| è la versione transpiled\footnote{Sezione~\ref{}} del circuito \mintinline{text}|qc| ottenuto nel Listato~\ref{lst:circ_build}.
+Listing~\ref{lst:minimize} shows the minimization process: we create an estimator that executes $1000$ runs of the circuit (lines $2$ and $3$) and use the library function \mintinline{text}|scipy.optimize.minimize|\footnote{Its documentation is available at \url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}.} to minimize $F(\vec{\gamma}, \vec{\beta})$ by optimizing the parameters $\vec{\gamma}$ and $\vec{\beta}$. Finally we create the optimized circuit by assigning to the parametric circuit the value of the optimized parameters (line $12$). In this listing, \mintinline{text}|candidate_circuit| is the transpiled\footnote{Section~\ref{sec:transpilation}} version of the circuit \mintinline{text}|qc| obtained in Listing~\ref{lst:circ_build}.
 
-\subsection{Recupero dei risultati}
-Ora che abbiamo ottimizzato il vlaore dei parametri possiamo, un'ultima volta, fare sampling del quantum circuit, questa volta non per stimare il valore minimo i $F(\vec{\beta}, \vec{\gamma})$, ma per stabilire il valore dei \emph{qubits} che generano tale valore.
+\subsection{Retrieving the results}
+Now that we have optimized the value of the parameters we can, one last time, perform sampling of the quantum circuit. This time we are not interested in estimating the minimum value of $F(\vec{\beta}, \vec{\gamma})$, but in determining the value of the \emph{qubits} that generate this value.
 
 \begin{listing}[h]
 	\mylisting{.75}{Python}{code/qaoa/result.py}
-	\caption{text}
+	\caption{Circuit sampling}
 	\label{lst:result}
 \end{listing}\
 
-Nel Listato~\ref{lst:result} creiamo un  \mintinline{text}|Sampler| (linea $1$) che run $10000$ volte il circuito ottimizzato (linea $4$). In questo caso usiamo un  \mintinline{text}|Sampler| non un  \mintinline{text}|Estimator| come nel Listato~\ref{lst:minimize} perché siamo interessati al valore dei \emph{qubits} non al valore di un'osservabile. Alla linea $5$ recuperiamo i risultati.
+In Listing~\ref{lst:result} we create a \mintinline{text}|Sampler| (line $1$) that runs the optimized circuit $10000$ times (line $4$). In this case we use a \mintinline{text}|Sampler|, and not an \mintinline{text}|Estimator| as in Listing~\ref{lst:minimize}, because we are interested in the value of the \emph{qubits} rather than the expected value of an observable. At line $5$ we retrieve the results.
 
 \section{Experiments}
-Applichiamo l'algoritmo QAOA per risolvere un problema in forma QUBO ottenuto con la pipeline di QA-Prolog.
-\subsection{Problema}
-Consideriamo il problema di soddisfacibilità $y = x_1 \land\neg(x_2 \lor x_3)$ (Equazione~\ref{eqn:simple_logic}). Questo problema si presta bene all'applicazione di QAOA perché possiamo leggere la soluzione direttamente dal valore dei \emph{qubits}\footnote{Della possibilità di usare QA-Prolog per rendere leggibile l'output di QAOA parleremo in \ref{}.}. 
+We apply the QAOA algorithm to solve a problem in QUBO form obtained with the QA-Prolog pipeline.
+\subsection{Problem}
+Consider the satisfiability problem $y = x_1 \land\neg(x_2 \lor x_3)$ (Equation~\ref{eqn:simple_logic}). This problem is well suited for the application of QAOA because we can read the solution directly from the value of the \emph{qubits}\footnote{We will discuss the possibility of using QA-Prolog to make the output of QAOA readable in \ref{}.}. 
 
-Come mostrato nell'Esempio~\ref{} partire dal codice Prolog per risolvere il problema di soddisfacibilità introduce parecchio overhead. Per contenere al massimo il numero di \emph{qubits} necessarei per rappresentare il problema percorriamo solo una parte della pipeline, partendo dal codice Verilog dell'Esempio~\ref{}.
+As shown in Example~\ref{ex:sat_prolog}, starting from Prolog code to solve the satisfiability problem introduces a significant amount of overhead. To minimize the number of \emph{qubits} required to represent the problem we follow only part of the pipeline, starting from the Verilog code of Example~\ref{ex:sat_verilog}.
 
-Il problema QUBO che otteniamo è rappresentato da una matrice $11\times11$, cioè abbiamo bisogno di undici \emph{qubits} per rappresentare il nostro problema.
+The QUBO problem that we obtain is represented by an $11\times11$ matrix, this means that we need eleven \emph{qubits} to encode our problem.
 
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{0.437\linewidth}
 		\includegraphics[width=\linewidth]{qaoa/h_qubo}
-		\caption{Text}
+		\caption{QUBO Hamiltonian}
 		\label{fig:h_qubo}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[c]{0.523\linewidth}
 		\includegraphics[width=\linewidth]{qaoa/h_ising}
-		\caption{text}
+		\caption{Ising Hamiltonian}
 		\label{fig:h_ising}
 	\end{subfigure}
-	\caption{Text}
+	\caption{Problem's Hamiltonian}
 	\label{fig:h}
 \end{figure}
 
-La Figura~\ref{fig:h} mostra la rappresentazione matriciale del permblema sia in forma Qubo che Ising. Le due rappresentazioni hanno ground state con valore diverso, ma che corrisponde alla stessa configurazione dei \emph{qubits}.
+Figure~\ref{fig:h} shows the matrix representation of the problem both in QUBO and Ising form. The two representations have ground states with different values, but they correspond to the same configuration of the \emph{qubits}.
 
-\subsection{Esecuzione}
-Per risolvere il probleama di soddisfacibilità costruiamo un QAOA con $10$ livelli. Aumentando il numero di livelli l'algoritmo converge sempre meglio alla soluzione ottima. 
+\subsection{Execution}
+To solve the satisfiability problem we construct a QAOA with $10$ levels. By increasing the number of levels, the algorithm converges increasingly well to the optimal solution. 
+
+However, increasing the number of levels also leads to longer execution time and, if executed on quantum hardware (and not through simulators), the deeper the circuit, the more one encounters the phenomenon of decoherence~\cite{bibid}. Moreover, the number of parameters to optimize is equal to twice the number of levels, therefore increasing the number of levels also makes the parameter optimization more complex\footnote{As sed in Section~\ref{sec:param_opt}}. 
 
 \begin{wrapfigure}{r}{.5\linewidth}
-	\centering
-	\vspace{-.5cm}
-	\includegraphics[width=.95\linewidth]{qaoa/qaoa_opt}
-	\caption{text}
+	\centering\textbf{}
+	\includegraphics[width=.85\linewidth]{qaoa/qaoa_opt}
+	\caption{Cost minimization}
 	\label{fig:optimization}
 \end{wrapfigure}
-Aumentare i livelli però comporta anche un tempo di escuzione maggiore e se si esegue su hardware quantistico (e non attraerso simulatori) più è profondo il circuito più si va incontro al fenomeno della decoerenza~\cite{bibid}; inoltre il numero di parametri da ottimizzare è pari al doppio dei livelli, aumentare il numro di livelli quindi comporta anche rendere più complessa l'ottimizzazione dei parametri. La Figura~\ref{fig:optimization} mostra il processo di ottimizzazione dei parametri: man mano che si trovano parametri migliori la stima del costo diminuisce. In questo caso i parametri sono stati ottimzzati dopo $130$ iterazioni circa. Ognuna di queste iperazioni prevede $1000$ run del quantum circuit.
+Figure~\ref{fig:optimization} shows the parameter optimization process: as better parameters are found the estimated cost decreases. In this case the parameters were optimized after approximately $130$ iterations. Each of these iterations involves $1000$ runs of the quantum circuit. 
 
-\begin{figure}[h]
+Once the parameters have been found we can sample the optimized circuit to obtain the answer to our problem. Figure~\ref{fig:qaoa_r_1} shows the result of the sampling ($10000$ runs of the quantum circuit), highlighting in purple the four most frequent results.
+
+\begin{figure}[H]
 	\centering
-		\includegraphics[width=.8\linewidth]{qaoa/qaoa_r_1}
-	\caption{Text}
-	\label{fig:qaoa_r_1}
+	\begin{subfigure}[c]{.55\linewidth}
+		\includegraphics[width=\linewidth]{qaoa/qaoa_r_1}
+		\caption{All \emph{qubits}}
+		\label{fig:qaoa_r_1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.4\linewidth}
+		\includegraphics[width=.95\linewidth]{qaoa/qaoa_r_2}
+		\caption{Interesting \emph{qubits}}
+		\label{fig:qaoa_r_2}
+	\end{subfigure}
+	\caption{Circuit sampling}
+	\label{fig:qaoa_circ_sample}
 \end{figure}
 
-Trovati i parametri possimao fare sample del circuito ottimizzato per ottenere la risposta del nostro problema. La Figura~\ref{fig:qaoa_r_1} mostra il risultato del sample ($10000$ run del quantum circuit) evidenziando in viola i quattro risultati più frequenti.
 
-\begin{wrapfigure}{r}{.5\linewidth}
-	\centering
-	\vspace{-.5cm}
-	\includegraphics[width=.95\linewidth]{qaoa/qaoa_r_2}
-	\caption{text}
-	\label{fig:qaoa_r_2}
-\end{wrapfigure}
-L'istogramma di Figura~\ref{fig:qaoa_r_1} è di difficile interpretazione, inoltre mostra il riultato di tutti gli undici \emph{qubits} che formano il polinomio da minimizzare. Noi siamo interessati solo al valore delle variabili $x_1$, $x_2$ e $x_3$, le altre sono ancillari. La Figura~\ref{fig:qaoa_r_2} mostra il risutlato del sample in cui consideriamo solo le variabili di nostro interesse. Queste sono state estratte verificando quali \emph{qubits} erano stati mappati da QMASM nelle varibili $x_1$, $x_2$ e $x_3$ e condierando che la bitstring ottenuta è da leggere al contrario
+The histogram in Figure~\ref{fig:qaoa_r_1} is difficult to interpret; moreover it shows the result of all eleven \emph{qubits} that form the polynomial to be minimized. We are interested only in the value of the variables $x_1$, $x_2$ and $x_3$, the others are ancillary. Figure~\ref{fig:qaoa_r_2} shows the sampling result where we consider only the variables of interest. These were extracted by checking which \emph{qubits} had been mapped by QMASM to the variables $x_1$, $x_2$ and $x_3$, and considering that the obtained bitstring must be read in reverse.
 
-Il risultato ottenuto è quello atteso, infatti abbiamo ottenuto la stringa $1\ 0\ 0$ come sample più probabile, questi valori sono da associare rispettivamente alle variabili $x_1$, $x_3$ e $x_2$ e possiamo verificare facilmente che questo assegnamento soddisfa l'Equazione~\ref{eqn:simple_logic}.
+The obtained result is the expected one; in fact we obtained the string $1\ 0\ 0$ as the most probable sample. These values must be associated respectively with the variables $x_1$, $x_3$ and $x_2$, and we can easily verify that this assignment satisfies Equation~\ref{eqn:simple_logic}.
 
-\subsection{Risultati}
-Sia il processo di sampling che il processo di ottimizzazione delle variabili introducono dei processi stocastici all'interno dell'esecuzione di QAOA. Verifichiamo quindi se eseguendo più volte l'ottimizzazione dei parametri e il sampling finale otteniamo sempreil risultato atteso\footnote{il codice che automatizza lesecuzione degli esperimenti è disponibie a \url{URL}}.
+\subsection{Results}
+Both the sampling process and the parameter optimization process introduce stochastic components into the execution of QAOA. We therefore want to verify, by executing the parameter optimization and the final sampling multiple times, if we always obtain the expected result\footnote{The code that automates the execution of the experiments is available at \url{https://github.com/DavideCamino/Thesis/blob/main/Code/3_QAUA/circ_sat/circ_sat_qaoa_multiple_run.ipynb}.}.
 
-Siccome il tempo di esecuizione di ciascun esperimento non è trescurabile il numero diesperimenti fatti è contenuto e non permette di fare statistiche attendibili. È però sufficiente per mostrare come l'agoritmo QAOA non sempre sia in grado di trovare la risposta corretta al problema di minimizzazione.
+Since the execution time of each experiment needs to be taken into consideration, the number of experiments performed is limited and does not allow reliable statistical analysis. However, it is sufficient to show how the QAOA algorithm is not always able to find the correct answer to the minimization problem.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.8\linewidth]{qaoa/qaoa_r_3}
-	\caption{Text}
+	\caption{Multiple experiments' result}
 	\label{fig:qaoa_r_3}
 \end{figure}
 
-La Figura~\ref{fig:qaoa_r_3} mostra i risultati (dei \emph{quits} interessanti) di 12 ripetizioni dell'esperimento. Nell'immagine sono stati evidenziati con lo sfondo verde tutti i casi in cui è stat individuato l'assegnamento corretto delle variabili  $x_1$, $x_2$ e $x_3$, mentre sono evidenziati in rosso i casi in cui il risultato più probabile è sbagliato.
+Figure~\ref{fig:qaoa_r_3} shows the results (of the relevant \emph{qubits}) of 12 repetitions of the experiment. In the image, all the cases in which the correct assignment of the variables $x_1$, $x_2$ and $x_3$ was identified are highlighted with a green. The cases, in which the most probable result is incorrect, are highlighted in red.
 
-Il umero di esperimenti è molto basso e analisi statistiche avanzate non sarebbero attendibili. Possiamo comunque fare alune osservazioni qualitative. Tipicamente nei casi in cui la soluzione corretta viene trovata la probabilità di quest'ultima è discretamente maggiore di quella degli altri risultati. Quando invece la soluzione è sbagliata i diversi risultati sono distribuiti i maniera abbastanza uniforme.
+The number of experiments is very low and advanced statistical analyses would not be reliable. Nevertheless, we can make some qualitative observations. Typically, in the cases in which the correct solution is found, the probability of the latter is noticeably higher than that of the other results. When instead the solution is incorrect, the different results are distributed in a rather uniform way in over half of the cases.
 
 \section{Conclusion}
-In questo capitolo abbiamo presentato un nuovo algoritmo per risolvere un problema di minimizzazione in fomra QUBO. Dal punto di vista teorico abbiamo visto che QAOA ci garantisce un miglioramento monotono delle performance all'aumentare del numero di livelli (a patto di aver trovato dei parametri ottimi), mentre il QAC non garantisce questa monotonia aumentando il tempo di annealing. Abbiamo poi presentato le criticità di QAOA evidenziando come il problema di trovare dei parametri ottimi sia in generale NP-Hard.
+In this chapter we presented a new algorithm for solving a minimization problem in QUBO form. From a theoretical point of view, we saw that QAOA guarantees a monotonic improvement in performance as the number of levels increases (provided that optimal parameters have been found), while QAC does not guarantee this monotonicity when increasing the annealing time. We then presented the critical aspects of QAOA, highlighting how the problem of finding optimal parameters is, in general, NP-Hard.
 
-La discussione si è poi spsotata sull'implementazione pratica e abbiamo visto come usare il Framework Qiskit per risolvere su macchine quantum gate based di IBM un problema originalmente in forma QUBO. Abbiamo presentato delgi script Python per automatizzare la traduzione, abbiamo visto come recuperare i risultati e come interpretarli. Infine abiamo discusso la qualita delle soluzioni formite da QAOA ripetendo il tunig dei parametri e il sampling del circuto ottimizzato discutendo i risultati ottenuti.
+The discussion then moved to the practical implementation, and we saw how to use the Qiskit Framework to solve on IBM quantum gate based machines a problem originally in QUBO form. We presented Python scripts to automate the translation, we saw how to retrieve the results and how to interpret them. Finally, we discussed the quality of the solutions provided by QAOA by repeating the parameter tuning and the sampling of the optimized circuit, discussing the obtained results.
 
-Nel capitolo precedente abbiamo mostrato come aggiungere un passo di riscrttura a monte della pipeline di QA-Prolog. Anche questo capitolo può essere considerato un ulteriore passo di riscrittura di un problema in formati diversi ma equivalenti; questa volta a valle della pipeline abbiamopreso l'output formito da QMASM e lo abbiamo risvritto in un formato compatibile con QAOA.
+In the previous chapter we showed how to add a rewriting step upstream of the QA-Prolog pipeline. This chapter can also be considered as a further rewriting step of a problem into different but equivalent formats; this time downstream of the pipeline we took the output provided by QMASM and rewrote it into a format compatible with QAOA.

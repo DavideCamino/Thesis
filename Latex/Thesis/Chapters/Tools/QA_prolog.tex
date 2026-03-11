@@ -241,7 +241,7 @@ The two most useful features of Yosys are the possibility of specifying a \emph{
 
 Yosys lowers a Verilog program to an EDIF netlist that uses only a specified set of gates; then edif2qmasm lowers the netlist into a symbolic Hamiltonian. This Hamiltonian uses a set of macros defining the energy for each type of gate Yosys can use\footnote{The actual set of gates extends the logical ports \emph{and}, \emph{or}, and \emph{not} and is available at: \url{https://github.com/lanl/edif2qmasm/blob/master/stdcell.qmasm}.}. What we end up with is a symbolic Hamiltonian that can be used as input for QMASM.
 
-\paragraph{Example:} Considering again the simple formula $y = x_1 \land \neg(x_2\lor x_3)$ (Equation~\ref{eqn:simple_logic}).
+\paragraph{Example:}\label{ex:sat_verilog} Considering again the simple formula $y = x_1 \land \neg(x_2\lor x_3)$ (Equation~\ref{eqn:simple_logic}).
 
 \begin{figure}[h]
 	\centering
@@ -316,7 +316,7 @@ Another detail to point out is the parameter \mintinline[escapeinside=@@]{text}|
 By inspecting the working directory, we can check the output of each step of the pipeline. In Appendix~\ref{lst:qa_prolog_compilation} is shown the rewritten of a Prolog KB into a Verilog program: it is possible to observe in detail how each fact or rule has been transformed.
 If we inspect the working directory we can see the output of every step of the pipeline; in particular, to see how exactly the KB is rewritten into a Verilog program, in Appendix~\ref{lst:qa_prolog_compilation} there is the result of compilation, and it is possible to observe in detail how each fact or rule has been transformed.
 
-\paragraph{Example 2: }The second example concludes our transformation of the satisfiability problem (Equation~\ref{eqn:simple_logic}); unfortunately, this is not very didactic because the Prolog program suitable for QA-Prolog processing introduces a consistent amount of overhead. This is due to the fact that in Prolog we can simply import \mintinline{text}|library(clpb)|~\cite{triska2018boolean} and then formulate the query \mintinline{text}|?- sat(A * (~(B + C))).|; to use QA-Prolog, instead, we have to implement logical operators by defining their truth tables, then assemble the operators in our logical formula. This leads to the overhead. Listing~\ref{lst:sat_prolog} shows the implementation we use in our test.
+\paragraph{Example 2: }\label{ex:sat_prolog} The second example concludes our transformation of the satisfiability problem (Equation~\ref{eqn:simple_logic}); unfortunately, this is not very didactic because the Prolog program suitable for QA-Prolog processing introduces a consistent amount of overhead. This is due to the fact that in Prolog we can simply import \mintinline{text}|library(clpb)|~\cite{triska2018boolean} and then formulate the query \mintinline{text}|?- sat(A * (~(B + C))).|; to use QA-Prolog, instead, we have to implement logical operators by defining their truth tables, then assemble the operators in our logical formula. This leads to the overhead. Listing~\ref{lst:sat_prolog} shows the implementation we use in our test.
 \begin{listing}[h]
 	\mylisting{.6}{prolog}{code/qa_prolog/sat.pl}
 	\caption{Satisfiability in Prolog}

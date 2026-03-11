@@ -64,6 +64,7 @@ If the setup is successful we are now able to run a small test to build a Bell s
 \end{listing}
 
 \subsection{Transpilation}
+\label{sec:transpilation}
 Each Quantum Processing Unit (QPU) has a specific topology. We need to rewrite our quantum circuit in order to match the topology of the selected device on which we want to run our program. This phase of rewriting, followed by an optimization, is called transpilation.
 
 Considering, for now, a fake hardware (so we do not need an API key) we can transpile the quantum circuit \mintinline{py}|qc|, from the code above, to match the topology of a specific QPU. Listing~\ref{lst:transpilation} implement the transpilantion, and Figure~\ref{fig:qc_transpilation} shows the circuits generated: (\hyperref[fig:qc_orig]{a}) is the circuit whe have defined in Listing~\ref{lst:hello_qiskit} and (\hyperref[fig:qc_trans]{b}) is the transpiled version where the Hadamard gate is replaced to match the actual topology of the QPU.
