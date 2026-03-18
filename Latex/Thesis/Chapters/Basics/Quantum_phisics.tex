@@ -58,8 +58,8 @@ Starting with the classical case we consider a bag of colored and numbered balls
 
 If we consider a particular state we can say if a proposition is true or false; we can also define two subsets of balls, the first with all the red balls (for this subset the first proposition is true), the second one with the balls that show an even number (subset that makes the second proposition true). Considering now disjunction and conjunction:
 \begin{itemize}
-	\item The extracted ball is red \emph{or} even.
-	\item The extracted ball is red \emph{and} even.
+	\item The extracted ball is red \spacedlowsmallcaps{or} even.
+	\item The extracted ball is red \spacedlowsmallcaps{and} even.
 \end{itemize}
 Again it is simple to associate a truth value to these propositions if we consider a single state; also we can construct two subsets that satisfy the propositions from the subsets we defined before: the new subsets are respectively the union and intersection of the old ones.
 
@@ -70,8 +70,8 @@ In the quantum world the situation is very different. Let's start from propositi
 \end{itemize}
 If we want to check the first proposition we can orient the apparatus $\mathcal{A}$ along $z$ and make a measurement; the same procedure can be followed for the second proposition. The disjunction and conjunction of these propositions are:
 \begin{itemize}
-	\item The $z$ component of the spin is $+1$ \emph{or} the $x$ component is $+1$.
-	\item The $z$ component of the spin is $+1$ \emph{and} the $x$ component is $+1$.
+	\item The $z$ component of the spin is $+1$ \spacedlowsmallcaps{or} the $x$ component is $+1$.
+	\item The $z$ component of the spin is $+1$ \spacedlowsmallcaps{and} the $x$ component is $+1$.
 \end{itemize}
 
 Starting with the disjunction. Considering a state prepared, without our knowledge, with $\sigma_z = +1$. If our first measure is along the $z$ axis, $\mathcal{A}$ will always display $+1$ and we can immediately conclude that the proposition is true. If we start measuring the $x$ component, we have a $50\%$ chance that $\mathcal{A}$ displays $+1$ or $-1$; also this measurement destroys the initial state and the measure of $\sigma_z$ becomes non predictable. In this scenario we have a $25\%$ chance of deducing that the proposition is false; Figure~\ref{fig:tree_dis} shows all the possible measurement results in this case. The\marginpar{The disjunction is not commutative} logical value of a proposition depends on the order in which we perform the measurements.
@@ -615,6 +615,7 @@ In\marginpar{Reversibility} other words, we want physical transformations to be 
 \end{axiom}
 
 \subsection{Time-Development Operator}
+\label{sec:unitary_operator}
 Considering a system in the state $\Ket{\Psi(t)}$, where the $t$ indicates that the state vector evolves over time, quantum motion equations allow us to obtain the state at time $t$ given the initial state:
 \begin{equation}
 	\label{eqn:evol}

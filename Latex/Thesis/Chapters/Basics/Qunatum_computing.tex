@@ -1,167 +1,251 @@
-\chapter{Quantum Computing}
-In questo capitolo introduciamo i concetti base del quantum computing. Vediamo le ragioni che ci spingono a cercare nuovi paradigmi di calcolo e perchè il quantum computing sembra essere promettente.
+\chapter{Computational complexity and quantum Computing}
+In this chapter we introduce the basic concepts of quantum computing. We examine the reasons that push us to search for new computational paradigms and why quantum computing appears to be promising.
 
-Per poter capire a fondo quali siano le speranze riposte nel quantum computing è necessario prima introdurre alcuni elementi di calcolabilità e complessità. Vedremo qundi le fondamenta della computer science partendo dai modelli computazionali. Daremo una definizione di problema computazionale e vedremo quali problemi che possiamo risolvere con un calcolatore. Infine studeiremo la complessità computazionale dei prioblemi classivifacndoli in base alle risorse necessaruie per trovare una soluzione.
+In order to fully understand the expectations placed on quantum computing, it is first necessary to introduce some elements of computability and complexity. We will therefore examine the foundations of computer science starting from computational models. We will give a definition of a computational problem and see which problems we can solve with a computer. Finally, we will study the computational complexity of problems by classifying them according to the resources required to find a solution.
 
-Terminata questa introduzione alla computer scienze vedremo come i computer quantistici si inseriscono in qesta analisi.  Partiremo presentando un modello computazionale che permette di definire quali problemi sianio risolvibili su un computer quantistico e noteremo come questo ci porti naturalmente veso i computer quantistici quantum based. Vedremo quali classi di complessità si possono definire considerando questo nuovo paradigma e cercheremo ci capire che relazioni ci sono tra le classi di problemi che abbiamo identificato con il modello di computazione classico e quelle derivate dal modello quantistico.
+Having completed this introduction to computer science, we will see how quantum computers fit into this analysis. We will begin by presenting a computational model that allows us to define which problems are solvable on a quantum computer and we will note how this naturally leads us toward quantum-based quantum computers. We will see which complexity classes can be defined considering this new paradigm and we will try to understand what relationships exist between the classes of problems identified with the classical model of computation and those derived from the quantum model.
 
-Nella seconda sezione di questo capitolo presenteremo in modo più rigoroso i computer quantum gate based. Vedremo cosa si intende per quantum gate, presenteremo i gate più frequenti e costruiremo un set di gate universali. Vedremo poi cosa significa programmare un quantum gate based computer presentando alcuni algoritmi di particolare interesse che sembrano suggerire che questo nuovo paradigma di computazione sia in effeti in grado di risolvere in modo efficiente problemi che consireiamo difficili su architetture classiche.
+In the second section of this chapter we will present in a more rigorous way quantum gate-based computers. We will see what is meant by a quantum gate, present the most common gates, and construct a universal set of gates. We will then see what it means to program a quantum gate-based computer by presenting some algorithms of particular interest that seem to suggest that this new computational paradigm is indeed capable of efficiently solving problems that we consider difficult on classical architectures.
 
-Il capitolo termina presentando il \emph{Quantum Adiabatic Computing} (QAC), un paradigma alternativo alla computazione basta su quantum gate.  Descriveremo i fondamenti teorici di questo paradigma e mostreremo che QAC e quantum gate based computing sono eqivalenti. Vedremo che programmare una macchina che sfrutta il paradigma QAC significa tradurre il problema che si vuole risolvere in un problema di minimizzazione risolvibile tramite \emph{annealing}. Descriveremo questa tecnica facendo un parallelo tra simulated classic annealing e quantum annealing. Ci concentreremo infine sulla formulazione dei problemi di minimizzazione rislvibili naturalmente con il quantum annealing. 
+The chapter concludes by presenting \emph{Quantum Adiabatic Computing} (QAC), an alternative paradigm to computation based on quantum gates. We will describe the theoretical foundations of this paradigm and show that QAC and quantum gate-based computing are equivalent. We will see that programming a machine that exploits the QAC paradigm means translating the problem we want to solve into a minimization problem solvable through \emph{annealing}. We will describe this technique by drawing a parallel between classical simulated annealing and quantum annealing. Finally, we will focus on the formulation of minimization problems naturally solvable with quantum annealing. 
 
 
-\section{Introduzione alla computer science}
-La computer scienze si occupa di studiare quali sono i problemi risolvibili attraverso un calcolatore e quali risorse sono necessarie per trovare la soluzione. Possiamo dividere questi due obbiettivi in due ricerche parallele e complementari. Da una parte per dimostrare che un problema è risolvibile è sufficiente mostrare un algoritmo in grado di risolvere quel problema; senza preoccuparsi troppo della complessità di quest'ultimo. Dall'altra per capire quali risorse sono necessarie vorremmo trovare un lower bound alle operazioni che dobbiamo effettuare per ottenere la soluzione.
+\section{Introduction to computer science}
+Computer science deals with studying which problems can be solved through a computer and which resources are necessary to find the solution. We can divide these two objectives into two parallel and complementary lines of research. On the one hand, to prove that a problem is solvable it is sufficient to show an algorithm capable of solving that problem, without worrying too much about its complexity. On the other hand, to understand which resources are necessary, we would like to find a lower bound on the operations that must be performed to obtain the solution.
 
-Queste richereche sono complementari nel senso che idealmente una volta individuatoun lower bound vorremmo essere un grado di costruire un algoritmo che lo rispetti. In pratica questo non sempre è possibile, sia perchè costruire algoritmi che si comportino bene in tutte le istanze di un problema è difficile, sia perché non sempre si conosce il lower bound delle operazioni e ci si deve accontentare del miglior algoritmo sviluppato fin'ora.
+These lines of research are complementary in the sense that ideally, once a lower bound has been identified, we would like to be able to construct an algorithm that matches it. In practice, this is not always possible, both because constructing algorithms that behave well on all instances of a problem is difficult, and because the lower bound of the required operations is not always known, so one must settle for the best algorithm developed so far.
 
-Abbiamo parlato di algoritmo sapendo intuitivamente che si tratta di una sequenza di operazioni che ci permettono di trovare la risposta a un problema. Per studiare formalmente le caratteristiche di un algoritmo Questa intuizione non è sufficiente, ci serve qualcosa che possiamo caratterizzare con più precisione. Introduciamo quindi i modelli computazionali.
-\subsection{Modelli computazionali}
-Un modello computazionale permette di definire matematicamente il concetto di algoritmo. Queste astrazioni sono state introdotte per la prima volta da Turing e Churc per trovare una soluzione al \emph{entscheidungsproblem}\footnote{Per ogni problema matematico esiste un algoritmo in grado di risolverlo?} di Hilbert. Vediamo ora due modelli computazionali equivalenti: la \emph{macchina di Turing} e il \emph{modello a circuito}. 
-\subsubsection*{Macchina di Turing}
-Questo è il modello computazionale più famoso. Presentato da Turing per descrivere formalmente la noszione di algoritmo che esegue un task computazionale.
+We have referred to an algorithm, intuitively knowing that it is a sequence of operations that allows us to find the answer to a problem. To formally study the characteristics of an algorithm, this intuition is not sufficient; we need something that we can characterize more precisely. We therefore introduce computational models.
+\subsection{Computational models}
+A computational model allows us to mathematically define the concept of an algorithm. These abstractions were first introduced by Turing and Church to find a solution to Hilbert's \emph{entscheidungsproblem}\footnote{For every mathematical problem, does there exist an algorithm capable of solving it?}. We now consider two equivalent computational models: the \emph{Turing machine} and the \emph{circuit model}. 
+\subsubsection*{Turing machine}
+This is the most well-known computational model. Introduced by Turing to formally describe the notion of an algorithm that performs a computational task.
 
-Una macchina di Turing può essere vista come la concettualizzazione di un calcolatore. È composta da quattro elementi principali:
+A Turing machine can be seen as the conceptualization of a computer. It is composed of four main elements:
 \begin{description}
-	\item[Programma:] che permette di codificare un algoritmo;
-	\item[Finite state control:]  unità che fa le veci del processore;
-	\item[Tape:] memoria del calcolatore;
-	\item[Read-write tape-head:] per poter interagire con la memoria.
+	\item[Program:] which allows the encoding of an algorithm;
+	\item[Finite state control:]  unit that acts as the processor;
+	\item[Tape:] memory of the computer;
+	\item[Read-write tape-head:] to interact with the memory.
 \end{description} 
 
-È possibile definire varie versioni della macchina di Turing. Per la nostra discussione possiamo considerare la versione più semplice, in cui la memory tape è illimitata verso destra e limitata a sinistra. I simboli che possono essere scritti sulla tape sono $0$, $1$, $b$ (the blank symbol) e il simbolo speciale $\triangleright$ che segna l'estremità sinistra della tape. Questi simboli formano il nostro alfabeto $\Gamma$, tutto quello che si può rappresentare sulla tape sono stringhe di lunghezza finita $\Gamma^*$ costituite da simboli dell'alfabeto (meno $\triangleright$ che compare solo all'inizio della tape). Finite state control è costituita da un insieme finito di stati $q1, \dots, q_m$ più due stati speciali $q_s$ e $q_h$ che rappresentano rispettivamente lo stato iniziale della macchina e quello finale (halt); quest'ultimo viene raggunto quando la macchina ha terminato l'elaborazione. 
+It is possible to define various versions of the Turing machine. For our discussion we can consider the simplest version, in which the memory tape is unbounded to the right and bounded to the left. The symbols that can be written on the tape are $0$, $1$, $b$ (the blank symbol) and the special symbol $\triangleright$ that marks the left end of the tape. These symbols form our alphabet $\Gamma$; everything that can be represented on the tape consists of finite-length strings $\Gamma^*$ made up of symbols from the alphabet (except $\triangleright$, which appears only at the beginning of the tape). The finite state control consists of a finite set of states $q1, \dots, q_m$ plus two special states $q_s$ and $q_h$ that represent, respectively, the initial state of the machine and the final (halt) state; the latter is reached when the machine has finished the computation. 
 
-Un programma per la macchina di Turing è costituito da program lines, ogni linea è una quintupla $\braket{q, x, q', x', s}$ che si interpeta in questo modo: se la macchina si trova nello stato $q$ e legge sulla tape il simbolo $x \in \Gamma$ allora transita nello stato $q'$, scrive sulla tape il simbolo $x' \in \Gamma$ e  si muove come indicato da $s$: a destra $+1$, a sisnidtra ($-1$) o rimanendo ferma ($0$).
+A program for the Turing machine consists of program lines; each line is a quintuple $\braket{q, x, q', x', s}$ which is interpreted as follows: if the machine is in state $q$ and reads the symbol $x \in \Gamma$ on the tape, then it transitions to state $q'$, writes the symbol $x' \in \Gamma$ on the tape, and moves as indicated by $s$: to the right $+1$, to the left ($-1$), or remains stationary ($0$).
 
-Per quanto il modello della Turing machine posse sembrare semplice è un grado di computare moltissime funzioni, in particolare questo modello cattura comletamente the notion of computing a function using an algorithm. Questa tesi è stata proposta indipendentemente da Churc e Turing e prende il nome di \emph{Church–Turing thesis}:
+Although the Turing machine model may appear simple, it is capable of computing a very large number of functions; in particular, this model completely captures the notion of computing a function using an algorithm. This thesis was proposed independently by Church and Turing and is known as the \emph{Church–Turing thesis}:
 \begin{thesis}
 	The class of functions computable by a Turing machine corresponds exactly to the class of functions which we would naturally regard as being computable by an algorithm.
 \end{thesis}
-Questa tesi afferma che la macchina di Turing è un modello computazionale in grado di fornire una definizione rigorosa al concetto intuitivo di algoritmo, è qundi adatta ad essere fondamento della computer science.
+This thesis states that the Turing machine is a computational model capable of providing a rigorous definition of the intuitive concept of an algorithm, and is therefore suitable as a foundation for computer science.
 
-La macchina di Turing che abbiamo descritto può esere modificata ad esempio immaginando di avere più tape di memoria, questa nuova macchina potrebbe essere in grado di risolvere problemi più rapidamente dell'originale, ma saremo sempre in grado di simulare la macchina con più tape con una macchina con un solo tape. Questo significa che anche considerare più tape non aumenta la potenza della macchina di Turing.
+The Turing machine we have described can be modified, for example, by imagining having multiple memory tapes; this new machine could be able to solve problems more quickly than the original, but we will always be able to simulate the multi-tape machine with a single-tape machine. This means that even considering multiple tapes does not increase the power of the Turing machine.
 
-Un'altra modifica che possiamo fare a questo modello computazionale, che ci tornerà utile in futuro, è coniderare una versione probabilistica della macchina di Turing: se la macchina si trova nello stato $q$ e viane letto il simbolo $x$ viene lanciata una moneta, se il risultato è testa si transita nello stato $q_H$, altrimenti nello stato $q_T$. Anche questa modifica può essere simulata con una macchina di Turing che esplora uno per volta tutti i cammini possibili (impiegando esponenzialmente più passaggi) quindi nuovamente non si estendel l'insieme delle funzioni computabili.
+Another modification that we can make to this computational model, which will be useful later, is to consider a probabilistic version of the Turing machine: if the machine is in state $q$ and the symbol $x$ is read, a coin is flipped; if the result is heads, the machine transitions to state $q_H$, otherwise to state $q_T$. This modification can also be simulated with a Turing machine that explores all possible computation paths one at a time (using exponentially more steps), so once again the set of computable functions is not extended.
 
-\paragraph{Indecidibilità:} I modelli computazionali, e con loro la computer scienze, nascono per rispondere all'
- entscheidungsproblem di Hilbert. Church con il $\lambda$-clacolo\footnote{Un altro modello computazionale equivalente alla macchina di Turing.} e Turing con la macchina di Turing dimostrano che la risposta è no, non può esistere un algoritmo algorithm to decide all the problems of mathematics.
+\paragraph{Undecidability:} Computational models, and with them computer science, were developed to answer Hilbert's entscheidungsproblem. Church with the $\lambda$-calculus\footnote{Another computational model equivalent to the Turing machine.} and Turing with the Turing machine showed that the answer is no: there cannot exist an algorithm to decide all the problems of mathematics.
 
-Questo risultato divide nettametne in due classi i problemi matematici: quelli che possono essere risolti con un algoritmo e quelli talmente difficili da essere irrisolvbili computazionalemente. Chiamiamo i problemi appartenenti a questa classe \emph{indecidibili}. Turing mostra che l'\emph{alting problem} (il problema di stabilire se una macchina di Turing termina dato l'input) è, in generale, indecidibile\footnote{Church dimostra che non esiste una funzione computabile che permetta di stabilire se due $\lambda$-calculus expressions sono equivalenti.}. Oltre ai problemi usati nelle dimostrazio di Church e Turing esistono molti altri problemi indecidibili, ad esempio trovare un omomorfismo tra due spazi topologici o alcunui problemi legati al comportamento di sistemi dinamici. 
+This result clearly divides mathematical problems into two classes: those that can be solved with an algorithm and those so difficult as to be computationally unsolvable. We call the problems belonging to this class \emph{undecidable}. Turing shows that the \emph{halting problem} (the problem of determining whether a Turing machine halts given an input) is, in general, undecidable\footnote{Church shows that there is no computable function that allows one to determine whether two $\lambda$-calculus expressions are equivalent.}. In addition to the problems used in the proofs of Church and Turing, there exist many other undecidable problems, for example finding a homomorphism between two topological spaces or some problems related to the behavior of dynamical systems. 
 
-\subsubsection*{Modello a circuito}
-Il modello a circuto è un modello di computazione alternativo in cuidescriviamo un algoritmo implementandolo attraverso un circuito fatto di porte logiche. Questo approccio è interessante perchè ci avvicina al primo modello di computazione quantistica gate based e ci dá la possibilità (nella Sezione~\ref{}) di parlare di perte logiche \emph{reversibili} e \emph{irreversibili}.
+\subsubsection*{Circuit model}
+The circuit model is an alternative model of computation in which we describe an algorithm by implementing it through a circuit made of logic gates. This approach is interesting because it brings us closer to the first quantum gate-based model of computation and gives us the possibility (in Section~\ref{}) to discuss \emph{reversible} and \emph{irreversible} logic gates.
 
-In Figura~\ref{fig:logic_gate} sono riportate le porte logiche più note, con cui possiamo costruire un circuito digitale. A queste normalmente aggiungiamo la possibilità di otenere la copia di un bit (un cavo che si divide) operazione che chiamiamo \emph{fanout} e la possibilità di scambiare due bit detta \emph{crossover}.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[c]{.21\linewidth}
+		\includegraphics[width=\linewidth]{quantum_computing/not}
+		\caption{\spacedlowsmallcaps{not} gate}
+		\label{fig:not}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.21\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/and}
+		\caption{\spacedlowsmallcaps{and} gate}
+		\label{fig:end}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.21\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/or}
+		\caption{\spacedlowsmallcaps{or} gate}
+		\label{fig:or}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.21\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/xor}
+		\caption{\spacedlowsmallcaps{xor} gate}
+		\label{fig:xor}
+	\end{subfigure}
+	\caption{Logic gate}
+	\label{fig:gate}
+\end{figure}
 
-È possibile dimostrare che con questo set limitato di gate si può computare qualsiasi funzione $f : \Set{0,1}^n \rightarrow \Set{0,1}^m$. Questo non è sufficiente per descrivere un modello computazionale utile. Prima di vedere quali caratteristiche richiediamo definiamo il concetto di famiglia di circuiti.
+In Figure~\ref{fig:gate} the most well-known logic gates are shown, with which we can build a digital circuit. To these we normally add the possibility of obtaining a copy of a bit (a wire that splits), an operation we call \spacedlowsmallcaps{fanout}, and the possibility of swapping two bits, called \spacedlowsmallcaps{crossover}.
 
-Una \emph{famiglia di circuiti} è un insieme di circuiti $\Set{C_n}$ indicizzati con $n\in\mathbb{N}$. il circuito $C_n$ ha $n$ bit in ingresso e un numero finito di extra work bits e di output bits. Dato un circuito $C_n$ e una stringa di bit $x$ di lunghezza massima $n$ come input del circuito, chiamiamo $C_n(x)$ l'output del circuito. 
+It is possible to show that with this limited set of gates one can compute any function $f : \Set{0,1}^n \rightarrow \Set{0,1}^m$. This is not sufficient to describe a useful computational model. Before seeing which characteristics we require, we define the concept of a circuit family.
 
-Diciamo che una famiglia di circuiti è \emph{consistente} se tutti i circuiti della famiglia calcolano la stessa funzione $C(\cdot)$. Formalmente la definizione di consistenza è: la famiglia di circuiti $\Set{C_n}$ è consistente se $m < n$ e $x$ è lungo al massimo $m$ bits, allora $C_m(x) = C_n(x)$. 
+A \emph{family of circuits} is a set of circuits $\Set{C_n}$ indexed by $n\in\mathbb{N}$. The circuit $C_n$ has $n$ input bits and a finite number of extra work bits and output bits. Given a circuit $C_n$ and a bit string $x$ of maximum length $n$ as input of the circuit, we denote by $C_n(x)$ the output of the circuit. 
 
-Infine definiamo \emph{uniforme} una famiglia di circuiti se esiste un algoritmo per una macchina di turing che dato in input $n$ è in grado di gererare una descrizione di $C_n$.  Questo algoritmo cioè ci deve formire la lista dei gates che costituiscono $C_n$ e la descrizione di come questi gates sono connessi tra loro.
+We say that a family of circuits is \emph{consistent} if all circuits in the family compute the same function $C(\cdot)$. Formally, the definition of consistency is: the family of circuits $\Set{C_n}$ is consistent if for $m < n$ and $x$ of length at most $m$ bits, then $C_m(x) = C_n(x)$. 
 
-Siamo finalmente pronti per descrivere le caratteristiche formali del modello di computazione a circuito. In questo modello consideriamo le funzioni computabili da fmaiglie di circuti $\Set{C_n}$ tali che:
+Finally, we define a family of circuits to be \emph{uniform} if there exists an algorithm for a Turing machine that, given $n$ as input, is able to generate a description of $C_n$. That is, this algorithm must provide the list of gates that constitute $C_n$ and the description of how these gates are connected to each other.
+
+We are finally ready to describe the formal characteristics of the circuit model of computation. In this model we consider functions computable by families of circuits $\Set{C_n}$ such that:
 \begin{itemize}
-	\item i circuiti della famiglia siano \emph{aciclici}: non devono essere presenti dei loop nel circuto, questo evita il verificarsi di possibili instabilità;
-	\item $\Set{C_n}$ sia una famiglia di circuiti consitente: tutti i circuiti calcolano la stessa funzione (su input di dimensione via via maggiore);
-	\item $\Set{C_n}$ sia una famiglia di circuiti uniforme: i circuiti siano generabili a partire da un algoritmo ragionevole. 
+	\item the circuits in the family are \emph{acyclic}: no loops must be present in the circuit, this prevents the occurrence of possible instabilities;
+	\item $\Set{C_n}$ is a \emph{consistent} family of circuits: all circuits compute the same function (on inputs of increasing size);
+	\item $\Set{C_n}$ is a \emph{uniform} family of circuits: the circuits can be generated from a reasonable algorithm. 
 \end{itemize}
 
-È possibile mostrare che la classe di funzioni computabili da una \emph{famiglia consistente}, \emph{uniforme} e \emph{aciclica} di circuiti è esattamente la stessa computabile su una macchina di Turing.
+It is possible to show that the class of functions computable by a \emph{consistent}, \emph{uniform}, and \emph{acyclic} family of circuits is exactly the same as that computable on a Turing machine.
 
-\subsection{Problemi computazionali}
-I modelli teorichi che abbiamo definito nella sezione precedente (e altri equivalenti che sono stati proposti nel corso dello studio della computer science) ci permettono di studiare in modo formale i problemi computazionali. Questa analisi parte dipende dalla risposta a tre domande fondamentali:
+\subsection{Computational problems}
+The theoretical models that we have defined in the previous section (and other equivalent ones that have been proposed in the course of studying computer science) allow us to formally study computational problems. This analysis depends on the answer to three fundamental questions:
 \begin{description}
-	\item[Cos'è un problema computazionale:] per problema computazionale intendiamo una specifica classe di problemi detti \emph{problemi decisionali}. Questa scelta ci permette di isolare una classe ristretta per semplificare l'analisi e fare progressi nello svilupppo della teoria. Vedremo che i risultati ottenuti si estendo ben oltre i problemi decisionali;
-	\item[Come sviluppare un algoritmo per risoverlo:] una volta individuato il problema occorre sviluppare un algoritmo in grado di trovare una soluzione. Siamo poi interessati a stabilire se ci sono algoritmi generali in grado di risolvere grandi classi di problemi. Infine vorremmo trovare degli strumenti per garantirci che un algoritmo funzioni effettivamente come ci si aspetta;
-	\item[Che risorse sono necessarie per la risoluzione:] un algoritmo consuma risorse computazionali come tempo spazio e einergia, vogliamo sapere se l'algoritmo sviluppato consuma più risorse di quelle effettivamente necessarie. Inoltre vorremmo poter classificare i problemi in base alle risorse necessarie per risolverli.
+	\item[What is a computational problem:] by computational problem we mean a specific class of problems called \emph{decision problems}. This choice allows us to isolate a restricted class to simplify the analysis and make progress in the development of the theory. We will see that the results obtained extend well beyond decision problems;
+	\item[How to develop an algorithm to solve it:] once the problem has been identified, it is necessary to develop an algorithm capable of finding a solution. We are then interested in determining whether there are general algorithms capable of solving large classes of problems. Finally, we would like to find tools to guarantee that an algorithm actually works as expected;
+	\item[What resources are necessary for the solution:] an algorithm consumes computational resources such as time, space, and energy; we want to know whether the developed algorithm consumes more resources than actually necessary. Moreover, we would like to classify problems according to the resources required to solve them.
 \end{description}
 
-\subsubsection*{Complessità computazionale}
-Lo studio della complessità computazionale cerca di quantificare le risorse computazionali richieste per risolvere un certo problema. Per studiare il consumo di risorse in modo indipendente dalle caratteristiche dell'architettura di riferimento\footnote{Intendiamo indipendente dalle specifiche decisioni architetturali che, ad esempio, permettono a un processore di risparmiare qualche ciclio di clock ogni volta che viene effettuata una certa operazione. Vedremo tra poco che invece modelli computazionali diversi possono avere consumi di risorse asintoticamente diversi} viene introdotta la \emph{notazione asintotica} che cattura il comportamento essenziale di una funzione:
+\subsubsection*{Computational complexity}
+The study of computational complexity aims to quantify the computational resources required to solve a given problem. To study resource consumption independently of the characteristics of the reference architecture\footnote{We mean independence from specific architectural decisions that, for example, allow a processor to save a few clock cycles whenever a certain operation is performed. We will soon see that different computational models can instead have asymptotically different resource consumption.}, \emph{asymptotic notation} is introduced, which captures the essential behavior of a function:
 \begin{itemize}
-	\item $O$ (\say{big O}): usata per definire l'\emph{upper bound} di una funzione;
-	\item $\Omega$ (\say{big Omega}): usata per definire il \emph{lower bound} di una funzione;
-	\item $\Theta$ (\say{big Theta}): è la combinazione di $O$ e $\Theta$, descrive il comportamento asintotico di una funzione.
+	\item $O$ (\say{big O}): used to define the \emph{upper bound} of a function;
+	\item $\Omega$ (\say{big Omega}): used to define the \emph{lower bound} of a function;
+	\item $\Theta$ (\say{big Theta}): is the combination of $O$ and $\Omega$, describing the asymptotic behavior of a function.
 \end{itemize}
 
-La complessità computazionale prende in esame risorse spaziali e temporali necessarie a risolvere un problema e cerca di dimostrare l'esistenza di un lower bound per queste risorse a prescindere che esista o meno un algoritmo ottimo che aderisca a questo lower bound. Ovviamente lo sviluppo degli algoritmi dovrebbe essere finalizzato a trovare un algoritmo che non usi più risorse del necessario, ovvero del lover bound teorico individuato dallo studio della complessità computazionale.
+Computational complexity considers the spatial and temporal resources required to solve a problem and seeks to demonstrate the existence of a lower bound for these resources regardless of whether an optimal algorithm exists that meets this lower bound. Clearly, the development of algorithms should aim to find an algorithm that does not use more resources than necessary, that is, the theoretical lower bound identified by the study of computational complexity.
 
-Sviluppando la teoria della complessità computazionale ci si è resi conto che il consumo di risorse dipende dal modello computazuionale di riferimento, ad esempio le tre diverse macchine di Turing presentate nella sezione precedente possono risolvere lo stesso problema con un numero di operazioni molto differente le une dalle altre.
+In developing the theory of computational complexity, it has been observed that resource consumption depends on the computational model of reference; for example, the three different Turing machines presented in the previous section can solve the same problem with a very different number of operations.
 
-Questo problem è stato risolto in modo netto dividendo i problemi in due classi:
+This problem has been clearly addressed by dividing problems into two classes:
 \begin{itemize}
-	\item problemi \emph{facili} detti anche \emph{trattabili} o \emph{feasible} sono i problemi per cui esiste un algoritmo in grado di trovare una soluzione in tempo \emph{polinomiale} rispetto alla dimensione del problema. Un algoritmo il cui consumo di risorse cresce come $O(p(n))$, dove $n$ è la dimensione del problema e $p(\cdot)$ è un polinomio, è detto \emph{efficiente};
-	\item problemi \emph{difficili}, \emph{intratabili} o \emph{infeasible} se il miglior algoritmo richiede risdorse esponenziali\footnote{Consideriamo esponenziale qualsiasi cosa cresca più rapidamente di un polinomio, $n^{\log n}$ con un po' di abuso notazionale è considerata funzione esponenziale.}. In questo caso parliamo di algoritmi \emph{inefficienti}.
+	\item \emph{easy} problems, also called \emph{tractable} or \emph{feasible}, are problems for which there exists an algorithm capable of finding a solution in \emph{polynomial} time with respect to the size of the problem. An algorithm whose resource consumption grows as $O(p(n))$, where $n$ is the size of the problem and $p(\cdot)$ is a polynomial, is called \emph{efficient};
+	\item \emph{hard}, \emph{intractable}, or \emph{infeasible} problems, if the best algorithm requires exponential resources\footnote{We consider exponential anything that grows faster than a polynomial; $n^{\log n}$, with some abuse of notation, is considered an exponential function.}. In this case we speak of \emph{inefficient} algorithms.
 \end{itemize}
 
-Ci sono varie ragioni per cui la scelta di dividere i problemi in due classi di complessità computazinale (polinomiale e esponenziale) risulat azzeccata. La prima è una ragione storica, i polinomi che descrivono la maggior parte degli algoritmi proposti non hanno gradi elevati, questo significa gli algoritmi polinomiali outperformano quasi sempre gli algoritmi esponenziali. La seconda ragione è più fondazionale ed è dovuta alla \emph{strong Church–Turing thesis}:
+There are several reasons why the choice of dividing problems into two classes of computational complexity (polynomial and exponential) is appropriate. The first is historical: the polynomials describing most proposed algorithms do not have high degree, which means polynomial algorithms almost always outperform exponential algorithms. The second reason is more foundational and is due to the \emph{strong Church–Turing thesis}:
 \begin{thesis}
 	Any model of computation can be simulated on a probabilistic Turing machine with at most a polynomial increase in the	number of elementary operations required.
 \end{thesis}
-Questo significa che robabilistic Turing machines appear to be the strongest \say{reasonable} model of computation. Formalmente possiamo scrivere che se considerando un certo modello computazionale (diverso dalla macchina di Turing probabilistica)  è possibile risolvere un problema con $k$ operazioni elementari, allora è possibile risolvere lo stesso problema su una macchina di Turing probabilistica con al più $p(k)$ operazioni elementari (dove $p(\cdot)$ è un polinomio).
+This means that probabilistic Turing machines appear to be the strongest \say{reasonable} model of computation. Formally, we can state that if, considering a certain computational model (different from the probabilistic Turing machine), it is possible to solve a problem with $k$ elementary operations, then it is possible to solve the same problem on a probabilistic Turing machine with at most $p(k)$ elementary operations (where $p(\cdot)$ is a polynomial).
 
-Ribaltando questa descrizione la strong Church–Turing thesis afferma che, dato un certo problema da risolvere, se non esiste un algoritmo efficiente per la probabilistic turing machine allora un algoritmo efficiente non esiste per nessun dispositivo di computazione.
+Reversing this description, the strong Church–Turing thesis states that, given a certain problem to be solved, if there is no efficient algorithm for the probabilistic Turing machine, then an efficient algorithm does not exist for any computational device.
 
-\subsubsection*{Classi di problemi}
-Per il momeno abbiamo diviso i problemi in polinomiali e esponenziali, vediamo ora delle divisioni più fini dei problemi computazionali, considerando non solo il tempo impiegato ma anche lo spazio richiesto per trovare la soluzione. Prima di dividere i problemi in classi definiamo formalmente i problemi decisionali introdotti all'inizio di questa sezione.
+\subsubsection*{Classes of problems}
+For now we have divided problems into polynomial and exponential, let us now consider finer divisions of computational problems, taking into account not only the time required but also the space needed to find the solution. Before dividing problems into classes, we formally define the decision problems introduced at the beginning of this section.
 
-Un problema decisionale è un problema la cui risposta è si o no. Possiamo definirli in modo formale aiutandoci con la terminologia dei \emph{linguaggi formali}. Un language $L$ over the alphabet $\Gamma$ is a subset of the set $\Gamma^*$ of all (finite) strings of symbols from $\Gamma$. Una stringa rappresenta l'input del nostro problema e può essere scritta sulla tape di una macchina di Turing. La macchina esegue una computazione che può terminare scrivedo sulla tape una stringa equivalente a si o no a seconda se la stringa in input appartiene al linguaggio $L$.
+A decision problem is a problem whose answer is yes or no. We can define them formally using the terminology of \emph{formal languages}. A language $L$ over the alphabet $\Gamma$ is a subset of the set $\Gamma^*$ of all (finite) strings of symbols from $\Gamma$. A string represents the input of our problem and can be written on the tape of a Turing machine. The machine performs a computation that may terminate by writing on the tape a string equivalent to yes or no depending on whether the input string belongs to the language $L$.
 
-In generale un linguaggio $L$ is \emph{decided} by a Turing machine if the machine is able to decide whether an input x on its tape is a member of the language of $L$ or not.
+In general, a language $L$ is \emph{decided} by a Turing machine if the machine is able to decide whether an input $x$ on its tape is a member of the language $L$ or not.
 
-\paragraph{P class:} Diciamo che un problema si può risolvere in tempo polinomiale se esiste una macchina di turing in grado di decidere se l'input $x$ di dimensione $n$ appartiene al linguaggio in un tempo $O(n^k)$ per qualche $k$ finito, diciamo che questo problema appartiene a \textbf{TIME}$(n^k)$. L'insieme di tutti i linguaggi in \textbf{TIME}$(n^k)$ è indicato con \textbf{P}. \textbf{P} is our first example of a\emph{ complexity class}.
+\paragraph{P class:} We say that a problem can be solved in polynomial time if there exists a Turing machine capable of deciding whether the input $x$ of size $n$ belongs to the language in time $O(n^k)$ for some finite $k$; we say that this problem belongs to \textbf{TIME}$(n^k)$. The set of all languages in \textbf{TIME}$(n^k)$ is denoted by \textbf{P}. \textbf{P} is our first example of a \emph{complexity class}.
 
-Per dimostrare che un linguaggio $L$ appartiene a \textbf{P} è sufficiente mostrare un algoritmo che declide $L$ in tempo polinomiale. Sfortunatamente esistono problemi per cui tale algoritmo non è ancora stato trovato. Ci si può allora domandare se esistono problemi fuori da \textbf{P}.
+To prove that a language $L$ belongs to \textbf{P}, it is sufficient to show an algorithm that decides $L$ in polynomial time. Unfortunately, there exist problems for which such an algorithm has not yet been found. One may then ask whether there exist problems outside \textbf{P}.
 
-Viceversa, anche se esistono dimostrazioni non costruttive che mostrano che devono esistere problemi che richiedono risirse esponenziali, sembra essere molto complesso dimostrare che uno specifico problema non appartenga a \textbf{P}.
+Conversely, although there exist non-constructive proofs showing that there must exist problems that require exponential resources, it seems very difficult to prove that a specific problem does not belong to \textbf{P}.
 
-\paragraph{NP class:} Esistono problemi per cui non è stato trovato un algoritmo polinomiale, ma se la soluzione al problema ci viene in qualche modo formita è possibile applicare un algoritmo efficiente per verificare tale soluzione. I problemi con questa proprietà appartengono alla classe \textbf{NP}. Formalmente l'insieme \textbf{NP} contiene i linguaggi $L$ tali per cui esiste una macchina di Turing $M$ tale che:
+\paragraph{NP class:} There exist problems for which a polynomial algorithm has not been found, but if the solution to the problem is somehow provided, it is possible to apply an efficient algorithm to verify such a solution. Problems with this property belong to the class \textbf{NP}. Formally, the set \textbf{NP} contains the languages $L$ such that there exists a Turing machine $M$ such that:
 \begin{itemize}
-	\item se $x \in L$ esiste una stringa testimonea $w$ tale che $M$ termina rispondendo \say{si} dopo un tempo polinomiale rispetto alla dimensione di $x$ quando la macchina parte dallo stato $x b w$ ($b$ è lo spazio vuoto blank);
-	 \item se $x \notin L$ per qualsiasi stringa testimone $w$ $M$ termina rispondendo \say{no} dopo un tempo polinomiale rispetto alla dimensione di $x$ quando la macchina parte dallo stato $x b w$
+	\item if $x \in L$ there exists a witness string $w$ such that $M$ halts answering \say{yes} after a time polynomial in the size of $x$ when the machine starts from the state $x b w$ ($b$ is the blank space);
+	\item if $x \notin L$ for any witness string $w$, $M$ halts answering \say{no} after a time polynomial in the size of $x$ when the machine starts from the state $x b w$
 \end{itemize}
 The most famous open problem in computer science is whether or not there are problems in \textbf{NP} which are not in \textbf{P}, often abbreviated as the \textbf{P} $\neq$ \textbf{NP} problem.
 
-All'interno della classe dei problemi \textbf{NP} si trovano i problemi \textbf{NP}-\emph{completi}. Un linguaggio $L$ è \textbf{NP}-completo se qualsiasi altro linguaggio in \textbf{NP} può essere \emph{ridotto} a $L$. Un linguaggio $B$ si dice ridubibile a un linguaggio $A$ se esiste una macchina di Turing che in tempo polinomiale parte da $x$ e produce $R(x)$ e $x\in B$ se e solo se $R(x) \in A$. Possiamo vedere la riduzione come una traduzione di un problema in un altro equivalente, trovare la soluzione ad uno significa risolvere anche l'altro. I problemi \textbf{NP}-\emph{completi} rappresentano i problemi più difficili della classe \textbf{NP}, nel senso che trovare un lower bound a un problema \textbf{NP}-\emph{completo}  significa trovare un lower bound a tutti i problemi in \textbf{NP}.
+Within the class of problems \textbf{NP} we find the \textbf{NP}-\emph{complete} problems. A language $L$ is \textbf{NP}-complete if any other language in \textbf{NP} can be \emph{reduced} to $L$. A language $B$ is said to be reducible to a language $A$ if there exists a Turing machine that, in polynomial time, starting from $x$ produces $R(x)$ and $x\in B$ if and only if $R(x) \in A$. We can view reduction as a translation of one problem into another equivalent one: finding the solution to one means solving the other as well. \textbf{NP}-\emph{complete} problems represent the hardest problems in the class \textbf{NP}, in the sense that finding a lower bound for an \textbf{NP}-\emph{complete} problem means finding a lower bound for all problems in \textbf{NP}.
 
-Un problema \textbf{NP}-\emph{completo} è quello di, dato un circuito con $n$ bit in ingresso e un bit di output, stabilire se esiste unassegnamento dei bit in ingresso per cui l'outpit del circuto è $1$. Questo problema è detto \emph{circuit satisﬁability} problem or \spacedlowsmallcaps{csat}. La dimostrazione di \textbf{NP}-\emph{completeness} di \spacedlowsmallcaps{csat} si deve al \emph{Cook–Levin theorem}
+An \textbf{NP}-\emph{complete} problem is the following: given a circuit with $n$ input bits and one output bit, determine whether there exists an assignment of the input bits such that the output of the circuit is $1$. This problem is called the \emph{circuit satisfiability} problem or \spacedlowsmallcaps{csat}. The proof of \textbf{NP}-\emph{completeness} of \spacedlowsmallcaps{csat} is due to the \emph{Cook–Levin theorem}
 \begin{theorem}
-	\spacedlowsmallcaps{csat} is \textbf{NP}-\emph{completo}.
+	\spacedlowsmallcaps{csat} is \textbf{NP}-\emph{complete}.
 \end{theorem}
-Una volta trovato un linguaggio $L$  \textbf{NP}-\emph{completo} per dimostrare che un altro linguaggio $L'$ è  \textbf{NP}-\emph{completo} è sufficiente trovare una riduzione da $L$ a $L'$.
+Once a language $L$ that is \textbf{NP}-\emph{complete} has been found, to prove that another language $L'$ is \textbf{NP}-\emph{complete} it is sufficient to find a reduction from $L$ to $L'$.
 
-\paragraph{PSPACE class:} Se smettiamo di considerare il tempo impiegato per risolvere un problema ma ci concentriamo sul consumo di spazio possiamo definire la classe do problemi \textbf{PSPACE}. In questa classe si trovano i linguaggi $L$ che possono essere riconosciuti da una macchina di Turing avendo a disposizione un numero polinomiale di working bits senza limitazioni di tempo. Le classi di problemi \textbf{P} e \textbf{NP} sono sottoinsiemi di \textbf{PSPACE}, ma non esistono dimostrazioni che questi sottoinsiemi siano o mento stretti.
+\paragraph{PSPACE class:} If we stop considering the time required to solve a problem and instead focus on space consumption, we can define the class of problems \textbf{PSPACE}. This class contains the languages $L$ that can be recognized by a Turing machine using a polynomial number of working bits without time limitations. The classes of problems \textbf{P} and \textbf{NP} are subsets of \textbf{PSPACE}, but there are no proofs that these subsets are strict or not.
 
-\paragraph{Una catena di inclusioni:}
-Possiamo organizzare le principali classi di problemi coputazionali nella seguente catena di inclusioni:
+\paragraph{A chain of inclusions:}
+We can organize the main classes of computational problems in the following chain of inclusions:
 \begin{equation}
 	\textbf{L} \subseteq \textbf{P} \subseteq \textbf{NP} \subseteq \textbf{PSPACE} \subseteq \textbf{EXP}.
 	\label{eq:complexity_class}
 \end{equation}
-Dove \textbf{L} sono i problemi risolvibili in spazio logaritmico e \textbf{EXP} i problemi risolvibili in tempo esponenziale.
+Where \textbf{L} are the problems solvable in logarithmic space and \textbf{EXP} the problems solvable in exponential time.
 
-Anche se la maggior parte dei computer scientist ritiene che ciascuna di queste inclusioni sia stretta non esistono dimostrazioni a riguardo. Esitono però dei risultati che ci permettono di dire con sicurezza che non esiste sicuramente un'unica classe di problemi. Il \emph{time hierarchy theorem} e il \emph{pace hierarchy theorem} ci assicurano rispettivamente che $\textbf{L} \subset \textbf{PSPACE}$ e $\textbf{P} \subset \textbf{EXP}$. Questo sigifica che nell'Equazione~\ref{eq:complexity_class} esiste almeno un'inclusione stretta, anche se non sappiamo quale possa essere.
+Although most computer scientists believe that each of these inclusions is strict, there are no proofs of this. However, there exist results that allow us to state with certainty that there is not a single class of problems. The \emph{time hierarchy theorem} and the \emph{space hierarchy theorem} ensure respectively that $\textbf{L} \subset \textbf{PSPACE}$ and $\textbf{P} \subset \textbf{EXP}$. This means that in Equation~\ref{eq:complexity_class} there is at least one strict inclusion, even if we do not know which one.
 
-\subsubsection*{Soluzioni approssimate}
-Se dobbiamo risolvere un problema \textbf{NP}-\emph{completo} oggi possiamo contare su molti algoritmi che si comportano bene nella maggior parte delle istanze di questi problemi difficili da risolvere. Se dovessimo essere particolarmente sfortunati e l'istanzxa che cerchiamo di risolvere non sembra avere delle buone proprietà per i nostri algoritmi possiamo cambiare approccio e cercare una \emph{soluzione approssimata}.
+\subsubsection*{Approximate solutions}
+If we need to solve an \textbf{NP}-\emph{complete} problem, today we can rely on many algorithms that perform well on most instances of these difficult problems. If we happen to be particularly unlucky and the instance we are trying to solve does not appear to have favorable properties for our algorithms, we can change approach and search for an \emph{approximate solution}.
 
-Esistono problemi \textbf{NP}-\emph{completi} per cui sono noti algoritmi apporssimati che ci garantiscanu un certo errore massimo rispetto alla soluzione corretta. Esiste un'intera branca della computer science che si occupa di algoritmi approssimati. È possibile definire  la classe dei linguaggi \textbf{MAXSNP} analoga alla classe \textbf{NP} per i quali è possibile verificare in modo efficiente una soluzione approssimata del problema.
+There exist \textbf{NP}-\emph{complete} problems for which approximate algorithms are known that guarantee a certain maximum error with respect to the correct solution. There is an entire branch of computer science devoted to approximation algorithms. It is possible to define the class of languages \textbf{MAXSNP}, analogous to the class \textbf{NP}, for which it is possible to efficiently verify an approximate solution to the problem.
 
-\paragraph{BPP class:} Questa è l'ultima classe di problemi che introduciamo considerando modelli computazionali classici e ci tornerà utile nella prossima sezione dove itrodurremo modelli di computazione quantistica. Per definire questa classe di linguaggi cambiamo modello computazionale, abbiamo già introdotto la macchina di Turing probabilistica e abbiamo visto che è il modello di computazione classico più potente.
+\paragraph{BPP class:} This is the last class of problems that we introduce considering classical computational models, and it will be useful in the next section where we will introduce quantum models of computation. To define this class of languages we change the computational model; we have already introduced the probabilistic Turing machine and have seen that it is the most powerful classical model of computation.
 
-Con questo modello possiamo definire la classe \textbf{BPP} cioè \emph{bounded-error probabilistic time} che contiene i linguaggi $L$ per cui esiste una macchina di Turing probabilistica $M$ tale per cui se $x\in L$ allora $M$ accetta $x$ con probabilità $\geq \frac{3}{4}$ e se   $x\notin L$ allora $M$ rifiuta $x$ con probabilità $\geq \frac{3}{4}$\footnote{Il valore $\frac{3}{4}$ è arbitrario, è sufficiente che la probabilità sia maggiore di $\frac{1}{2}$.}.
+With this model we can define the class \textbf{BPP}, that is \emph{bounded-error probabilistic time}, which contains the languages $L$ for which there exists a probabilistic Turing machine $M$ such that if $x\in L$ then $M$ accepts $x$ with probability $\geq \frac{3}{4}$ and if $x\notin L$ then $M$ rejects $x$ with probability $\geq \frac{3}{4}$\footnote{The value $\frac{3}{4}$ is arbitrary; it is sufficient that the probability be greater than $\frac{1}{2}$.}.
 
-The \emph{Chernoff bound} imlica che con un nimero limitato di ripetizioni dell'algoritmo la probabilità di successo sia amplificata a tal punto da essere essenzialmente uno. Per questa ragione i linguaggi in \textbf{BPP} ancora più che quelli in \textbf{P} sono considerati quelli che possono essere risolti in modo efficiente su un calcolatore classico.
-\subsection{Quantum computation}
+The \emph{Chernoff bound} implies that with a limited number of repetitions of the algorithm, the probability of success is amplified to the point of being essentially one. For this reason, languages in \textbf{BPP}, even more than those in \textbf{P}, are considered those that can be solved efficiently on a classical computer.
 
+\subsection{Quantum computational complexity}
+Estendiamo ora la classificazione dei problemi computaziuonali considerando un nuovo modello computazionale: i \emph{quantum circuit}. Nella Sezione{} definiremo con precisione cosa è un \emph{quantum gate} e come si possano assemblare per creare dei quantum circuit. Per il momento ci basta sapere che un quantum gate applica una trasformazione unitaria (introdotta nella Sezione~\ref{sec:unitary_operator}) a uno o più quantum bit (\emph{qubit}).
 
+\subsubsection*{BPQ Class}
+Grazie al concetto di quantum circuit possiamo definire la classe di problemi \textbf{BQP}: l'iniseme dei problemi decisionali che possono essere risolti with bounded probability of error using a polynomial size quantum circuit. Più formalmente possiamo dire che il linguaggio $L \in \textbf{BQP}$ if there is a family of polynomial size quantum circuits which decides the language, accepting strings in the language with probability at least $\frac{3}{4}$, and rejecting strings which aren’t in the language with probability at least $\frac{3}{4}$.
 
+In questa definizione possiamo vedere nuovamente il concetto di famiglia di circuiti, questo perhé un quantuym circuit può trovare la soluzione a un problema solo fino a una certa dimensione, se questa aumenta sarà necessario modificare il circuito. Perchè un problema sia in \textbf{BQP} richiediamo che:
+\begin{itemize}
+	\item la dimensione dei circuiti della famiglia che risolvono il problema cresca al più polinomialmente rispetto alla dimensione della stringa $x$ in input;
+	\item la famiglia di circuti sia \emph{uniforme} ovvero che esista un set di istruzioni chiare, il nostro algoritmo, che generino il quantum circiut.
+\end{itemize}
+
+\subsubsection*{Relazioni con le classi classiche}
+
+One of the most significant results in quantum computational complexity is that $\textbf{BQP} \in \textbf{PSPACE}$ . It is clear that$\textbf{BPP} \in BQP\textbf{}$. Rimane aperta la questione se $\textbf{BPP} \neq \textbf{BQP}$, in altre parole non si è ancora trovata una dimostrazione del fatto che un computer quantistico sia più potente di un computer classico.
+
+La disuguaglianza $\textbf{BPP} \neq \textbf{BQP}$ non ha solo effetti nella comparazione tra modelli di computazione classici e quantistici, ma avrebbe ripercussioni anche sulla  gerarchia di inclusioni classiche. Se riscriviamo l'Equazione~\ref{eq:complexity_class} alla luce di $\textbf{BQP} \in \textbf{PSPACE}$ oteniamo:
+\begin{equation}
+	\textbf{L} \subseteq \textbf{P} \subseteq \textbf{NP} \subseteq \textbf{BQP}  \subseteq  \textbf{PSPACE} \subseteq \textbf{EXP}.
+	\label{eq:complexity_class_q}
+\end{equation}
+Assumendo che $\textbf{BPP} \neq \textbf{BQP}$ potremmo dedurre che  $\textbf{BPP} \neq \textbf{PSACE}$.
+
+Esistono forti dubbi che unmdello computazionale quantistico non possa risolvere tutti i problemi in \textbf{NP}, in particolare sarebbero esclusi i problemi \textbf{NP}-completi. Tuttavia ci sono algoritmi che suggeriscono che un computer quantistico possa risolvere in tempi polinomiali un problema fuori da \textbf{P} e da \textbf{BPP}.
+
+La classe di probemi che appartengono a \textbf{NP} ma non a \textbf{NP}-complete sono detti \textbf{NPI} (\textbf{NP} \emph{intermediate}) . Il problema della fattorizzazioni in numeri primi appartiene a questa classe di problemi ed è risolto dall'algoritmo di Shore in tempi polinomiali. Questo algoritmo sembrerebbe dimostrare la superiorità computazionale del modello quantistico; tuttavia, sfortunatamente, non esiste una dimostrazione di $\textbf{P} \neq \textbf{NPI}$. Questa è la classe di problemi su cui i researchers in quantum computation and quantum information puntano per mostrare la superiorità della computazione quantistica over quella classica.
 
 \section{Gate based paradigm}
+Il paradigma di computazione quantum gate based è la diretta implementazione del modello computazionale che abbiamo appena descritto. Questo approccio alla compuazione quantistica si fonda su un grande lavoro teorico, parte del quale abbiamo accennato nella sezione precedente e per questo la maggior parte dei risultati teorici sulla computazione quantistica discendo da questo paradigma.
+
+Come suggerito dal nome questo modello si basa sui quantum gate, i quantum gate manipolano \emph{qubit} applicando loro trasformazioni fisiche. Lo scopo del Capitolo~\ref{ch} era quello di convincerci che questi gate devono avere determinate caratteristiche per aderire alle legi della fisica. Vediamo ora come sono fatti i quantum gate e quale effetto hanno sui \emph{qubits}.
+
 \subsection{Gate reversibili}
-\section{Gate universali}
+I quantum gate modificano i \emph{qubit} applicano operatori unitari. Nella Sezione~\ref{sec:unitary_operator} ci siamo concentrati sul significato fisico di un operatore unitario e abbiamo visto come conoscendo lo stato del sistema dopo l'applicazione dell'operatore potevamo risalire allo stato iniziale.
+
+Ci concentriamo ora sul quali implicazioni abbia un operatore unitario su un modello di computazione. La prima conseguenza, più ovvia è che siamo autorizzati a costruire unicamente gate reversibili, ovvero gate che ci permettano di conoscere lo stato dei \emph{qubit} in ingresso se conosciamo lo stato dei \emph{qubit} in uscita.
+
+\subsubsection*{Gate reversibili classici}
+I gate reversibili non esistono solo quando si parla di computer quantisitci. Esistono numerosi esempi di gate classici reversibili e visono studi che partono da una computazione classica completamente reversibile per abbattere drasticamente il consumo energetico dei calcolatori.
+
+Il più semplice gate reversibile è la porta \spacedlowsmallcaps{not} (Figura~\ref{fig:not}). Un'altro importante gate reversibile classico è il \spacedlowsmallcaps{Toffoli} gate mostrato in Figura~\ref{fig:toffoli_gate}\footnote{La Figura~\ref{fig:toffoli_ext} mostra l'implementazione del \spacedlowsmallcaps{Toffoli} gate usando i gate mostrati in Figura~\ref{fig:gate}.}.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[c]{.4\linewidth}
+		\includegraphics[width=\linewidth]{quantum_computing/toffoli}
+		\caption{\spacedlowsmallcaps{Toffoli} gate scheme}
+		\label{fig:toffoli}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.5\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/toffoli_ext}
+		\caption{\spacedlowsmallcaps{Toffoli} gate Implementation}
+		\label{fig:toffoli_ext}
+	\end{subfigure}
+	\caption{Circuit sampling}
+	\label{fig:toffoli_gate}
+\end{figure}
+\
+Se osserviamo la tabella di verià del \spacedlowsmallcaps{Toffoli} gate (Figura~\ref{label}) possiamo notare come gli input siano univocamente identifficati dagli output. Per questa ragione non ci sono ripetizioni negli output e possiamo verificare che l'output del \spacedlowsmallcaps{Toffoli} gate cosiste in una \emph{permutazione} degli input. Questo è vero in generale:
+\begin{theorem}
+	La colonna di output della tabella di verità di un gate reversibile classico è una permutazione della colonna degli input.
+\end{theorem}
+\subsection{Gate universali}
 \subsection{Algoritmi}
 
 \section{Quantum annealing}
