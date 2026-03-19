@@ -53,7 +53,7 @@ The circuit model is an alternative model of computation in which we describe an
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[c]{.21\linewidth}
-		\includegraphics[width=\linewidth]{quantum_computing/not}
+		\includegraphics[width=.95\linewidth]{quantum_computing/not}
 		\caption{\spacedlowsmallcaps{not} gate}
 		\label{fig:not}
 	\end{subfigure}
@@ -197,7 +197,7 @@ In questa definizione possiamo vedere nuovamente il concetto di famiglia di circ
 
 \subsubsection*{Relazioni con le classi classiche}
 
-One of the most significant results in quantum computational complexity is that $\textbf{BQP} \in \textbf{PSPACE}$ . It is clear that$\textbf{BPP} \in BQP\textbf{}$. Rimane aperta la questione se $\textbf{BPP} \neq \textbf{BQP}$, in altre parole non si è ancora trovata una dimostrazione del fatto che un computer quantistico sia più potente di un computer classico.
+One of the most significant results in quantum computational complexity is that $\textbf{BQP} \in \textbf{PSPACE}$ . It is clear that $\textbf{BPP} \in \textbf{BQP}$. Rimane aperta la questione se $\textbf{BPP} \neq \textbf{BQP}$, in altre parole non si è ancora trovata una dimostrazione del fatto che un computer quantistico sia più potente di un computer classico.
 
 La disuguaglianza $\textbf{BPP} \neq \textbf{BQP}$ non ha solo effetti nella comparazione tra modelli di computazione classici e quantistici, ma avrebbe ripercussioni anche sulla  gerarchia di inclusioni classiche. Se riscriviamo l'Equazione~\ref{eq:complexity_class} alla luce di $\textbf{BQP} \in \textbf{PSPACE}$ oteniamo:
 \begin{equation}
@@ -213,18 +213,17 @@ La classe di probemi che appartengono a \textbf{NP} ma non a \textbf{NP}-complet
 \section{Gate based paradigm}
 Il paradigma di computazione quantum gate based è la diretta implementazione del modello computazionale che abbiamo appena descritto. Questo approccio alla compuazione quantistica si fonda su un grande lavoro teorico, parte del quale abbiamo accennato nella sezione precedente e per questo la maggior parte dei risultati teorici sulla computazione quantistica discendo da questo paradigma.
 
-Come suggerito dal nome questo modello si basa sui quantum gate, i quantum gate manipolano \emph{qubit} applicando loro trasformazioni fisiche. Lo scopo del Capitolo~\ref{ch} era quello di convincerci che questi gate devono avere determinate caratteristiche per aderire alle legi della fisica. Vediamo ora come sono fatti i quantum gate e quale effetto hanno sui \emph{qubits}.
+Come suggerito dal nome questo modello si basa sui quantum gate, i quantum gate manipolano \emph{qubit} applicando loro trasformazioni fisiche. Lo scopo del Capitolo~\ref{ch} era quello di convincerci che questi gate devono avere determinate caratteristiche per aderire alle legi della fisica.
 
-\subsection{Gate reversibili}
 I quantum gate modificano i \emph{qubit} applicano operatori unitari. Nella Sezione~\ref{sec:unitary_operator} ci siamo concentrati sul significato fisico di un operatore unitario e abbiamo visto come conoscendo lo stato del sistema dopo l'applicazione dell'operatore potevamo risalire allo stato iniziale.
 
 Ci concentriamo ora sul quali implicazioni abbia un operatore unitario su un modello di computazione. La prima conseguenza, più ovvia è che siamo autorizzati a costruire unicamente gate reversibili, ovvero gate che ci permettano di conoscere lo stato dei \emph{qubit} in ingresso se conosciamo lo stato dei \emph{qubit} in uscita.
 
-\subsubsection*{Gate reversibili classici}
-I gate reversibili non esistono solo quando si parla di computer quantisitci. Esistono numerosi esempi di gate classici reversibili e visono studi che partono da una computazione classica completamente reversibile per abbattere drasticamente il consumo energetico dei calcolatori.
+\subsection{Gate reversibili classici}
+I gate reversibili non esistono solo quando si parla di computer quantisitci. Esistono numerosi esempi di gate classici reversibili e vi sono studi che partono da una computazione classica completamente reversibile per abbattere drasticamente il consumo energetico dei calcolatori. Anche per noi è utile esaminare alcuni gate reversibili classici perche alcune considerazioni che possiamo fare su questi ci torneranno utili nello studio dei quantum gate.
 
 Il più semplice gate reversibile è la porta \spacedlowsmallcaps{not} (Figura~\ref{fig:not}). Un'altro importante gate reversibile classico è il \spacedlowsmallcaps{Toffoli} gate mostrato in Figura~\ref{fig:toffoli_gate}\footnote{La Figura~\ref{fig:toffoli_ext} mostra l'implementazione del \spacedlowsmallcaps{Toffoli} gate usando i gate mostrati in Figura~\ref{fig:gate}.}.
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{.4\linewidth}
 		\includegraphics[width=\linewidth]{quantum_computing/toffoli}
@@ -240,12 +239,168 @@ Il più semplice gate reversibile è la porta \spacedlowsmallcaps{not} (Figura~\
 	\caption{Circuit sampling}
 	\label{fig:toffoli_gate}
 \end{figure}
-\
-Se osserviamo la tabella di verià del \spacedlowsmallcaps{Toffoli} gate (Figura~\ref{label}) possiamo notare come gli input siano univocamente identifficati dagli output. Per questa ragione non ci sono ripetizioni negli output e possiamo verificare che l'output del \spacedlowsmallcaps{Toffoli} gate cosiste in una \emph{permutazione} degli input. Questo è vero in generale:
+\begin{wrapfigure}[12]{r}{.35\linewidth}
+	\centering
+	\vspace{-.3cm}
+	\includegraphics[width=.7\linewidth]{quantum_computing/toffoli_tt}
+	\caption{\spacedlowsmallcaps{Toffoli} gate true table}
+	\label{fig:toffoli_tt}
+\end{wrapfigure}
+Se osserviamo la tabella di verià del \spacedlowsmallcaps{Toffoli} gate (Figura~\ref{fig:toffoli_tt}) possiamo notare come gli input siano univocamente identificati dagli output (definizione di gate reversibile). Il \spacedlowsmallcaps{Toffoli} gate ha tre bit in ingresso, la tabella di verità ha dunque $2^3=8$ righe, siccome gli output devono essere delle chiavi univoche non ci sono ripetizioni negli output. Questo significa che anche negli output ci sono tutte le combinazioni possibili di tre bit. Possiamo allora dedurre che il \spacedlowsmallcaps{Toffoli} gate agisce \emph{permutando} le righe in ingresso della tabella di verità. Questo è vero in generale:
 \begin{theorem}
 	La colonna di output della tabella di verità di un gate reversibile classico è una permutazione della colonna degli input.
 \end{theorem}
-\subsection{Gate universali}
+Questo concetto di permutazuione dell'input tornerrà anche quando parleremo di gate quantistici.
+\subsection{Quantum gate}
+Nel Capitolo~\ref{} abbiamo visto che lo spin è un esempio di proprietà binaria e avevamo classificato come \emph{qubit} tutte quelle proprietà fisiche che misurate restituiscono solo due valori. Avevamo misurato lo spin rispetto agli assi coordinati e avevamo individuado diversi stati di spin (\emph{up} and \emph{down}, \emph{left} and \emph{right}, \emph{in} and \emph{out}). 
+
+Questi stati cambiano leggermente notazione quando passiamo dallo studio della fisica alla computer science. Prima di descrivere i quantum gate introduciamo questa notazione alternativa per gli stati di un \emph{qubit} e mostriamo una rappresentazione grafica che ci tornerà utile per capire l'effetto dei quantum gate.
+\subsubsection*{qubits}
+Nella computer science i gli stati \emph{up} and \emph{down} (Equazioni~\ref{} e \ref{}) rappresentano rispettivamente un \emph{qubit} spento $\Ket{0}$ e acceso $\Ket{1}$. Denotiamo con $\Ket{+}$  e $\Ket{-}$ i \emph{qubits} negli stati \emph{right} and \emph{left} (Equazioni~\ref{} e \ref{}); infine gli stati \emph{in} and \emph{out} (Equazioni~\ref{} e \ref{}) sono rappresentati da $\Ket{i}$  e $\Ket{-i}$. Possiamo riscrivere le equazioni citate alla luce della nuova notazione:
+\begin{equation}
+	\Ket{+}=\frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) \qquad \Ket{-}=\frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1})
+\end{equation}
+and:
+\begin{equation}
+	\Ket{i}=\frac{1}{\sqrt{2}} (\Ket{0} + i\Ket{1}) \qquad \Ket{-i}=\frac{1}{\sqrt{2}} (\Ket{0} - i\Ket{1})
+\end{equation}
+
+Per rappresentare i \emph{qubits} in un modo grafico che rispetti le proprietà matematiche delgi stati quantistici possiamo ricorrere a una sfera detta \emph{sfera di Bloch}. La sfera ha raggio 1 e ogni punto sulla sfera rappresenta un \emph{qubit}\footnote{A meno di una fase globale, che però è ininfluente.}. La Figura~\ref{} mostra, sulla sfera di Bloch, i \emph{qubits} descritti sopra.
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[c]{.3\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_1_0}
+		\caption{States $\Ket{0}$ and $\Ket{1}$}
+		\label{fig:bloch_1_0}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.3\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_+_-}
+		\caption{States $\Ket{+}$ and $\Ket{-}$}
+		\label{fig:bloch_+_-}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{.3\linewidth}
+		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_i_-i}
+		\caption{States $\Ket{i}$ and $\Ket{-i}$}
+		\label{fig:bloch_i_-i}
+	\end{subfigure}
+	\caption{Bloch Sphere~\cite{bibid}}
+	\label{fig:bloch_sphere}
+\end{figure}
+\subsubsection*{quantum gate}
+Ricordando i risultati raggiunti nel Capitolo~\ref{} e considerando anche quanto abbiamo detto riguardo i gate cclassici reversibili nella Sezione~\ref{} possiamo fare le seguenti affermazioni riguardo i quantum gate:
+\begin{itemize}
+	\item i quantum gate sono mappe lineari che mantengono la probabilità totale pari a $1$\footnote{Ricordiamo che la probabilità totale dello stato $\Ket{s} = c_1 \Ket{0} + c_2  \Ket{1}$ formato da un \emph{qubit} è $\alpha^2 + \beta^2$};
+	\item possiamo rapptresentare un qwuantum gate come una matrice che mantiene la probabilità totale pari a $1$;
+	\item i quantum gate sono matrici unitarie e le matrici unitarie sono quantum gate;
+	\item un quantum gate $\mathbf{U}$ è reversibile e $\mathbf{U}^\dagger$ è il gate inverso;
+	\item i gate reversibili classici sono quantum gate validi\footnote{In paricolare è possibile mostrare che un gate reversibile classico permuta le ampiezze di probabilità, quindi mantiene la probabilità totale pari a $1$}.
+\end{itemize}
+
+Ora che abbiamo descritto le principali proprietà dei quantum gate possiamo esaminare l'effetto che questi gate hanno sui \emph{qubits}, cominciamo la nostra analisi dai gate che operano su un singolo \emph{qubit}.
+\paragraph{single qubit quantum gate:} I quantum gate che operano su un singolo \emph{qubit} possono essere visualizzati come delle \emph{rotazioni} sulla sfera di bloch. Qualsiasi rotazione può essere percorsa sia in avanti che indietro, questo rende le rotazioni reversibili e di conseguenza dei quantum gate validi. Vediamo ora alcune rotazioni che definiscono gate particolarmente interessanti.
+
+Rotazioni di $180^\circ$ rispetto agli assi definiscono i \emph{gate di Paoli}:
+\begin{itemize}
+	\item Paoli gate $X$: rotazione rispetto all'asse $x$. Questo gate è la versione quantistica del gate  classico \spacedlowsmallcaps{not}:
+	\[
+		X\Ket{0} = \Ket{1} \qquad  X\Ket{1} = \Ket{0};
+	\]
+	\item Paoli gate $Y$: rotazione rispetto all'asse $y$. Questo gate non ha un corrispettivo classico e, applicato ai \emph{qubits} $\Ket{0}$ e $\Ket{1}$ li modifica come segue:
+	\[
+	Y\Ket{0} = i\Ket{1} \qquad  Y\Ket{1} = -i\Ket{0};
+	\]
+	\item Paoli gate $Z$: rotazione rispetto all'asse $z$. Anche questo è un gate puramente quantistico, che agisce nel seguente modo:
+	\[
+	Z\Ket{0} = \Ket{0} \qquad  Z\Ket{1} = -\Ket{1};
+	\]
+	\item Paoli gate $I$: rotazione nulla. Questo gate non modifica lo stato dei \emph{qubits}:
+	\[
+	I\Ket{0} = \Ket{0} \qquad  I\Ket{1} = \Ket{1}.
+	\]
+\end{itemize}
+È possibile definire questi gate anche come matrici, la definizione è uguale a quella degli operatori che rappresentavano le ossevabili $\sigma_x$, $\sigma_y$ e $\sigma_z$ (rispettivamente equazioni~\ref{label}, \ref{label} e \ref{label}) più la matrice identità per il gate $I$. Se infatti osserviamo qle matrici che descrivono le osservabili notiamo che oltre ad essere operatori Hermitiani (che descrivono osservabili) sono anche Unitari, quindi dei gate quantisitici validi.
+
+Possiamo poi considerare rotazioni inferiori ai $180^\circ$, definiamo allora il gate $S$ o \emph{phase gate} come rotazione di $90^\circ$ rispetto all'asse $z$ e dimezzando ancora l'angolo di rotazione otteniamo il gate $T$ (rotazione di $45^\circ$ rispetto a $z$). L'azione di $T$ su $\Ket{0}$ e $\Ket{1}$ è:
+\[
+	T\Ket{0} = \Ket{0} \qquad  T\Ket{1} = e^{i\frac{\pi}{4}}\Ket{1}.
+\]
+
+L'ultimo gate che agisce su un singolo \emph{qubit} che consideriamo è la \emph{porta di Hadamard} ($H$). Questo gate può essere interpretato come una rotazione di  $180^\circ$ rispetto all'asse $x+z$. $H$ permette di creare sovrapposizione di stati\footnote{Torneremo su questo nella Sezione~\ref{}}, in particloare:
+\[
+	H\Ket{0} = \frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) = \Ket{+} \qquad  H\Ket{1} = \frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1}) = \Ket{-}
+\]
+
+La Figura~\ref{} mostra i gate descritti come rotazioni sulla sfera di Bloch.
+%\begin{figure}[h]
+%	\centering
+%	\begin{subfigure}[c]{.25\linewidth}
+%		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_1_0}
+%		\caption{States $\Ket{0}$ and $\Ket{1}$}
+%		\label{fig:blosch_1_0}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}[c]{.25\linewidth}
+%		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_+_-}
+%		\caption{States $\Ket{+}$ and $\Ket{-}$}
+%		\label{fig:blaoch_+_-}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}[c]{.25\linewidth}
+%		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_i_-i}
+%		\caption{States $\Ket{i}$ and $\Ket{-i}$}
+%		\label{fig:blocfh_i_-i}
+%	\end{subfigure}
+%	\\
+%	\begin{subfigure}[c]{.25\linewidth}
+%		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_+_-}
+%		\caption{States $\Ket{+}$ and $\Ket{-}$}
+%		\label{fig:blaosch_+_-}
+%	\end{subfigure}
+%	\qquad
+%	\begin{subfigure}[c]{.25\linewidth}
+%		\includegraphics[width=.95\linewidth]{quantum_computing/bloch_i_-i}
+%		\caption{States $\Ket{i}$ and $\Ket{-i}$}
+%		\label{fig:blocafh_i_-i}
+%	\end{subfigure}
+%	\caption{Bloch Sphere~\cite{bibid}}
+%	\label{fig:bloch_gate}
+%\end{figure}
+\paragraph{multiple qubits quantum gate:}
+Quando descriviamo stati formati da più \emph{qubits} dobbiamo descriverli come \emph{prodotto tensoriale} $\otimes$. Ad esempio uno stato in cui due \emph{qubits} siano entrambi nello stato $\Ket{0}$ si indica:
+\[
+	\Ket{0}\otimes\Ket{0} \text{ abbreviato in } \Ket{0}\Ket{0} \text{ abbreviato in } \Ket{00}
+\]
+
+Con due \emph{qubits} la base $z$ è $\Set{\Ket{00}, \Ket{01}, \Ket{10}, \Ket{11}}$. Un generico stato $\Ket{s}$ sarà la sovrapposizione degli stati della base
+\[
+	\Ket{s} = c_1 \Ket{00}+c_2\Ket{01}+c_3 \Ket{10}+c_4 \Ket{11},
+\]
+e la probabilità totale sarà $|c_1|^2+|c_2|^2+|c_3|^2 + |c_4|^2$ che, se lo stato è normalizzato, sarà uguale a $1$.
+
+Alcuni stati composti possono essere scritti come prodotto tensoriale di stati di \emph{qubits} singoli, ad esempio:
+\[
+	\frac{1}{2}\dots .
+\]
+Questi stati sono detti \emph{product states} o \emph{simply separable states}. Esistono stati che non possono essere scomposti in stati semplici. Si parla allora di \emph{entangled states}, degli stati in cui la completa conoscenza del vettore di stato del sistema completo non ci da nessuna informazione sugli stati degli elementi che compongono il sistema\footnote{L'entanglement è uno degli aspetti più interessanti della meccanica quantistica. Discuterne approfonditamente le implicazioni fisiche è furi dallo scopo di questo lavoro. Si raccomanda la lettura di \cite{bibid}.}.
+
+Studiamo i multiple qubits quantum gate proprio per la loro capacità di creare stati entangled. Il primo gate che permette l'entanglement tra \emph{qubits} è il \spacedlowsmallcaps{cnot} o \spacedlowsmallcaps{c}$X$.
+
+\begin{wrapfigure}{r}{.45\linewidth}
+	\centering
+	\vspace{-.3cm}
+	\includegraphics[width=.6\linewidth]{quantum_computing/cnot}
+	\caption{\spacedlowsmallcaps{cnot} gate}
+	\label{}
+\end{wrapfigure}
+Il gate \spacedlowsmallcaps{cnot} (\emph{controlled} \spacedlowsmallcaps{not}) è un gate a due \emph{qubit}, il primo è detto di \emph{controllo}, il secondo è il \emph{qubit target}. Se il \emph{qubit} di controllo è settato il \emph{qubit} target è invertito (da questo deriva il nome controlled \spacedlowsmallcaps{not}). Il comportamento del gate \spacedlowsmallcaps{cnot} può essere descritto come:
+\[
+	\text{\spacedlowsmallcaps{cnot}}\Ket{a}\Ket{b}= \Ket{a} \Ket{a\oplus b}.
+\]
+
+In Figura~\ref{} è riportata la definizione matriciale del \spacedlowsmallcaps{cnot}.
+\subsubsection*{Universal quantum gates}
 \subsection{Algoritmi}
 
 \section{Quantum annealing}
