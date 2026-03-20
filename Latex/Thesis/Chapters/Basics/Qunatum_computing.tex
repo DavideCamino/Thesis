@@ -399,9 +399,158 @@ Il gate \spacedlowsmallcaps{cnot} (\emph{controlled} \spacedlowsmallcaps{not}) �
 	\text{\spacedlowsmallcaps{cnot}}\Ket{a}\Ket{b}= \Ket{a} \Ket{a\oplus b}.
 \]
 
-In Figura~\ref{} è riportata la definizione matriciale del \spacedlowsmallcaps{cnot}.
+In Figura~\ref{} è riportata la definizione matriciale del \spacedlowsmallcaps{cnot}. Questo gate è in grado di creare stati entangled. In particolare:
+\begin{gather*}
+	content...
+\end{gather*}
+Gli stati $\Ket{\Psi}^+$, $\Ket{\Psi}^-$, $\Ket{\Phi}^+$ e $\Ket{\Phi}^-$ non possono essere ottenuti come prodotto tensoriale di stati di \emph{qubits} singoli e sono quindi stati entagled. Questi quattro stati sono detti \emph{Bell states}, sono ortogonali e formano una base detta \emph{Bell basis}.
+
+Altri quantum gate importanti sono quelli che abbiamo già incontrato palrlando di gate classici, abbiamo già visto che un gate classico reversibile è un quantum gate valido. I gate che ci interessano di più sono il \spacedlowsmallcaps{toffoli} gate e il \spacedlowsmallcaps{crossover} gate.
+
+Non è invece possibile costruire un alternativa quantistica del \spacedlowsmallcaps{fanout} gate, quindi non possiamo ottenere una copia di un \emph{qubit} senza sapere il suo stato. Misurare lo stato, però, vorrebbe dire inevitabilmente modificarlo, quindi in generale non possiamo duplicate un \emph{qubit}. Questo è un risultato teorico importante e prende il nome di \emph{non-cloning theorem}:
+\begin{theorem}
+	It is impossible to make a copy of an unknown quantum state. Qubits cannot be copied.
+\end{theorem}
+
 \subsubsection*{Universal quantum gates}
+Come esistono dei set di gate classici che permettono di costruire quealsiasi altro gate\footnote{Esempi di questi set sono: $\Set{\text{\spacedlowsmallcaps{and}}, \text{\spacedlowsmallcaps{not}}}$, $\Set{\text{\spacedlowsmallcaps{or}}, \text{\spacedlowsmallcaps{not}}}$, $\Set{\text{\spacedlowsmallcaps{nand}}}$ e $\Set{\text{\spacedlowsmallcaps{toffoli}}}$.} possiamo individuare dei set di quantum gate universali. Un set di quantum gate universali deve essere in grado di:
+\begin{itemize}
+	\item creare sovrapposizione di stati come la porta di Hadamerd $H$;
+	\item creare stati entangled come il gate \spacedlowsmallcaps{cnot};
+	\item creare ampiezze di probabilità complesse, $H$ e \spacedlowsmallcaps{cnot} contengono solo valori reali, il phase gate $S$ invece consente di ottenere ampiezze di probabilità complesse.
+\end{itemize}
+Nonostante il set di gate che abbiamo implicitamente definito $\Set{\text{\spacedlowsmallcaps{cnot}}, H, S}$ abbia tutte le proprietà richieste è possibile mostrare che non è un set universale. In particolare il \emph{Gottesman-Knill theorem} avverma che:
+\begin{theorem}
+	A quantum circuit containing only  \spacedlowsmallcaps{cnot}, $H$ and $S$ gates is efficiently simulated by a classical computer.
+\end{theorem}
+Chiamiamo i circuiti generati da questo set di gates \emph{Clifford group}, e il set  $\Set{ \text{\spacedlowsmallcaps{cnot}}, H, S}$ prende, di conseguenza, il nome di \emph{Clifford group generator}. Un set di gates universali deve quindi generare più del \emph{Clifford group}, anche se non è stato dimostrato che sia condizione sufficiente a essere un set universale.
+
+Esempi di set di gates universali sono: 
+\begin{itemize}
+	\item $\Set{ \text{\spacedlowsmallcaps{cnot}}, H, T}$: rimpiazzare il phase gate con il gate $T$ nel \emph{Clifford group generator} ci permette di ottenere un set di porte universali;
+	\item $\Set{ \text{\spacedlowsmallcaps{toffoli}}, H, S}$: partiamo nuovamente da \emph{Clifford group generator} e otteniamo un set universale sostituendo al \spacedlowsmallcaps{cnot} il \spacedlowsmallcaps{toffoli} gate;
+\end{itemize}
+
+Il concetto di set di gates universali quando si parla di quantum computing è differente da quello a cui siamo abituati con le porte classiche. Nel caso classico possiamo costruire una qualsiasi tabilla di verità partendo da un set di gate classici universali. Il significato di set universale nella computazione quantistica invece è descritto dal \emph{Solovay-Kitaev theorem}:
+\begin{theorem}
+	Any universal gate set can approximate a quantum gate on $n$ qubits to precision $\epsilon$ using $\Theta(2^n\log^c(\frac{1}{\epsilon}))$ gates for some constant $c$
+\end{theorem} 
+
+Non ci deve stupire il termine $2^n$ perchè un operatore unitario che agisce su $n$ \emph{qubits} (cioè il gate che stiamo cercando di approssimare) è una matrice di dimensione $2^n \times2^n$. Ciò che ci intgeressa davvero è il termine $\log^c(\frac{1}{\epsilon})$ che ci dice che possiamo ridurre l'errore di approssimazione ad un costo che crese come il polinomio di un logaritmo \textemdash{}questa funzione è spesso chiamata \emph{polylog}\textemdash{} in modo, cioè, efficiente.
+
 \subsection{Algoritmi}
+Abbiamo discusso cosa siano i quantum gate e come essere assemblati per costruire un quantum circuit. Vediamo ora come questo circuito deve essere fatto per poter essere utile alla risoluzione di un problema computazionale. In questa sezione introduciamo i circuiti basati su oracolo quantististico e presentiamo il più semplice algoritmo basato su oracolo.
+
+\subsubsection*{Quantum Oracles}
+un oracolo è una funzione booleana, ovvero una funzione che abisce su dei \emph{qubits} e che si può comporre con dei gate. Per poter essere tradotta in quantum gate dobbiamo fare in modo che il gate ottenuto sia reversibile. È possibile, in generale, rendere reversibile un circuito usando un extra \emph{quibit} e applicando il gate \spacedlowsmallcaps{xor} tra l'output del circuito e il \emph{qubit} extra. 
+
+\begin{wrapfigure}{r}{.45\linewidth}
+	\centering
+	\vspace{.3cm}
+	\begin{tikzpicture}
+		\begin{yquant}[operator/separation=4mm]
+			qubit {$\Ket{\reg}$} y;
+			qubit {$\Ket{\reg}$} x;
+			box {$\mathbf{U}_f$} (x, y);
+			output {$\Ket{y \oplus f(x)}$} y;
+			output {$\Ket{x}$} x;		
+		\end{yquant}
+	\end{tikzpicture}
+	\caption{Quantum oracle gate}
+	\label{fig:oracle}
+\end{wrapfigure}
+Se a esempio se la funzione $f(x)$ agisce su un solo \emph{qubit} possiamo costruire un gate reversibile $\mathbf{U}_f$ come quello mostrato in Figura~\ref{fig:oracle}. È facile vedere che a prescindere dll'azione di $f(x)$, che può essere reversibile o meno, conoscendo gli output del gate è possibile risalire agli input. Possiamo riscrivere l'applizione di $\mathbf{U}_f$ ai \emph{qubits} come:
+\[
+	\Ket{x}\Ket{y} \xrightarrow{\mathbf{U}_f} \Ket{x}\Ket{y \oplus f(x)}
+\]
+L'extra \emph{qubit} è detto \emph{answer qubit} o \emph{target qubit}, $\Ket{x}$ è detto \emph{input qubit}. Quando settiamo $\Ket{y} = \Ket{0}$ possiamo leggere nel target \emph{qubit} il risutato di $f(x)$ applicata a $\Ket{x}$.
+
+In realtà questo non è il modo standard di usare un quantum oracle. Ciò che si fa è preparare il target \emph{qubit} nello stato $\Ket{-}$ poi applocare il gate $\mathbf{U}_f$. I quantum gate possono ovviamente essere applicati anche a stati sovrapposti, e in questo caso il risultato è un cambiamento della fase del \emph{qubit} $\Ket{x}$ mentre il \emph{qubit} target rimane invariato. Possiamo scrivere l'applicazione di questo gate come:
+\[
+		\Ket{x} \Ket{-}\xrightarrow{\mathbf{U}_f} 
+		\begin{cases}
+			\Ket{x} \Ket{-} & \text{if $f(x)=0$} \\
+			-\Ket{x} \Ket{-} & \text{if $f(x)=0$}
+		\end{cases} = 
+		(-1)^{f(x)}\Ket{x} \Ket{-} = (-1)^{f(x)}\Ket{x}
+\]
+Dove, nell'ultimo passaggio, tralasiamo il valore del \emph{qubit} terget perhè non viene modificato dal gate.
+
+\begin{wrapfigure}[5]{l}{.5\linewidth}
+	\centering
+	\vspace{-.1cm}
+	\begin{tikzpicture}
+		\begin{yquant}[operator/separation=3mm]
+			qubit {$\Ket{\reg}$} y;
+			qubit {$\Ket{\reg}$} x;
+			h y;
+			z y;
+			box {$\mathbf{U}_f$} (x, y);
+			output {$\Ket{-}$} y;
+			output {$(-1)^{f(x)}\Ket{x}$} x;		
+		\end{yquant}
+	\end{tikzpicture}
+	\caption{Phase oracle}
+	\label{fig:phase_oracle}
+\end{wrapfigure}
+Siccome usato in questo modo l'oracolo applica un cambiamento di fase a $\Ket{x}$ viene detto \emph{phase oracle}. La Figura~\ref{fig:phase_oracle} mostra l'applicazione del phase oracle, in particolare si nota come sia possibile preparare $\Ket{y}$ nello stato $\Ket{-}$ per poter poi usare $\mathbf{U}_f$ come phase oracle\footnote{È possibile ottenere lo stesso risultato applicando prima il Paoli gate $X$ poi la porta di Hadamard $H$}.
+
+\subsubsection*{Deutsch' algorithm}
+Questo algoritmo mostra come usare il phase oracle per risolvere un problema computazionale. Vedremo che già con questo primo algoritmo otteniamo performance migliori rispetto a quello che potremmo fare con un architettura classica. In questo caso però l'incremento prestazionale è polinomiale, questo quindi non è uno di quegli algoritmi che suggeriscono che i computer quantistici possano risolvere in modo efficiente una classe di problemi più ampia dei calcolatori classici\footnote{Mostrare questi algoritmi, tra cui l'algoritmo di Shore è fuori dallo scopo di questo lavoro.}.
+
+Il problema computazionale che vogliamo risolvere è quello di stabilire la \emph{parità} di due bit $b_1$ e $b_2$ ignoti. Stabilire la parità significa calcolare $b_1 \oplus b_2$. Per ottenere il risultato abbiamo a disposizione un oracolo $f(x)$ con $x \in \Set{0,1}$ che, interrogato con l'indice del bit ignoto, ci fornisce il valore del bit, cioè:
+\[
+	f(0) = b_0 \qquad f(1) = b_1
+\]
+
+In un modello di computazione classico dobbiamo interrogare l'oracolo due volte, ottenere il valore dei bit e calcolare il risultato dello \spacedlowsmallcaps{xor} tra i due valori.
+
+L'algoritmo di Deutsch ci permette di ottenere il valore di parità interrogano l'oracolo una volta sola. La Figura~\ref{fig:deutsch} mostra come è implementato il quantum circuit.
+\begin{figure}[h]
+	\centering
+	\vspace{-.1cm}
+	\begin{tikzpicture}
+		\begin{yquant}[operator/separation=4mm]
+			qubit {$\Ket{-}$} y;
+			qubit {$\Ket{0}$} x;
+			h x;
+			z y;
+			box {$\mathbf{U}_f$} (x, y);
+			h x;
+			measure x;
+			output {$\Ket{-}$} y;
+			output {Parity} x;		
+		\end{yquant}
+	\end{tikzpicture}
+	\caption{Deutsch' algorithm}
+	\label{fig:deutsch}
+\end{figure}
+
+Senza sviluppare tutti i passaggi algebrici vediamo cosa succede all'input \emph{qubit} $\Ket{0}$ man mano che attraversa i quantum gate. Il primo quantum gate è la porta $H$, l'applicazione di questa modifica  $\Ket{0}$ in
+\[
+	\Ket{0} \xrightarrow{H} \frac{1}{\sqrt{2}}\Ket{0} + \Ket{1} = \Ket{+}.
+\]
+Ora interroghiamo l'oracolo con un input in sovrapposizione di stati. Il risultato dell'interrogazione è
+\[
+ \frac{1}{\sqrt{2}}(\Ket{0} + \Ket{1}) \xrightarrow{\mathbf{U}_f} \frac{1}{\sqrt{2}}\Big[(-1)^{f_0}\Ket{0} + (-1)^{f_1}\Ket{1}\Big].
+\]
+Ignorando alcuni passaggi possiamo semplificare questa espressione in:
+\[
+\begin{cases}
+	(-1)^{b_0} \Ket{+} & \text{if } b_0=b_1\\
+	(-1)^{b_0} \Ket{-} & \text{if } b_0\neq b_1
+\end{cases}.
+\]
+Dopo l'oracolo, se $ b_0=b_1$ otteniamo lo stato $\Ket{+}$ più una fase globale, se $ b_0\neq b_1$ otteniamo lo stato $\Ket{-}$ più una fase globale. Questa fase non modifica la posizione del \emph{qubit} sulla sfera di Bloch, possiamo già distinguere i due stati con una misura parallela all'asse $x$. Dato che per convenzione le misure vengono fatte rispetto all'asse $z$ applichiamo ancora una volta la porta $H$ ottenendo
+\[
+	\begin{cases}
+		(-1)^{b_0} \Ket{0} & \text{if } b_0=b_1\\
+		(-1)^{b_0} \Ket{1} & \text{if } b_0\neq b_1
+	\end{cases}.
+\]
+L'atto di misura scarta la fase globale e ci permette di distinguere con certezza i due casi: otterremo  $\Ket{0}$ se i bit incogniti erano uguali (parità pari), $\Ket{1}$ se i bit incogniti erano diversi (parità dispari). È interessante notare che durante tutto l'algoritmo non siamo mai venuti a conoscenza del valore dei singoli bit, ma abbiamo ricavato solamente se erano uguali o meno.
+
+L'algoritmo di Deutsch permette di dimezzare il nuoreo di interrogaziooni all'oracolo, e può essere esteso a un numero arbitrario di bit di cui si vuole conoscere la parità. Questo esempio conclude la nostra discussiaone sul paradigma quantum gate based. Troveremo nuovamente questo paradigma nel Capitolo~\ref{ch:qaoa} dove lo mischieremo ai concetti di quantum annealing che illustriamo adesso.
 
 \section{Quantum annealing}
 \subsection{Annealing}
