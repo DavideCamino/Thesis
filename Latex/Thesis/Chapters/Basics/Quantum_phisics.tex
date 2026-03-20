@@ -1,4 +1,5 @@
 \chapter{Quantum Mechanics}
+\label{ch:physics}
 In this chapter we will explore the basics of quantum mechanics in order to understand what we can or cannot do with a quantum computer. The reference architecture for this work is the quantum gate-based quantum computer. In the next pages we will try to justify why the algorithms that run on this hardware need to be reversible.
 
 The chapter starts from the very beginning with the definition of a quantum system and presents the basis to understand the evolution of a quantum system, trying to justify why every evolution needs to be reversible and what exactly reversibility means. At the end of the chapter we will put all of our new knowledge together to derive the famous Schrödinger equation.
@@ -206,11 +207,13 @@ Now we are ready to express spin states as linear combinations of the basis vect
 	\Ket{u} &= \begin{pmatrix}
 		1 \\
 		0
-	\end{pmatrix}\\
+	\end{pmatrix}
+	\label{eqn:ket_u}\\
 	\Ket{d} &= \begin{pmatrix}
 		0 \\
 		1
 	\end{pmatrix}.
+	\label{eqn:ket_d}
 \end{align}
 
 To construct vector \emph{right}, let's consider a spin prepared in the state $\Ket{r}$. If we measure $\sigma_z$, we have a $50\%$ chance of obtaining $+1$ (and $50\%$ for $-1$); this means that for $\Ket{r}$ we have $\alpha_u^*\alpha_u = \alpha_d^*\alpha_d = \sfrac{1}{2}$. A vector that satisfies this constraint is:
@@ -420,6 +423,7 @@ The solution of this system is\footnote{It is easy to verify that this operator 
 	1 & 0\\
 	0 & -1
 \end{pmatrix}.
+\label{eqn:obs_z}
 \]
 
 \paragraph{Operator $\boldsymbol{\sigma_x}$:} With the same reasoning, we can construct the operator along the $x$ axis. We have already deduced the representations of \emph{right} and \emph{left} in Equations~\ref{eqn:ket_r}~and~\ref{eqn:ket_l}. The equations that allow us to construct $\sigma_x$ are:
@@ -456,6 +460,7 @@ The solution of this system is:
 	0 & 1\\
 	1 & 0
 \end{pmatrix}.
+\label{eqn:obs_x}
 \]
 
 \paragraph{Operator $\boldsymbol{\sigma_y}$:} The last direction is along the $y$ axis. Considering the expressions for \emph{in} and \emph{out} given in Equations~\ref{eqn:ket_i}~and~\ref{eqn:ket_o}, and following the second principle, we can write:
@@ -470,6 +475,7 @@ We can rewrite this in matrix form, and the solution we would obtain is:
 	0 & -i\\
 	i & 0
 \end{pmatrix}.
+\label{eqn:obs_y}
 \]
 
 We\marginpar{Pauli matrices} have obtained a matrix representation of the three spin operators $\sigma_z$, $\sigma_x$, and $\sigma_y$:
