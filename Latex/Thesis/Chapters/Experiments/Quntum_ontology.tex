@@ -89,7 +89,7 @@ Advanced topics such as the open world assumption, enumerated classes, existenti
 \subsection{Classes and subclasses}
 We start our KB describing the T-Box of the ontology: here we define the classes' hierarchy. Listing~\ref{lst:t_box_pl} shows how to build the hierarchy: (\hyperref[lst:t_box_pl_class]{a}) is a list of facts that defines the classes (for example, line $1$ can be read as “animal is a class.”), (\hyperref[lst:t_box_pl_subclass]{b}) defines the structure of the classes (line $1$ is read as “mammal is a subclass of animal.”).
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\centering
 	\begin{sublisting}[c]{0.45\linewidth}
 		\sublistingnumber{Prolog}{code/quantum_ontology/class.pl}
@@ -104,7 +104,7 @@ We start our KB describing the T-Box of the ontology: here we define the classes
 	\end{sublisting}
 	\caption{T-Box definition}
 	\label{lst:t_box_pl}
-\end{listing}
+\end{listingenv}
 
 We must now create a rule to ensure that the subclass relation satisfies the transitive property:
 \[
@@ -113,18 +113,18 @@ We must now create a rule to ensure that the subclass relation satisfies the tra
 
 In our ontology, for example,  this rule is needed to establish that a penguin is an animal, but not a mammal. The most natural way, in a logic programming language, to enforce the transitive property is through a recursive definition. Listing~\ref{lst:subclass_rec} shows how the rule is defined: lines $1$ and $2$ implement the base case of the recursion, while lines $4$, $5$, and $6$ implement the recursive call.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_rec.pl}
 	\caption{Recursive definition of subclass predicate}
 	\label{lst:subclass_rec}
-\end{listing}
+\end{listingenv}
 
 It is important to point out that the predicate we are defining in Listing~\ref{lst:subclass_rec} is different from the one used in Listing~\ref{lst:t_box_pl}. The predicate \mintinline{text}|subclass(C1, C2)| (where \mintinline{text}|C1| and \mintinline{text}|C2| are classes) is used to construct the subclass hierarchy with a list of facts. The predicate \mintinline{text}|subClass(C1, C2)| captures the transitive property we are interested in. This one is the predicate that must be used in queries and in any subsequent rules whenever it is necessary to reason over the class hierarchy.
 
 \subsection{Individuals and their relationships}
 We define individuals by assigning them to a class; to do so, we use the predicate \mintinline{text}|isa(I, C)| where \mintinline{text}|I| is an individual, \mintinline{text}|C| is a class. Relationships, on the other hand, are defined through the predicate \mintinline{text}|hasproperty(I1, R, I2)| that means individual \mintinline{text}|I1| is in the relation \mintinline{text}|R| with individual \mintinline{text}|I2|. Listing~\ref{lst:a_box_pl} is a collection of facts that populate our KB, and that define the relationships between individuals.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\centering
 	\begin{sublisting}[c]{0.35\linewidth}
 		\sublistingnumber{Prolog}{code/quantum_ontology/individual.pl}
@@ -139,7 +139,7 @@ We define individuals by assigning them to a class; to do so, we use the predica
 	\end{sublisting}
 	\caption{A-Box definition}
 	\label{lst:a_box_pl}
-\end{listing}
+\end{listingenv}
 
 
 
@@ -147,11 +147,11 @@ The predicate \mintinline{text}|isa(I, C)| allows us to define the class of an i
 
 To also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, permits to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/isa.pl}
 	\caption{isA predicate}
 	\label{lst:isa}
-\end{listing}
+\end{listingenv}
 
 As for the predicates \mintinline{text}|subclass(C1, C2)| and \mintinline{text}|subClass(C1, C2)|, also \mintinline{text}|isa(I, C)| must be used only in the definition of an individual's class, while \mintinline{text}|isA(I, C)| is to be used in queries and future rules.
 
@@ -161,19 +161,19 @@ The KB that we have built so far contains classes, individuals, and relationship
 In particular, we now present the rules to: assign a class to an individual, identify the ancestors of an individual, define two classes as disjoint, and find inconsistencies in the KB.
 
 \paragraph{Assigning a class:} The rules defined in Listing~\ref{lst:class_attr} allow us to assign the class carnivore and predator/prey to an individual. These rules are an example of how logical programming languages are easy to interpret: we can read Listing~\ref{lst:class_attr} as \say{If an animal hunts, it is a carnivore and it is a predator. If it is hunted, it is a prey.}
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/class_attribution.pl}
 	\caption{Class attribution rules}
 	\label{lst:class_attr}
-\end{listing}
+\end{listingenv}
 
-\paragraph{Ancestors:}  Similarly to what was done for the definition of \mintinline{text}|subClass(C1, C2)|, we can define the predicate \mintinline{text}|hasproperty(I1, ancestor, I2)|. Listing~\ref{lst:ancestor} shows the basic implementation. 
+\paragraph{Ancestors:}  Similarly to what was done for the definition of subclasses \mintinline{text}|subClass(C1, C2)|, we can define the predicate \mintinline{text}|hasproperty(I1, ancestor, I2)|. Listing~\ref{lst:ancestor} shows the basic implementation. 
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/ancestor.pl}
 	\caption{Ancestor definition}
 	\label{lst:ancestor}
-\end{listing}
+\end{listingenv}
 
 Although in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
 \begin{itemize}
@@ -187,20 +187,20 @@ Listing~\ref{lst:disjoint} shows how to define two disjoint classes and the cons
 
 Providing a detailed explanation of \mintinline{text}|logicNot(P)| predicate is beyond the scope of this work; in \cite{samuel2008translating} the introduction of \mintinline{text}|logicNot(P)| is justified in order to bring the open world assumption into Prolog.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.65}{Prolog}{code/quantum_ontology/disjoint.pl}
 	\caption{Disjoint classes}
 	\label{lst:disjoint}
-\end{listing}
+\end{listingenv}
 
 Identifying the inconsistency of our KB means finding a statement that is both true and false. In particular, Reiny is carnivorous because she hunts (line $5$ Listing~\ref{lst:a_box_pl}), but she cannot be so because she is a reindeer and reindeers are herbivores (line $9$ Listing~\ref{lst:t_box_pl}).
 
 It is possible to identify a proposition that is simultaneously true and false with the rule shown in Listing~\ref{lst:error}. The head of the rule is a list composed of a string (which serves only to print an informational message) and the proposition \mintinline{text}|P|. For the predicate to be true, the proposition \mintinline{text}|P| must be both false and true.
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylistingnonumber{.9}{Prolog}{code/quantum_ontology/error.pl}
 	\caption{Error rule}
 	\label{lst:error}
-\end{listing}
+\end{listingenv}
 
 We can now test the consistency of the KB by asking the Prolog interpreter whether there exists a \mintinline{text}|P| that is simultaneously false and true. The result of the query is shown in the following listing:
 \begin{center}
@@ -228,11 +228,11 @@ Complex terms are predicates that have one or more predicates as arguments. The 
 
 We can replace the complex term with a new predicate that represents the same concept: \mintinline{text}|isNotA(I, C)|. This new predicate forces us to modify also the rule for capturing inconsistencies in the KB. Listing~\ref{lst:error_qa} shows the final result.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.9}{Prolog}{code/quantum_ontology/error_qa.pl}
 	\caption{List and complex term removal}
 	\label{lst:error_qa}
-\end{listing}
+\end{listingenv}
 
 Eliminating the predicate \mintinline{text}|logicNot(P)| where \mintinline{text}|P| is a proposition, therefore possibly a predicate, forces us to define a new predicate for each statement we want to negate, and to test each \emph{predicate}-\emph{predicate\_negation} pair to check for possible inconsistencies.
 
@@ -250,11 +250,11 @@ Unfolding consists of developing the recursion by explicitly repeating the funct
 
 Our ontology has a maximum depth of three, therefore at most two recursive calls are needed to start from any node in the class hierarchy and reach the root. Listing~\ref{lst:subclass_qa} shows the updated version of the rule \mintinline{text}|subClass(C1, C2)| (to clarify the procedure, unfolding is developed up to three calls, even though only two were necessary to cover the entire class hierarchy).
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_qa.pl}
 	\caption{Subclasses unfolding}
 	\label{lst:subclass_qa}
-\end{listing}
+\end{listingenv}
 
 \paragraph{Ancestor:} The issue with the predicate \mintinline{text}|hasproperty(I1, R, I2)| concerns the ancestor-descendant relationship. Indeed, its definition was very similar to the rule \mintinline{text}|subClass(C1, C2)|. In this case, however, recursion is also present in the base step, as can be seen in lines $1$ and $2$ of Listing~\ref{lst:ancestor}. Listing~\ref{lst:ancestor_qa} shows a possible solution. About this code it is important to note:
 \begin{itemize}
@@ -263,11 +263,11 @@ Our ontology has a maximum depth of three, therefore at most two recursive calls
 	\item we stopped, arbitrarily, after building a family tree of depth ten; in general there is no way to know how many recursive calls should be unfolded to be sure of capturing all the ancestors of an individual.
 \end{itemize}
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/ancestor_qa.pl}
 	\caption{Ancestor unfolding}
 	\label{lst:ancestor_qa}
-\end{listing}
+\end{listingenv}
 
 \subsection{Stopping criterion}
 As mentioned above, it is not always possible to know in advance how many recursive calls will be performed to capture all the aspects we are interested in. Here we discuss some stopping criteria looking only at the KB\footnote{For a performance analysis of the impact of unfolding see Section\ref{sec:unfold_performance}.}. In general, we can distinguish two cases: T-Box and A-Box.
@@ -302,7 +302,7 @@ Listing~\ref{lst:query_qa} shows the queries, that use the modified rules to mak
 	\item In (\hyperref[lst:query_error]{c}) we use the predicate \mintinline{text}|error(X, Y, Z)| with the definition that avoids list and complex terms.
 \end{itemize}
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\centering
 	\begin{sublisting}[c]{0.35\linewidth}
 		\sublistingnumber{Prolog}{code/quantum_ontology/query1.pl}
@@ -324,7 +324,7 @@ Listing~\ref{lst:query_qa} shows the queries, that use the modified rules to mak
 	\end{sublisting}
 	\caption{Query results}
 	\label{lst:query_qa}
-\end{listing}
+\end{listingenv}
 
 The result of the queries is as expected: we obtained all and only the results that we would also have obtained by querying the original KB. This intuitively convinces us of the equivalence of the two KBs.
 
@@ -380,7 +380,7 @@ If we observe Listing~\ref{lst:subclass_qa} and Listing~\ref{lst:ancestor_qa}, w
 
 In this section we study the dimension of the problem generated by the QA-Prolog pipeline as a function of the number of recursive calls unfolded. In order to isolate as much as possible the impact of unfolding, we consider the minimal KB and the query shown in Listing~\ref{lst:unfold_test}.
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\centering
 	\begin{sublisting}[c]{0.40\linewidth}
 		\sublistingnumber{Prolog}{code/quantum_ontology/small_kb.pl}
@@ -393,15 +393,15 @@ In this section we study the dimension of the problem generated by the QA-Prolog
 	\end{sublisting}
 	\caption{Input unfold}
 	\label{lst:unfold_test}
-\end{listing}
+\end{listingenv}
 
 QA-Prolog imposes a maximum number of clauses in the body of a rule, in order to exceed this limit, we are forced to develop the unfolding as we did for the relation \mintinline{text}|hasProperty(I1, ancestor, I2)| (Listing~\ref{lst:ancestor_qa}).
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\mylisting{.9}{Python}{code/quantum_ontology/gen_unfold.py}
 	\caption{Unfolding script's core}
 	\label{lst:unfolding_script}
-\end{listing}
+\end{listingenv}
 
 Since we know the only recursive rule of the KB, we can automate the unfolding process. Listing~\ref{lst:unfolding_script} shows the core of the rule generation: for \mintinline{text}|n_unfold| times (line $2$) we generate a new rule (line $3$) using the rule defined in the previous iteration\footnote{Or at line $1$ during the first iteration.} (line $4$), then adding one level (line $5$).
 

@@ -1,0 +1,53 @@
+\babel@toc {english}{}\relax 
+\deactivateaddvspace 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Experiment's schema}}{3}{figure.caption.2}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Disjunction tree}}{6}{figure.caption.3}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Logic gate}}{26}{figure.caption.8}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Circuit sampling}}{33}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces \textsf {\spacedlowsmallcaps {Toffoli}} gate truth table}}{33}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Bloch Sphere~\blx@tocontentsinit {0}\cite {wong2022introduction}}}{34}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Gate as rotation~\blx@tocontentsinit {0}\cite {wong2022introduction}}}{36}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces \textsf {\spacedlowsmallcaps {cnot}} gate}}{37}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Quantum oracle gate}}{39}{figure.caption.21}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Phase oracle}}{39}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Deutsch' algorithm}}{40}{figure.caption.23}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Simulated and quantum annealing \blx@tocontentsinit {0}\cite {k2005transverse}}}{46}{figure.caption.26}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Graph for T-Box}}{52}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Simpson family tree}}{52}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces First layer of DOLCE taxonomy}}{53}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Complexity classes}}{55}{figure.caption.36}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Qiskit software stack}}{59}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Transpilation example}}{61}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Ocean software stack}}{62}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Ising formulation}}{63}{figure.caption.43}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {5.1}{\ignorespaces QA-Prolog pipeline}}{71}{figure.caption.51}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Yosys processing}}{76}{figure.caption.58}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Ontology T-Box}}{86}{figure.caption.66}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Error dialog in Protégé}}{87}{figure.caption.68}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Problem size}}{97}{figure.caption.88}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Unfold impact on size}}{99}{figure.caption.92}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Fitted data}}{100}{figure.caption.94}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {7.1}{\ignorespaces QAOA scheme~\blx@tocontentsinit {0}\cite {blekos2024review}}}{104}{figure.caption.95}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces QAOA circuit}}{108}{figure.caption.102}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Problem's Hamiltonian}}{110}{figure.caption.106}%
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Cost minimization}}{111}{figure.caption.107}%
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Circuit sampling}}{112}{figure.caption.108}%
+\contentsline {figure}{\numberline {7.6}{\ignorespaces Multiple experiments' result}}{112}{figure.caption.109}%
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

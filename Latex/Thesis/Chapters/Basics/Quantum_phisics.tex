@@ -6,6 +6,8 @@ The chapter starts from the very beginning with the definition of a quantum syst
 
 With all this work we will be able to imagine the function of a quantum gate and understand the limitations that are imposed when we develop an algorithm for a quantum computer.
 
+This chapter is inspired by~\cite{susskind2014quantum} specifically on chapters $1$, $2$, $3$ and $4$ of the original book.  Because of this, no citations will appear throughout the text as it would only be redundant.
+
 
 \section{Experiments}
 We start our introduction to quantum mechanics with an experiment. Experiments are not only an excuse to introduce the topic, but the essential key of physics, both classical and modern.
@@ -13,14 +15,14 @@ We start our introduction to quantum mechanics with an experiment. Experiments a
 Theory and models need to adapt to the experiments, and when the experimental results are in contradiction with the actual model it means that the model needs to be changed to respect the behavior of the world.
 
 \subsection{Spin}\label{sec:spin}
-We analyze the experiment of an electron in a magnetic field. An electron is an electrically charged particle; when some electrons are shot in an electric field all of them are influenced by Coulomb's law; if all electrons have the same initial velocity the beam of electrons remains intact.
-
 \begin{wrapfigure}[11]{r}{.4\linewidth}
 	\centering
 	\vspace{-.25cm}
 	\includegraphics[width=.85\linewidth]{quantum_phisics/spin_experiment}
 	\caption{Experiment's schema}
 \end{wrapfigure}
+We analyze the experiment of an electron in a magnetic field. An electron is an electrically charged particle; when some electrons are shot in an electric field all of them are influenced by Coulomb's law; if all electrons have the same initial velocity the beam of electrons remains intact.
+
 What happens to the same beam in a magnetic field? Again electrons are deflected by a force, but this time the beam splits. If the initial velocity was parallel to the $x$ axis and the magnetic field is oriented along the $z$ axis some electrons are deflected upward, some downward, but the intensity of the deflection is the same for all the electrons. This means that no electrons are deflected less or more than the others and the beam splits exactly into two parts.
 
 Starting from this experiment we can make a measuring instrument: this apparatus $\mathcal{A}$ can be oriented along an arbitrary axis, and in the previous configuration $\mathcal{A}$ displays $+1$ if the electron is deflected upward, $-1$ otherwise. We call this number the spin of the electron.
@@ -80,7 +82,7 @@ Starting with the disjunction. Considering a state prepared, without our knowled
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.7\linewidth]{quantum_phisics/tree_or}
-	\caption{The apparatus $\mathcal{A}$ is represented as a box, the arrow represents the direction along which the apparatus is oriented, the display (ellipse) shows the result of measurement. We have highlighted in green the cases in witch we can immediately conclude that the disjunction of the propositions is true}
+	\caption[Disjunction tree]{The apparatus $\mathcal{A}$ is represented as a box, the arrow represents the direction along which the apparatus is oriented, the display (ellipse) shows the result of measurement. We have highlighted in green the cases in witch we can immediately conclude that the disjunction of the propositions is true}
 	\label{fig:tree_dis}
 \end{figure}
 
@@ -773,7 +775,7 @@ We have linked a state vector to the result of a measurement \textendash{}to be 
 
 Our introduction continues with the analysis of the temporal evolution of a quantum system. We have described the evolution of a state vector with an unitary operator; the application of this operator to a state vector produces the new state in which the system will be. We understood that the temporal evolution of the state vector is deterministic and that indeterminacy is caused only by the act of measuring.
 
-Considering infinitesimal time intervals, we have deduced the time-dependent Schrödinger equation and, thanks to this equation, we have shown how to describe the temporal evolution of expectation values for a certain observable. During this analysis, we also introduced the Hamiltonian of the system, a Hermitian operator that describes the energy of the system. 
+Considering infinitesimal time intervals has allowed us to deduce the time-dependent Schrödinger equation and, thanks to this equation, we have shown how to describe the temporal evolution of expectation values for a certain observable. During this analysis, we also introduced the Hamiltonian of the system, a Hermitian operator that describes the energy of the system. 
 
 The discussion ends with a comforting result: as in classical physics, the energy of a closed system is conserved. We have obtained this result by presenting the commutator and linking the temporal evolution of an observable with the commutator between the observable and the Hamiltonian (energy) of the system. The commutator of the Hamiltonian with itself is trivially zero, so the expectation value for the energy doesn't change.
 

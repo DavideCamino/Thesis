@@ -1,0 +1,101 @@
+\documentclass[a4paper,twoside,openright,titlepage,
+               headinclude,footinclude,BCOR5mm,
+               numbers=noenddot,cleardoublepage=empty,
+               tablecaptionabove]{scrbook}
+               
+\input{package}
+\usepackage{newfloat,tocloft}
+\input{arsclassica-settings}
+
+\DeclareFloatingEnvironment[
+fileext=lop,
+listname={List of Plots},
+name=Plot
+]{plot}
+
+\DeclareFloatingEnvironment[
+fileext=loi,
+listname={List of Images},
+name=Image
+]{image}
+
+
+\newlistof{diagram}{lod}{List of Diagrams}
+\DeclareFloatingEnvironment[name=Diagram,fileext=lod]{diagram}
+
+\renewcommand{\cftdiagrampresnum}{Listing }
+\setlength{\cftdiagramnumwidth}{3cm}
+
+
+               
+\begin{document}
+	
+	\begin{plot}
+		\centering
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/and.qmasm}
+			\caption{\spacedlowsmallcaps{and} gate}
+			\label{lst:and_gate}
+		\end{sublisting}
+		\quad
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/not.qmasm}
+			\caption{\spacedlowsmallcaps{not} gate}
+			\label{lst:not_gate}
+		\end{sublisting}
+		\quad
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/or.qmasm}
+			\caption{\spacedlowsmallcaps{or} gate}
+			\label{lst:or_gate}
+		\end{sublisting}
+		\caption{T-Box definition}
+		\label{lst:macros}
+	\end{plot}
+	\begin{diagram}
+		\centering
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/and.qmasm}
+			\caption{\spacedlowsmallcaps{and} gate}
+			\label{lst:and_agate}
+		\end{sublisting}
+		\quad
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/not.qmasm}
+			\caption{\spacedlowsmallcaps{not} gate}
+			\label{lst:noft_gate}
+		\end{sublisting}
+		\quad
+		\begin{sublisting}[c]{0.28\linewidth}
+			\sublistingnumber{text}{code/qa_prolog/or.qmasm}
+			\caption{\spacedlowsmallcaps{or} gate}
+			\label{lst:or_gsate}
+		\end{sublisting}
+		\caption{T-Box definition}
+		\label{lst:maacros}
+	\end{diagram}
+	
+	\begin{plot}
+		\centering
+		\includegraphics[width=0.7\textwidth]{ontology/complexity}
+		\caption{This is a plot}
+	\end{plot}
+	
+	\begin{image}
+		\centering
+		\includegraphics[width=0.7\textwidth]{ontology/complexity}
+		\caption{This is an image}
+	\end{image}
+	
+	\begin{image}
+		\centering
+		\includegraphics[width=0.7\textwidth]{ontology/complexity}
+		\caption{This is an image}
+	\end{image}
+	
+	\listofdiagram
+	\listofplots
+	\listofimages
+	\lstlistoflistings
+	\listoffigures
+\end{document}

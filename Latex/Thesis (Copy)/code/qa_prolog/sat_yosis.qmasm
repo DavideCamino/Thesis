@@ -1,0 +1,15 @@
+!include <stdcell>
+		
+!begin_macro sat
+	!use_macro AND $id00006 
+	!use_macro NOT $id00004 
+	!use_macro OR $id00005 
+	$id00004.A = $id00005.Y  # $or$sat.v:5$1_Y
+	$id00005.A = b
+	$id00005.B = c
+	$id00006.A = a
+	$id00006.B = $id00004.Y  # $not$sat.v:5$2_Y
+	$id00006.Y = y
+!end_macro sat
+
+!use_macro sat sat

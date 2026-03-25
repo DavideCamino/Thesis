@@ -1,0 +1,5 @@
+# enemies/2
+!begin_macro id00010
+  !use_macro hates/2 $id00032  # hates_PWYwG/2
+  ...
+!end_macro id00010

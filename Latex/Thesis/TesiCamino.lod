@@ -1,0 +1,40 @@
+\babel@toc {english}{}\relax 
+\contentsline {listingenv}{\numberline {3.1}{\ignorespaces Definition of parents}}{52}{listingenv.caption.30}%
+\contentsline {listingenv}{\numberline {4.1}{\ignorespaces Building Bell state}}{60}{listingenv.caption.38}%
+\contentsline {listingenv}{\numberline {4.2}{\ignorespaces Transpilation}}{61}{listingenv.caption.39}%
+\contentsline {listingenv}{\numberline {4.3}{\ignorespaces Simulated execution}}{61}{listingenv.caption.41}%
+\contentsline {listingenv}{\numberline {4.4}{\ignorespaces Ising example}}{63}{listingenv.caption.44}%
+\contentsline {listingenv}{\numberline {4.5}{\ignorespaces Rewriting MVC with pyQUBO}}{64}{listingenv.caption.45}%
+\contentsline {listingenv}{\numberline {4.6}{\ignorespaces Rewriting MVC with qubovert}}{65}{listingenv.caption.46}%
+\contentsline {listingenv}{\numberline {5.1}{\ignorespaces Basic KB}}{69}{listingenv.caption.50}%
+\contentsline {listingenv}{\numberline {5.2}{\ignorespaces T-Box definition}}{73}{listingenv.caption.54}%
+\contentsline {listingenv}{\numberline {5.3}{\ignorespaces Circuit satisfiability}}{73}{listingenv.caption.55}%
+\contentsline {listingenv}{\numberline {5.4}{\ignorespaces Circuit satisfiability results}}{74}{listingenv.caption.56}%
+\contentsline {listingenv}{\numberline {5.5}{\ignorespaces Simbolic Hamiltonian}}{76}{listingenv.caption.59}%
+\contentsline {listingenv}{\numberline {5.6}{\ignorespaces KB enemy of my enemy is my friend}}{77}{listingenv.caption.61}%
+\contentsline {listingenv}{\numberline {5.7}{\ignorespaces Satisfiability in Prolog}}{78}{listingenv.caption.63}%
+\contentsline {listingenv}{\numberline {5.8}{\ignorespaces Undefined macros error}}{80}{listingenv.caption.64}%
+\contentsline {listingenv}{\numberline {5.9}{\ignorespaces Preprocessor's core}}{80}{listingenv.caption.65}%
+\contentsline {listingenv}{\numberline {6.1}{\ignorespaces T-Box definition}}{88}{listingenv.caption.69}%
+\contentsline {listingenv}{\numberline {6.2}{\ignorespaces Recursive definition of subclass predicate}}{89}{listingenv.caption.70}%
+\contentsline {listingenv}{\numberline {6.3}{\ignorespaces A-Box definition}}{89}{listingenv.caption.71}%
+\contentsline {listingenv}{\numberline {6.4}{\ignorespaces isA predicate}}{90}{listingenv.caption.72}%
+\contentsline {listingenv}{\numberline {6.5}{\ignorespaces Class attribution rules}}{90}{listingenv.caption.74}%
+\contentsline {listingenv}{\numberline {6.6}{\ignorespaces Ancestor definition}}{90}{listingenv.caption.76}%
+\contentsline {listingenv}{\numberline {6.7}{\ignorespaces Disjoint classes}}{91}{listingenv.caption.78}%
+\contentsline {listingenv}{\numberline {6.8}{\ignorespaces Error rule}}{91}{listingenv.caption.79}%
+\contentsline {listingenv}{\numberline {6.9}{\ignorespaces List and complex term removal}}{92}{listingenv.caption.80}%
+\contentsline {listingenv}{\numberline {6.10}{\ignorespaces Subclasses unfolding}}{93}{listingenv.caption.82}%
+\contentsline {listingenv}{\numberline {6.11}{\ignorespaces Ancestor unfolding}}{94}{listingenv.caption.84}%
+\contentsline {listingenv}{\numberline {6.12}{\ignorespaces Query results}}{96}{listingenv.caption.87}%
+\contentsline {listingenv}{\numberline {6.13}{\ignorespaces Input unfold}}{98}{listingenv.caption.89}%
+\contentsline {listingenv}{\numberline {6.14}{\ignorespaces Unfolding script's core}}{99}{listingenv.caption.90}%
+\contentsline {listingenv}{\numberline {7.1}{\ignorespaces From QUBO form to Ising}}{106}{listingenv.caption.97}%
+\contentsline {listingenv}{\numberline {7.2}{\ignorespaces Genearating Pauli operator}}{107}{listingenv.caption.98}%
+\contentsline {listingenv}{\numberline {7.3}{\ignorespaces Defining cost function}}{107}{listingenv.caption.99}%
+\contentsline {listingenv}{\numberline {7.4}{\ignorespaces Circuit construction}}{108}{listingenv.caption.100}%
+\contentsline {listingenv}{\numberline {7.5}{\ignorespaces $F(\vec {\gamma }, \vec {\beta })$ estimation}}{109}{listingenv.caption.103}%
+\contentsline {listingenv}{\numberline {7.6}{\ignorespaces $\vec {\gamma }$ and $\vec {\beta }$ optimization}}{109}{listingenv.caption.104}%
+\contentsline {listingenv}{\numberline {7.7}{\ignorespaces Circuit sampling}}{110}{listingenv.caption.105}%
+\contentsline {listingenv}{\numberline {A.1}{\ignorespaces QA-Prolog compilation result}}{122}{listingenv.A.1}%
+\contentsline {listingenv}{\numberline {A.2}{\ignorespaces Ancestor definition extended to family relation}}{122}{listingenv.A.2}%

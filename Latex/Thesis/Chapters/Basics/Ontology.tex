@@ -75,12 +75,12 @@ In Figure~\ref{fig:ont_people}, we can see the T-Box of the ontology: this struc
 
 OWL allows us to express rules to infer when a member of a class belongs also to another class. The following code shows (in the RDF/XML syntax) the definition of the class \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{url}.}:
 
-\begin{listing}[h]
+\begin{listingenv}[h]
 	\centering
 	\mylisting{.9}{xml}{code/ontology/people_parent.xml}
 	\caption{Definition of parents}
 	\label{lst:ont_parent}
-\end{listing}
+\end{listingenv}
 At line 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People|, and at lines 4 and 5 it is specified that a parent is a person that is \mintinline{text}|parent_of| another person.
 
 From Figure~\ref{fig:ont_people} we can also see some properties of the relations:
@@ -109,7 +109,7 @@ DOLCE (Descriptive Ontology for Linguistic and Cognitive Engineering) is a top-l
 	\includegraphics[width=\linewidth]{ontology/DOLCE}
 	\caption{First layer of DOLCE taxonomy}
 \end{figure}
-\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time; for this reason DOLCE distinguishes between endurants and perdurants. Endurants may acquire and lose properties and parts through time, perdurants are fixed in time~\cite{borgo2022dolce}. With a simplification we can see endurants as the physical entities that are modified by the passing of time (like objects, animals, and people) and perdurants as events that, once they have passed, cannot be changed anymore (like a tennis match or a conference).
+\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time; for this reason DOLCE distinguishes between \emph{endurants} and \emph{perdurants}. Endurants may acquire or lose properties and parts through time, perdurants are fixed in time~\cite{borgo2022dolce}. With a simplification we can see endurants as the physical entities that are modified by the passing of time (like objects, animals, and people) and perdurants as events that, once they have passed, cannot be changed anymore (like a tennis match or a conference).
 
 The relation connecting endurants and perdurants is called participation. A physical entity can be in time by participating in a perdurant, and perdurants happen in time by having endurants as participants~\cite{borgo2022dolce}.
 

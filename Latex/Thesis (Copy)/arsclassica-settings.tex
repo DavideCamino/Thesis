@@ -1,0 +1,77 @@
+% ********************************************************************
+% Personal commands
+% ******************************************************************** 
+\newcommand{\myName}{Davide Camino}
+\newcommand{\myTitle}{Quantum computing for logical inference}
+\newcommand{\mySubTitle}{Subtitle}
+
+\newcommand{\mail}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+
+% ********************************************************************
+% Graphics
+% ********************************************************************
+\graphicspath{{Graphics/}}
+\setcounter{MaxMatrixCols}{11}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\numberwithin{equation}{chapter}
+
+\bibliography{Bibliography}
+
+\theoremstyle{plain}
+\newtheorem{axiom}{Axiom}
+\newtheorem{principles}{Principles}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{thesis}{Thesis}
+
+\definecolor{bg}{rgb}{.95, .95, .95}
+\setminted{
+	bgcolor=bg,
+	linenos,
+	tabsize=2,
+	breaklines=true,
+	fontsize=\small
+}
+
+\newcommand{\mylisting}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
+}
+
+\newcommand{\mylistingnonumber}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines, linenos=false]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
+}
+
+\newcommand{\mylistingnumbernear}[3]{
+	\centering
+	\begin{minipage}{#1\linewidth}
+		\inputminted[frame=lines, numbersep=4pt]{#2}{#3}
+	\end{minipage}
+	\vspace{-.25cm}
+}
+
+\newcommand{\sublistingnumber}[2]{
+	\inputminted[frame=lines, numbersep=4pt]{#1}{#2}
+	\vspace{-.55cm}
+}
+
+\DeclareCaptionSubType{listing}
+
+\DeclareMathVersion{alt}
+\SetSymbolFont{operators}{alt}{OT1}{cmr}{m}{n}
+\SetSymbolFont{letters}{alt}{OML}{cmm}{m}{it}
+\SetSymbolFont{symbols}{alt}{OMS}{cmsy}{m}{n}
+\SetSymbolFont{largesymbols}{alt}{OMX}{cmex}{m}{n}
+
+\newcommand{\dl}[1]{%
+	{\mathversion{alt}$\mathcal{#1}$}%
+}

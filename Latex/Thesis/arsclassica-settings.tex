@@ -3,7 +3,7 @@
 % ******************************************************************** 
 \newcommand{\myName}{Davide Camino}
 \newcommand{\myTitle}{Quantum computing for logical inference}
-\newcommand{\mySubTitle}{Subtitle}
+\newcommand{\mySubTitle}{Ontology as optimization problem}
 
 \newcommand{\mail}[1]{\href{mailto:#1}{\texttt{#1}}}
 
@@ -64,8 +64,6 @@
 	\vspace{-.55cm}
 }
 
-\DeclareCaptionSubType{listing}
-
 \DeclareMathVersion{alt}
 \SetSymbolFont{operators}{alt}{OT1}{cmr}{m}{n}
 \SetSymbolFont{letters}{alt}{OML}{cmm}{m}{it}
@@ -75,3 +73,13 @@
 \newcommand{\dl}[1]{%
 	{\mathversion{alt}$\mathcal{#1}$}%
 }
+
+\DeclareCaptionSubType{listing}
+
+\newcommand{\smallcaps}[1]{\textsf{\spacedlowsmallcaps{#1}}}
+
+\newlistof{listingenv}{lod}{}
+\DeclareFloatingEnvironment[name=Listing,fileext=lod]{listingenv}
+
+\renewcommand{\cftlistingenvpresnum}{Listing }
+\setlength{\cftlistingenvnumwidth}{3cm}

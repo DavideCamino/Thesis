@@ -1,0 +1,23 @@
+\newgeometry{
+	left=4.5cm,
+	right=4.5cm
+}
+
+\chapter{Abstract}
+In this thesis we revisit and extend the work of Scott Pakin presented in~\cite{pakin2018performing}. This work presents a rewriting pipeline to move from a high-level language, Prolog, to a formulation compatible with solving on quantum annealers, a particular type of adiabatic quantum computing, that is, quantum hardware specialized in solving optimization problems.
+
+In this thesis we start from Pakin's work by making it compatible again with the frameworks used to interface with quantum annealers. Once the compatibility of the pipeline has been restored, we extend it both upstream and downstream.
+
+Upstream: we rewrite an ontology, a particular type of knowledge base, in Prolog. We then present some solutions to make this translation compatible with Pakin's pipeline, which does not implement the full set of Prolog features. Finally, we study the size of the problem obtained as a function of the ontology we translate, and the query used to interrogate the knowledge base.
+
+Downstream: we show that the output of the pipeline is not limited to resolution through annealing, but that a formulation as an optimization problem also allows the application of algorithms developed for the other type of quantum architecture (the quantum gate-based one). We show how to move from one formulation to another and how to perform some experiments to study this approach's behavior.
+
+Now we briefly show how the work is organized. The first three chapters provide a theoretical introduction. In Chapter~\ref{ch:physics} we provide some basics of quantum mechanics; the goal of this chapter is to argue that physical transformations, and therefore quantum gates, must be reversible. In Chapter~\ref{ch:qc} we introduce the study of computer science, defining computational complexity classes and showing where quantum computers fit into this analysis. The chapter concludes with the presentation of the two paradigms of quantum computation: quantum gate-based computing and adiabatic quantum computing. Chapter~\ref{ch:ont} presents ontologies, showing the main characteristics of these knowledge bases and discussing the complexity of performing reasoning over them. 
+
+We then move to two chapters in which we present the tools used in the rest of the work. In Chapter~\ref{ch:env} we show how to set up a development environment with all the software and libraries needed to carry out our experiments. Chapter~\ref{ch:qa_p} presents Pakin's pipeline for translating from Prolog to an optimization problem. We examine the characteristics of each step of the pipeline and present our contribution to restore compatibility between the pipeline and the other software it interfaces with.
+
+The last two chapters concern the experiments carried out in this work. Chapter~\ref{ch:qa_ont} shows the translation of an ontology into Prolog and from Prolog to an optimization problem. Chapter~\ref{ch:qaoa} deals with the discretized version of quantum annealing implementable on quantum gate-based systems. We show how to start from the result of Pakin's pipeline and how to obtain a formulation suitable for this paradigm.
+
+In the conclusions (Chapter~\ref{ch:conclusion}) we review the results achieved and provide some directions for future work.
+
+\restoregeometry
