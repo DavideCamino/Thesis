@@ -20,12 +20,12 @@ In the gate model the algorithm is described by the circuit and vice versa a cir
 \label{sec:qaoa_circ}
 The QAOA circuit take in input $n$ \emph{qubits}, these are the boolean veriables that we want to optimize to minimize the energy represented by $\mathbf{H}$. At the beginning of the circuit all the \emph{qubits} are set to zero ($\Ket{0}$).
 
-The QAOA algorithm stats preparing the state $\Ket{s}$ with maximum superposition. It is possible to obtain this state starting from the state with $n$ \emph{qubits} set to zero applying the Hadamard gate ($H$) to each of them~\cite{fakhimi2023quantum}; we denote this operator with $H^{\otimes n}$. 
+The QAOA algorithm stats preparing the state $\Ket{s}$ with maximum superposition. It is possible to obtain this state starting from the state with $n$ \emph{qubits} set to zero applying the Hadamard gate ($H$) to each of them~\cite{fakhimi2023quantum}; we denote this operator with $H^{\otimes n}$. State $\Ket{s}$ is prepared by the blue gate in Figure~\ref{fig:qaoa}.
 
 The QAOA circuit then consists of $p$ identical levels. Each level is composed of two operators (two quantum gates): 
 \begin{itemize}
-	\item \emph{phase separation operator}: $U_P(\gamma) = e ^{-i\gamma\mathbf{H}}$ where $\mathbf{H}$ is the Hamiltonian of the system, and $\gamma \in [0, 2\pi]$ is a parameter;
-	\item \emph{mixing operator}:  $U_M(\beta) = e ^{-i\beta B}$ where $B$ is the operator that applies the Pauli Gates $X$ to every \emph{qubit}, and $\beta \in [0, \pi]$ is a parameter.
+	\item \emph{phase separation operator} (gates orange in Figure~\ref{fig:qaoa}): $U_P(\gamma) = e ^{-i\gamma\mathbf{H}}$ where $\mathbf{H}$ is the Hamiltonian of the system, and $\gamma \in [0, 2\pi]$ is a parameter;
+	\item \emph{mixing operator} (gates green in Figure~\ref{fig:qaoa}):  $U_M(\beta) = e ^{-i\beta B}$ where $B$ is the operator that applies the Pauli Gates $X$ to every \emph{qubit}, and $\beta \in [0, \pi]$ is a parameter.
 \end{itemize}
 The operator $U_P(\gamma)$ simulates $\mathbf{H}$, while $U_M(\beta)$, which does not commute with $U_P(\gamma)$\footnote{$U_P(\gamma) \times U_M(\beta) \neq U_M(\beta) \times U_P(\gamma)$.}, allows modifying the probability distribution of the output~\cite{fakhimi2023quantum}. 
 
@@ -53,7 +53,7 @@ F(\vec{\gamma},\vec{\beta}) =\Braket{\psi(\vec{\gamma},\vec{\beta}) | \mathbf{H}
 
 $F(\vec{\gamma},\vec{\beta})$ represents the expected value of $\mathbf{H}$ in the state $\Ket{\psi(\vec{\gamma},\vec{\beta})}$~\cite{fakhimi2023quantum}. 
 
-Once implemented the expected value is estimated by executing the quantum circuit many times. Each run of the circuit  reteive an assignement for the $n$ input \emph{qubits}, this assignement represents a possible solution to the problem, with an associated energy. The average energy represent our estimation $F(\vec{\gamma},\vec{\beta})$.
+Once implemented the expected value is estimated by executing the quantum circuit many times. Each run of the circuit  retrieves an assignment for the $n$ input \emph{qubits}, this assignment represents a possible solution to the problem, with an associated energy. The average energy represent our estimation $F(\vec{\gamma},\vec{\beta})$.
 
 
 The QAOA’s performance depends on the number of levels; given optimal parameters of QAOA, the algorithm asymptotically converges to optimal solutions as the number of levels grows\cite{farhi2014quantum}.
@@ -129,7 +129,7 @@ As seen in Section~\ref{sec:qaoa_circ} the QAOA algorithm does not directly use 
 Qiskit provides the programmer with a constructor to generate the quantum circuit that implements the QAOA algorithm; this constructor allows specifying:
 \begin{itemize}
 	\item cost function: the one obtained in Listing~\ref{lst:cost_func};
-	\item \mintinline{text}|reps|: the number of levels;
+	\item \mintinline{text}|reps|: the number $p$ of levels;
 	\item initial state: in the form of a quantum circuit. If no initial state is specified, the Hadamard gate is applied to each \emph{qubit};
 	\item mixing operator: this parameter can be specified as a base operator or as a quantum circuit. If no parameter is specified the Paoli $X$ gate is applied.
 \end{itemize}
