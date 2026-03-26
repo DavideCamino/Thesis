@@ -209,17 +209,17 @@ The inequality $\textbf{BPP} \neq \textbf{BQP}$ would violate the strong Churchâ
 \end{equation}
 Assuming that $\textbf{BPP} \neq \textbf{BQP}$, we could deduce that  $\textbf{BPP} \neq \textbf{PSPACE}$.
 
-There are some hints that quantum computer might be more powerful than classic one. The two most famous example of quantum superiority are the Grover's algorithm and the Shor's algorithm.
+There are some hints that quantum computer might be more powerful than classic ones. The two most famous example of quantum superiority are the Grover's algorithm and the Shor's algorithm.
 
-Grover's algorithm show a quadratic speedup in finding an element from an unordered list respect to the lover bound of a classical algorithm. Grover's search algorithm is optimal: his complexity is the same of the theoretical lower bound in the quantum computational model.
+Grover's algorithm shows a quadratic speedup in finding an element from an unordered list respect to the lower bound of a classical algorithm. Grover's search algorithm is optimal: his complexity is the same of the theoretical lower bound in the quantum computational model.
 
-The Shor's algorithm show an exponential speedup in factorizing a number respect to the best know classical algorithm. The key to the efficient quantum mechanical solution of the factoring problem was the exploitation of a structure hidden within the problem.
+The Shor's algorithm shows an exponential speedup in factorizing a number respect to the best know classical algorithm. The key to the efficient quantum mechanical solution of the factoring problem was the exploitation of a structure hidden within the problem.
 
-Many computer scientists  believe that the essential reason for the difficulty of \textbf{NP}-complete problems is that their search space has no structure, and that the best possible method for solving such a problem (in the most general case) is to adopt a search method.
+Many computer scientists  believe that the essential reason for the difficulty of \textbf{NP}-complete problems is that their search space has no structure, and that the best possible method for solving such problems (in the most general case) is to adopt a search method.
 
 Taking this point of view means that quantum computer can not solve efficiently an \textbf{NP}-complete problem because the maximum speedup achievable is quadratic. Researchers in quantum computation and quantum information focus, then, on another class of problems to show the superiority of quantum computation over classical computation. This class of problems is called \textbf{NPI} (\textbf{NP}-\emph{intermediate}) and contains problem in \textbf{NP} that are both outside \textbf{P} (or \textbf{BPP}) and \textbf{NP}-complete. 
 
-The factoring problem is belived to be in \textbf{NPI} and the Shor's algorithm would seem to demonstrate the computational superiority of the quantum model; however, unfortunately, there is no proof that $\textbf{P} \neq \textbf{NPI}$. These considerations are deeper explained in \cite[pages 150, 151, 270 and 271]{nielsen2010quantum}
+The factoring problem is believed to be in \textbf{NPI} and the Shor's algorithm would seem to demonstrate the computational superiority of the quantum model; however, unfortunately, there is no proof that $\textbf{P} \neq \textbf{NPI}$. These considerations are deeper explained in \cite[pages 150, 151, 270 and 271]{nielsen2010quantum}
 
 \section{Gate based paradigm}
 \label{sec:gate_model}
@@ -320,21 +320,21 @@ Recalling the results achieved in Chapter~\ref{ch:physics} and also considering 
 Now that we have described the main properties of quantum gates we can examine the effect that these gates have on \emph{qubits}; we begin our analysis with gates that operate on a single \emph{qubit}.
 \paragraph{single qubit quantum gate:}\label{par:single_gate} Quantum gates that operate on a single \emph{qubit} can be visualized as \emph{rotations} on the Bloch sphere. Any rotation can be traversed both forward and backward, which makes rotations reversible and, consequently, valid quantum gates. We now examine some rotations that define particularly interesting gates.
 
-Rotations of $180^\circ$ with respect to the axes define the \emph{Paoli gates}:
+Rotations of $180^\circ$ with respect to the axes define the \emph{Pauli gates}:
 \begin{itemize}
-	\item Paoli gate $X$: rotation with respect to the $x$ axis. This gate is the quantum version of the classical \smallcaps{not} gate:
+	\item Pauli gate $X$: rotation with respect to the $x$ axis. This gate is the quantum version of the classical \smallcaps{not} gate:
 	\[
 	X\Ket{0} = \Ket{1} \qquad  X\Ket{1} = \Ket{0};
 	\]
-	\item Paoli gate $Y$: rotation with respect to the $y$ axis. This gate has no classical counterpart and, applied to the \emph{qubits} $\Ket{0}$ and $\Ket{1}$, modifies them as follows:
+	\item Pauli gate $Y$: rotation with respect to the $y$ axis. This gate has no classical counterpart and, applied to the \emph{qubits} $\Ket{0}$ and $\Ket{1}$, modifies them as follows:
 	\[
 	Y\Ket{0} = i\Ket{1} \qquad  Y\Ket{1} = -i\Ket{0};
 	\]
-	\item Paoli gate $Z$: rotation with respect to the $z$ axis. This is also a purely quantum gate, which acts as follows:
+	\item Pauli gate $Z$: rotation with respect to the $z$ axis. This is also a purely quantum gate, which acts as follows:
 	\[
 	Z\Ket{0} = \Ket{0} \qquad  Z\Ket{1} = -\Ket{1};
 	\]
-	\item Paoli gate $I$: zero rotation. This gate does not modify the state of the \emph{qubits}:
+	\item Pauli gate $I$: zero rotation. This gate does not modify the state of the \emph{qubits}:
 	\[
 	I\Ket{0} = \Ket{0} \qquad  I\Ket{1} = \Ket{1}.
 	\]
@@ -355,21 +355,21 @@ Figure~\ref{fig:bloch_gate} shows the described gates as rotations on the Bloch 
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{.25\linewidth}
-		\includegraphics[width=.95\linewidth]{quantum_computing/Paoli_X}
-		\caption{Paoli gate $X$}
-		\label{fig:Paoli_X}
+		\includegraphics[width=.95\linewidth]{quantum_computing/Pauli_X}
+		\caption{Pauli gate $X$}
+		\label{fig:Pauli_X}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[c]{.25\linewidth}
-		\includegraphics[width=.95\linewidth]{quantum_computing/Paoli_Y}
-		\caption{Paoli gate $Y$}
-		\label{fig:Paoli_Y}
+		\includegraphics[width=.95\linewidth]{quantum_computing/Pauli_Y}
+		\caption{Pauli gate $Y$}
+		\label{fig:Pauli_Y}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[c]{.25\linewidth}
-		\includegraphics[width=.95\linewidth]{quantum_computing/Paoli_Z}
-		\caption{Paoli gate $Z$}
-		\label{fig:Paoli_Z}
+		\includegraphics[width=.95\linewidth]{quantum_computing/Pauli_Z}
+		\caption{Pauli gate $Z$}
+		\label{fig:Pauli_Z}
 	\end{subfigure}
 	\\
 	\begin{subfigure}[c]{.25\linewidth}
@@ -521,7 +521,7 @@ where, in the last step, we omit the value of the target \emph{qubit} because it
 	\caption{Phase oracle}
 	\label{fig:phase_oracle}
 \end{wrapfigure}
-Since, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{y}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Paoli gate $X$ and then the Hadamard gate $H$.}.
+Since, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{y}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Pauli gate $X$ and then the Hadamard gate $H$.}.
 
 \subsubsection*{Deutsch' algorithm}
 The Deutsch algorithm shows how to use the phase oracle to solve a computational problem. We will see that already with this first algorithm we obtain better performances compared to what we could achieve with a classical architecture. In this case, however, the performance gain is polynomial; therefore this is not one of those algorithms that suggest that quantum computers can efficiently solve a broader class of problems than classical computers\footnote{Showing these algorithms, including Shor's algorithm, is beyond the scope of this work.}.

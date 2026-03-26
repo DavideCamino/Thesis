@@ -53,7 +53,7 @@ F(\vec{\gamma},\vec{\beta}) =\Braket{\psi(\vec{\gamma},\vec{\beta}) | \mathbf{H}
 
 $F(\vec{\gamma},\vec{\beta})$ represents the expected value of $\mathbf{H}$ in the state $\Ket{\psi(\vec{\gamma},\vec{\beta})}$~\cite{fakhimi2023quantum}. 
 
-Once implemented the expected value is estimated by executing the quantum circuit many times. Each run of the circuit  retrieves an assignment for the $n$ input \emph{qubits}, this assignment represents a possible solution to the problem, with an associated energy. The average energy represent our estimation $F(\vec{\gamma},\vec{\beta})$.
+Once implemented, the expected value is estimated by executing the quantum circuit many times. Each run of the circuit  retrieves an assignment for the $n$ input \emph{qubits}, this assignment represents a possible solution to the problem with an associated energy. The average energy represents our estimation $F(\vec{\gamma},\vec{\beta})$.
 
 
 The QAOA’s performance depends on the number of levels; given optimal parameters of QAOA, the algorithm asymptotically converges to optimal solutions as the number of levels grows\cite{farhi2014quantum}.
@@ -131,7 +131,7 @@ Qiskit provides the programmer with a constructor to generate the quantum circui
 	\item cost function: the one obtained in Listing~\ref{lst:cost_func};
 	\item \mintinline{text}|reps|: the number $p$ of levels;
 	\item initial state: in the form of a quantum circuit. If no initial state is specified, the Hadamard gate is applied to each \emph{qubit};
-	\item mixing operator: this parameter can be specified as a base operator or as a quantum circuit. If no parameter is specified the Paoli $X$ gate is applied.
+	\item mixing operator: this parameter can be specified as a base operator or as a quantum circuit. If no parameter is specified the Pauli $X$ gate is applied.
 \end{itemize}
 
 The circuit ends by measuring the value of the \emph{qubits}. Listing~\ref{lst:circ_build} shows the construction of the circuit.
@@ -245,9 +245,9 @@ The QUBO problem that we obtain is represented by an $11\times11$ matrix, this m
 Figure~\ref{fig:h} shows the matrix representation of the problem both in QUBO and the corresponding Ising form. The two representations have ground states with different values, but they correspond to the same configuration of the \emph{qubits}.
 
 \subsection{Execution}
-To solve the satisfiability problem we construct a QAOA with $10$ levels. By increasing the number of levels, the algorithm converges increasingly well to the optimal solution. 
+To solve the satisfiability problem we construct a QAOA with $p=10$ levels. By increasing the number of levels, the algorithm converges increasingly well to the optimal solution. 
 
-However, increasing the number of levels also leads to longer execution time and, if executed on quantum hardware (and not through simulators), the deeper the circuit, the more one encounters the phenomenon of decoherence~\cite[p. 278]{wong2022introduction}\footnote{Even $10$ levels are already too many for the today noisy quantum computer,however, it is an appropriate number for our simulations.}. Moreover, the number of parameters to optimize is equal to twice the number of levels, therefore increasing the number of levels also makes the parameter optimization more complex\footnote{As sed in Section~\ref{sec:param_opt}}. 
+However, increasing the number of levels also leads to longer execution time and, if executed on quantum hardware (and not through simulators), the deeper the circuit, the more one encounters the phenomenon of decoherence~\cite[p. 278]{wong2022introduction}\footnote{Even $10$ levels are already too many for the today noisy quantum computer, however, it is an appropriate number for our simulations.}. Moreover, the number of parameters to optimize is equal to twice the number of levels, therefore increasing the number of levels also makes the parameter optimization more complex\footnote{As said in Section~\ref{sec:param_opt}.}. 
 
 \begin{wrapfigure}{r}{.5\linewidth}
 	\centering\textbf{}
@@ -255,7 +255,7 @@ However, increasing the number of levels also leads to longer execution time and
 	\caption{Cost minimization}
 	\label{fig:optimization}
 \end{wrapfigure}
-Figure~\ref{fig:optimization} shows the parameter optimization process: as better parameters are found, the estimated cost decreases. In this case, the parameters were optimized after approximately $130$ iterations. Each iteration involves $1000$ runs of the quantum circuit. During these $1000$ shots, the circuit remains unchanged and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are fixed. After each iteration (i.e., after $1000$ shots), the expected value of the system’s energy is estimated, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are updated.
+Figure~\ref{fig:optimization} shows the parameter optimization process: as better parameters are found, the estimated cost decreases. In this case, the parameters were optimized after approximately $130$ iterations. Each iteration involves $1000$ runs of the quantum circuit. During these $1000$ shots, the circuit remains unchanged, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are fixed. After each iteration (i.e., after $1000$ shots), the expected value of the system’s energy is estimated, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are updated.
 
 After the optimization phase, we obtain an approximation of the optimal parameters $\vec{\gamma}^*$ and $\vec{\beta}^*$ (Equation~\ref{eqn:optimized}). We can then sample the optimized circuit to obtain the solution to our problem. Each shot, both in the optimization phase and in the final sampling phase uses the same initial \emph{qubit} configuration. The algorithm starts with all \emph{qubits} in state $\Ket{0}$, and then prepares the state $\Ket{s}$ by applying the Hadamard gate $H$ to each \emph{qubit}.
 
