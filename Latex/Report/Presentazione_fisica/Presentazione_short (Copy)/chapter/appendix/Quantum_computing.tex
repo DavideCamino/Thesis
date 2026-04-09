@@ -1,0 +1,118 @@
+\section{Quantum Computing}
+
+
+\begin{frame}{Perché il quantum computing}
+	\begin{minipage}{\linewidth}
+		\begin{minipage}{.3\linewidth}
+			\begin{block}{Grazie a}
+				\begin{itemize}
+					\item Superposition
+					\item Entanglement
+				\end{itemize}
+			\end{block}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.68\linewidth}
+			\begin{gather*}
+				\mathcal{H}(t) \Ket{\psi(t)} = i \hbar \frac{\partial}{\partial t} \Ket{\psi(t)}\\ 
+				\Braket{A_0 \otimes B_0} + \Braket{A_0 \otimes B_1} + \Braket{A_1 \otimes B_0} - \Braket{A_1 \otimes B_1} = 2\sqrt{2}
+			\end{gather*}
+		\end{minipage}
+	\end{minipage}
+	\begin{minipage}{\linewidth}
+		\begin{minipage}{.3\linewidth}
+			\begin{block}{Violiamo}
+				\begin{center}
+					Strong Church-Turing Thesis
+				\end{center}
+			\end{block}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.68\linewidth}
+			\vspace{.5cm}
+			\begin{figure}
+				\centering
+				\includegraphics[width=.6\linewidth]{ntm}
+				\caption{Probabilistic Turing Machine}
+			\end{figure}
+		\end{minipage}
+	\end{minipage}
+\end{frame}
+
+
+\begin{frame}{Due paradigmi di programmazione}
+	\begin{minipage}{\linewidth}
+		\begin{minipage}{.48\linewidth}
+			\begin{block}{}
+				Quantum Gate
+			\end{block}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.48\linewidth}
+			\begin{block}{}
+				Quantum Annealing
+			\end{block}
+		\end{minipage}
+	\end{minipage}
+	\begin{minipage}{\linewidth}
+		\vspace{.5cm}
+		\begin{minipage}{.48\linewidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=.5\linewidth]{bloch}
+				\caption{A single \emph{qubit} gate can be seen as a rotation on the Bloch Sphere}
+			\end{figure}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{.48\linewidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=.8\linewidth]{QA}
+				\caption{Tunneling effect (K. Chakrabarti, A. Das)}
+			\end{figure}
+		\end{minipage}
+	\end{minipage}
+\end{frame}
+
+
+\begin{frame}{Quantum Gate}
+	\begin{minipage}{.35\linewidth}
+		\begin{block}{}
+			\begin{itemize}
+				\item Formalismo molto studiato
+				\item Gate Reversibili
+				\item  Set di porte universali
+				\item  Algoritmi di Shore, ecc.
+			\end{itemize}
+		\end{block}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.6\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{Shor}
+			\caption{Step for Shor algoritm (Thomas G. Wong)}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+
+\begin{frame}{Quantum Annealer}
+	\begin{minipage}{.48\linewidth}
+		\begin{figure}
+			\includegraphics[width=.65\linewidth]{QA_fun}
+			\caption{Complete sovrapposition $\rightarrow$ ground state $\mathcal{H}_f$}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.48\linewidth}
+		\begin{block}{}
+			\begin{itemize}
+				\item Problemi in forma QUBO
+				\item Ispirato a Simulated Annealling
+				\item Effetto tunneling
+				\item Adiabatic Quantum Computing (AQC)
+				\item $\mathcal{H}(t) =s(t) \mathcal{H}_i + (i-s(t)) \mathcal{H}_f $
+			\end{itemize}
+		\end{block}
+	\end{minipage}	
+\end{frame}

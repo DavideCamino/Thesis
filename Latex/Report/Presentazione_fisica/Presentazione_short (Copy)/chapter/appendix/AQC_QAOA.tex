@@ -1,0 +1,149 @@
+\section{QAC to QAOA}
+\begin{frame}{QAOA}
+	\begin{block}{Quantum approximate optimization algorithm}
+		\begin{enumerate}
+			\item Definire matrici: $\mathcal{H}_c$ e  $\ \mathcal{H}_m$
+			\item Definire oracoli parametrici: $\mathcal{U}_c(\gamma) = \mathnormal{e}^{-i\gamma\mathcal{H}_c}$ e $\ \mathcal{U}_m(\beta) = \mathnormal{e}^{-i\beta\mathcal{H}_m}$
+			\item Applicazione ripetuta di $\mathcal{U}_c(\gamma)$ e $\ \mathcal{U}_m(\gamma)$
+			\item Ottimizzazione (classica) dei parametri $\gamma_i$ e $\beta_i$
+		\end{enumerate}
+	\end{block}
+	\begin{figure}[h]
+		\includegraphics[width=.63\linewidth]{QAOA}
+		\caption{QAOA sketch (BLEKOS, Kostas, et al.)}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}[fragile]{QUBO $\rightarrow$ ISING $\rightarrow$ Operatori di Pauli}
+	\begin{center}
+		\begin{minipage}{.7\linewidth}
+			\begin{figure}[h]
+				\begin{minipage}{\linewidth}
+					\hrule
+					\begin{minted}{python}
+	
+qubo = qubovert.utils.matrix_to_qubo(qubo_mat)
+ising = qubovert.utils.qubo_to_quso(qubo)
+qubo_dict = dict(qubo)
+ising_dict = dict(ising)
+ising_dict.pop(())
+ising_mat = qubovert.utils.qubo_to_matrix(ising_dict)
+					\end{minted}
+					\hrule
+				\end{minipage}
+				\caption{QUBO $\rightarrow$ ISING (libreria qubovert)}
+			\end{figure}
+			\vspace{-.8cm}
+			\begin{figure}[h]
+				\begin{minipage}{\linewidth}
+					\hrule
+					\begin{minted}{python}
+
+def build_paulis(matrix):
+	pauli_list = []
+	for i in range(len(matrix)):
+		pauli_list.append(("Z", [i], matrix[i][i]))
+		for j in range(i+1, len(matrix)):
+				pauli_list.append(("ZZ", [i, j], matrix[i][j]))
+	return pauli_list
+
+sat_paulis = build_paulis(ising_mat)
+cost_hamiltonian = SparsePauliOp.from_sparse_list(sat_paulis, n_qubits)
+					\end{minted}
+					\hrule
+				\end{minipage}
+				\caption{ISING $\rightarrow$ Operatori di Pauli}
+			\end{figure}
+		\end{minipage}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]{Esempio}
+	\begin{minipage}{.33\linewidth}
+		\begin{figure}[h]
+			\vspace{.3cm}
+			\includegraphics[width=.8\linewidth]{sat_circ.pdf}
+			\vspace{.5cm}
+			\hrule
+			\begin{minted}{text}
+
+!begin_macro sat
+	!use_macro AND $id00006
+	!use_macro NOT $id00004
+	!use_macro OR $id00005
+	$id00004.A = $id00005.Y
+	$id00005.A = b
+	$id00005.B = c
+	$id00006.A = a
+	$id00006.B = $id00004.Y
+	$id00006.Y = y
+!end_macro sat
+			\end{minted}
+			\hrule
+			\caption{CircSat}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.65\linewidth}
+		{
+		\tiny
+		\[
+			\begin{pmatrix}
+				0.5 & 0.5 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -2 \\
+				0 & 0.5 & -1 & 0 & -2 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 1 & 0 & 0 & -2 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & -0.5 & 0.5 & -1 & -2 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & -0.5 & -1 & 0 & -2 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+			\end{pmatrix}
+	\]
+	}
+	\vspace{-.4cm}
+		\begin{figure}[h]
+			\includegraphics[width=.65\linewidth]{QAOA_qc}
+			\vspace{-.1cm}
+			\caption{$\mathcal{H}_f$ and QAOA Quantum Circuit}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}{Esempio}{Risultato 1}
+	\begin{minipage}{.337\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_opt}
+			\caption{Parameter optimization}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.613\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_r_1}
+			\caption{Sample results}
+		\end{figure}
+	\end{minipage}
+	
+	
+	
+\end{frame}
+\begin{frame}{Esempio}{Risultato 2}
+		\begin{minipage}{.337\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_r_2}
+			\caption{3 \say{interesting} bit}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.65\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_r_3}
+			\caption{Multilpe experiment runs}
+		\end{figure}
+	\end{minipage}
+\end{frame}

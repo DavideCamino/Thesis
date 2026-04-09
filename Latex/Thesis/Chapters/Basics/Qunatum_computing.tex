@@ -25,7 +25,7 @@ A computational model allows us to mathematically define the concept of an algor
 \subsubsection*{Turing machine}
 This is the most well-known computational model. Introduced by Turing to formally describe the notion of an algorithm that performs a computational task.
 
-A Turing machine can be seen as the conceptualization of a computer. It is composed of four main elements:
+A \marginpar{Turing machine\\definition}Turing machine can be seen as the conceptualization of a computer. It is composed of four main elements:
 \begin{description}
 	\item[Program:] which allows the encoding of an algorithm;
 	\item[Finite state control:]  unit that acts as the processor;
@@ -38,7 +38,7 @@ It is possible to define various versions of the Turing machine. For our discuss
 A program for the Turing machine consists of program lines; each line is a quintuple $\braket{q, x, q', x', s}$ which is interpreted as follows: if the machine is in state $q$ and reads the symbol $x \in \Gamma$ on the tape, then it transitions to state $q'$, writes the symbol $x' \in \Gamma$ on the tape, and moves as indicated by $s$ (to the right $+1$, to the left $-1$, or remains stationary $0$).
 
 The Turing machine model may appear simple, but it is the formalism of reference to tell what we consider computable or not. The importance of the Turing machine is supported by the \emph{Church–Turing thesis} proposed independently by Church and Turing:
-\begin{thesis}
+\begin{thesis}\marginpar{\\Church–Turing\\ thesis}
 	The class of functions computable by a Turing machine corresponds exactly to the class of functions which we would naturally regard as being computable by an algorithm.
 \end{thesis}
 Church–Turing thesis states that the Turing machine is a computational model capable of providing a rigorous definition of the intuitive concept of an algorithm, and is therefore suitable as a foundation for computer science.
@@ -93,7 +93,7 @@ We say that a family of circuits is \emph{consistent} if all circuits in the fam
 
 Finally, we define a family of circuits to be \emph{uniform} if there exists an algorithm for a Turing machine that, given $n$ as input, is able to generate a description of $C_n$. That is, this algorithm must provide the list of gates that constitute $C_n$, and the description of how these gates are connected to each other.
 
-We are finally ready to describe the formal characteristics of the circuit model of computation. In this model we consider functions computable by families of circuits $\Set{C_n}$ such that:
+We \marginpar{Circuit model\\definition}are finally ready to describe the formal characteristics of the circuit model of computation. In this model we consider functions computable by families of circuits $\Set{C_n}$ such that:
 \begin{itemize}
 	\item the circuits in the family are \emph{acyclic}: no loops must be present in the circuit, this prevents the occurrence of possible instabilities;
 	\item $\Set{C_n}$ is a \emph{consistent} family of circuits: all circuits compute the same function (on inputs of increasing size);
@@ -111,7 +111,7 @@ The theoretical models that we have defined in the previous section (and other e
 \end{description}
 
 \subsubsection*{Computational complexity}
-The study of computational complexity aims to quantify the computational resources required to solve a given problem. To study resource consumption independently of the characteristics of the reference architecture\footnote{We mean independence from specific architectural decisions that, for example, allow a processor to save a few clock cycles whenever a certain operation is performed. We will soon see that different computational models can, instead, have asymptotically different resource consumption.}, \emph{asymptotic notation} is introduced, which captures the essential behavior of a function:
+The study of computational complexity aims to quantify the computational resources required to solve a given problem. To \marginpar{Asymptotic notation}study resource consumption independently of the characteristics of the reference architecture\footnote{We mean independence from specific architectural decisions that, for example, allow a processor to save a few clock cycles whenever a certain operation is performed. We will soon see that different computational models can, instead, have asymptotically different resource consumption.}, \emph{asymptotic notation} is introduced, which captures the essential behavior of a function:
 \begin{itemize}
 	\item $O$ (\say{big O}): used to define the \emph{upper bound} of a function;
 	\item $\Omega$ (\say{big Omega}): used to define the \emph{lower bound} of a function;
@@ -122,14 +122,14 @@ Computational complexity considers the spatial and temporal resources required t
 
 In developing the theory of computational complexity, it has been observed that resource consumption depends on the computational model of reference; for example, the three different Turing machines presented in the previous section can solve the same problem with a very different number of operations.
 
-This problem has been clearly addressed by dividing problems into two classes:
+This \marginpar{Easy and hard problems} problem has been clearly addressed by dividing problems into two classes:
 \begin{itemize}
 	\item \emph{easy} \emph{tractable} or \emph{feasible} problems: are problems for which there exists an algorithm capable of finding a solution in \emph{polynomial} time with respect to the size of the problem. An algorithm whose resource consumption grows as $O(p(n))$, where $n$ is the size of the problem and $p(\cdot)$ is a polynomial, is called \emph{efficient};
 	\item \emph{hard}, \emph{intractable}, or \emph{infeasible} problems: if the best algorithm requires exponential resources\footnote{We consider exponential anything that grows faster than a polynomial; $n^{\log n}$, with some abuse of notation, is considered an exponential function.}. In this case we speak of \emph{inefficient} algorithms.
 \end{itemize}
 
 There are several reasons why the choice of dividing problems into two classes of computational complexity (polynomial and exponential) is appropriate. The first is historical: the polynomials describing most proposed algorithms do not have high degree, which means polynomial algorithms almost always outperform exponential algorithms. The second reason is more foundational and is due to the \emph{strong Church–Turing thesis}:
-\begin{thesis}
+\begin{thesis}\marginpar{\\Strong Church–Turing\\ thesis}
 	Any model of computation can be simulated on a probabilistic Turing machine with at most a polynomial increase in the	number of elementary operations required.
 \end{thesis}
 This means that probabilistic Turing machines appear to be the strongest \say{reasonable} model of computation. Formally, we can state that if, considering a certain computational model (different from the probabilistic Turing machine), it is possible to solve a problem with $k$ elementary operations, then it is possible to solve the same problem on a probabilistic Turing machine with at most $p(k)$ elementary operations (where $p(\cdot)$ is a polynomial).
@@ -154,7 +154,7 @@ Conversely, although there exist non-constructive proofs showing that there must
 	\item if $x \in L$, there exists a witness string $w$ such that $M$ halts answering \say{yes} after a time polynomial in the size of $x$ when the machine starts from the state $x b w$ ($b$ is the blank space);
 	\item if $x \notin L$ for any witness string $w$, $M$ halts answering \say{no} after a time polynomial in the size of $x$ when the machine starts from the state $x b w$.
 \end{itemize}
-The most famous open problem in computer science is whether or not there are problems in \textbf{NP} which are not in \textbf{P}, often abbreviated as the \textbf{P} $\neq$ \textbf{NP} problem.
+The \marginpar{\textbf{P} $\neq$ \textbf{NP} open \\question}most famous open problem in computer science is whether or not there are problems in \textbf{NP} which are not in \textbf{P}, often abbreviated as the \textbf{P} $\neq$ \textbf{NP} problem.
 
 Within the class of problems \textbf{NP} we find the \textbf{NP}-\emph{complete} problems. A language $L$ is \textbf{NP}-complete if any other language in \textbf{NP} can be \emph{reduced} to $L$. A language $B$ is said to be reducible to a language $A$ if there exists a Turing machine that, in polynomial time, starting from $x$ produces $R(x)$ and $x\in B$ if and only if $R(x) \in A$. We can view reduction as a translation of one problem into another equivalent one: finding the solution to one means solving the other as well. \textbf{NP}-\emph{complete} problems represent the hardest problems in the class \textbf{NP}, in the sense that finding a lower bound for an \textbf{NP}-\emph{complete} problem means finding a lower bound for all problems in \textbf{NP}.
 
@@ -191,7 +191,7 @@ The \emph{Chernoff bound} implies that with a limited number of repetitions of t
 We now extend the classification of computational problems by considering a new computational model: \emph{quantum circuits}. In Section~\ref{sec:quantum_gate} we will precisely define what a \emph{quantum gate} is and how they can be assembled to create quantum circuits. For now, it is sufficient to know that a quantum gate applies a unitary transformation (introduced in Section~\ref{sec:unitary_operator}) to one or more quantum bits (\emph{qubits}). The size of a quantum circuit is defined by the number of gates that are in the circuit and by the depth of the circuit\footnote{In Section~\ref{sec:qa_algo} we will  use another way of measuring the complexity: the number of query to an oracle.}. The latter is the number of distinct timesteps at which gates are applied.
 
 \subsubsection*{BPQ Class}
-Thanks to the concept of quantum circuits we can define the quantum alternative to the class \textbf{BBP}: class of problems \textbf{BQP}. This set contains the decision problems that can be solved with bounded probability of error using a polynomial size quantum circuit (both the number of gate and the depth). To be precise a circuit is a fixed entity that can found the solution of a problem up to a certain input dimension. To better formalize the \textbf{BQP} class we recall the concept of circuit family. Considering a language $L$ and an input string $x$ of size $n$ we say that $L \in \textbf{BPQ}$ if: 
+Thanks to the concept of quantum circuits we can define the quantum alternative to the class \textbf{BBP}: class of problems \textbf{BQP}. This set contains the decision problems that can be solved with bounded probability of error using a polynomial size quantum circuit (both the number of gate and the depth). To be precise a circuit is a fixed entity that can found the solution of a problem up to a certain input dimension. To better formalize the \textbf{BQP} class we recall the concept of circuit family. Considering \marginpar{Quantum circuit\\ model definition} a language $L$ and an input string $x$ of size $n$ we say that $L \in \textbf{BPQ}$ if: 
 \begin{itemize}
 	\item the number of gates of the circuits in the family that solve the problem grows, at most, polynomially with respect to $n$;
 	\item the family of circuits is \emph{uniform}, that is, there exists a set of clear instructions, our algorithm, that generates the quantum circuit.
@@ -215,13 +215,13 @@ Grover's algorithm shows a quadratic speedup in finding an element from an unord
 
 The Shor's algorithm shows an exponential speedup in factorizing a number respect to the best know classical algorithm. The key to the efficient quantum mechanical solution of the factoring problem was the exploitation of a structure hidden within the problem.
 
-Many computer scientists  believe that the essential reason for the difficulty of \textbf{NP}-complete problems is that their search space has no structure, and that the best possible method for solving such problems (in the most general case) is to adopt a search method.
+Many \marginpar{Limits of quantum\\ computation} computer scientists  believe that the essential reason for the difficulty of \textbf{NP}-complete problems is that their search space has no structure, and that the best possible method for solving such problems (in the most general case) is to adopt a search method.
 
 Taking this point of view means that quantum computer can not solve efficiently an \textbf{NP}-complete problem because the maximum speedup achievable is quadratic. Researchers in quantum computation and quantum information focus, then, on another class of problems to show the superiority of quantum computation over classical computation. This class of problems is called \textbf{NPI} (\textbf{NP}-\emph{intermediate}) and contains problem in \textbf{NP} that are both outside \textbf{P} (or \textbf{BPP}) and \textbf{NP}-complete. 
 
 The factoring problem is believed to be in \textbf{NPI} and the Shor's algorithm would seem to demonstrate the computational superiority of the quantum model; however, unfortunately, there is no proof that $\textbf{P} \neq \textbf{NPI}$. These considerations are deeper explained in \cite[pages 150, 151, 270 and 271]{nielsen2010quantum}
 
-\section{Gate based paradigm}
+\section{Quantum gate based paradigm}
 \label{sec:gate_model}
 The quantum gate-based computation paradigm is the direct implementation of the computational model that we have just described. This approach to quantum computation is founded on extensive theoretical work, part of which we have mentioned in the previous section, and for this reason most of the theoretical results on quantum computation derive from this paradigm.
 
@@ -274,7 +274,7 @@ In Chapter~\ref{ch:physics} we saw that spin is an example of a binary property,
 
 These states slightly change notation when we move from the study of physics to computer science. Before describing quantum gates we introduce this alternative notation for the states of a \emph{qubit} and show a graphical representation that will be useful to understand the effect of quantum gates.
 \subsubsection*{qubits}
-In computer science the states \emph{up} and \emph{down} (Equations~\ref{eqn:ket_u} and \ref{eqn:ket_d}) represent respectively a \emph{qubit} off $\Ket{0}$ and on $\Ket{1}$. We denote with $\Ket{+}$ and $\Ket{-}$ the \emph{qubits} in the states \emph{right} and \emph{left} (Equations~\ref{eqn:ket_r} and \ref{eqn:ket_l}); finally the states \emph{in} and \emph{out} (Equations~\ref{eqn:ket_i} and \ref{eqn:ket_o}) are represented by $\Ket{i}$ and $\Ket{-i}$. We can rewrite the cited equations considering the new notation:
+In\marginpar{Spin and qubits} computer science the states \emph{up} and \emph{down} (Equations~\ref{eqn:ket_u} and \ref{eqn:ket_d}) represent respectively a \emph{qubit} off $\Ket{0}$ and on $\Ket{1}$. We denote with $\Ket{+}$ and $\Ket{-}$ the \emph{qubits} in the states \emph{right} and \emph{left} (Equations~\ref{eqn:ket_r} and \ref{eqn:ket_l}); finally the states \emph{in} and \emph{out} (Equations~\ref{eqn:ket_i} and \ref{eqn:ket_o}) are represented by $\Ket{i}$ and $\Ket{-i}$. We can rewrite the cited equations considering the new notation:
 \begin{equation}
 	\Ket{+}=\frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) \qquad \Ket{-}=\frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1})
 \end{equation}
@@ -283,7 +283,7 @@ and:
 	\Ket{i}=\frac{1}{\sqrt{2}} (\Ket{0} + i\Ket{1}) \qquad \Ket{-i}=\frac{1}{\sqrt{2}} (\Ket{0} - i\Ket{1})
 \end{equation}
 
-To represent \emph{qubits} in a graphical way that respects the mathematical properties of quantum states, we can use a sphere called the \emph{Bloch sphere}. The sphere has radius 1 and every point on the sphere represents a \emph{qubit}\footnote{Up to a global phase, which is however irrelevant.}. Figure~\ref{fig:bloch_sphere} shows, on the Bloch sphere, the \emph{qubits} described above.
+To\marginpar{Bloch \\sphere} represent \emph{qubits} in a graphical way that respects the mathematical properties of quantum states, we can use a sphere called the \emph{Bloch sphere}. The sphere has radius 1 and every point on the sphere represents a \emph{qubit}\footnote{Up to a global phase, which is however irrelevant.}. Figure~\ref{fig:bloch_sphere} shows, on the Bloch sphere, the \emph{qubits} described above.
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{.3\linewidth}
@@ -306,9 +306,11 @@ To represent \emph{qubits} in a graphical way that respects the mathematical pro
 	\caption{Bloch Sphere~\cite{wong2022introduction}}
 	\label{fig:bloch_sphere}
 \end{figure}
+
+A state represented as a point on the surface of the Bloch sphere is called a \emph{pure state}. It is also possible to consider the points inside the sphere, in which case one speaks of \emph{mixed states}. To continue our discussion, we can consider only pure states.
 \subsubsection*{Quantum gate}
 \label{sec:quantum_gate}
-Recalling the results achieved in Chapter~\ref{ch:physics} and also considering what we have said about classical reversible gates in Section~\ref{sec:reversible_gate}, we can make the following statements regarding quantum gates:
+Recalling\marginpar{Quantum gates\\properties} the results achieved in Chapter~\ref{ch:physics} and also considering what we have said about classical reversible gates in Section~\ref{sec:reversible_gate}, we can make the following statements regarding quantum gates:
 \begin{itemize}
 	\item quantum gates are linear maps preserving the total probability equal to $1$\footnote{Recall that the total probability of the state $\Ket{s} = c_1 \Ket{0} + c_2  \Ket{1}$ formed by a \emph{qubit} is $\alpha^2 + \beta^2$.};
 	\item we can represent a quantum gate as a matrix that preserves the total probability equal to $1$;
@@ -320,7 +322,7 @@ Recalling the results achieved in Chapter~\ref{ch:physics} and also considering 
 Now that we have described the main properties of quantum gates we can examine the effect that these gates have on \emph{qubits}; we begin our analysis with gates that operate on a single \emph{qubit}.
 \paragraph{single qubit quantum gate:}\label{par:single_gate} Quantum gates that operate on a single \emph{qubit} can be visualized as \emph{rotations} on the Bloch sphere. Any rotation can be traversed both forward and backward, which makes rotations reversible and, consequently, valid quantum gates. We now examine some rotations that define particularly interesting gates.
 
-Rotations of $180^\circ$ with respect to the axes define the \emph{Pauli gates}:
+Rotations\marginpar{Pauli gates} of $180^\circ$ with respect to the axes define the \emph{Pauli gates}:
 \begin{itemize}
 	\item Pauli gate $X$: rotation with respect to the $x$ axis. This gate is the quantum version of the classical \smallcaps{not} gate:
 	\[
@@ -351,7 +353,7 @@ The last gate that acts on a single \emph{qubit} that we consider is the \emph{H
 H\Ket{0} = \frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) = \Ket{+} \qquad  H\Ket{1} = \frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1}) = \Ket{-}.
 \]
 
-Figure~\ref{fig:bloch_gate} shows the described gates as rotations on the Bloch sphere.
+Figure~\ref{fig:bloch_gate}\marginpar{Important gates\\ on the Bloch sphere} shows the described gates as rotations on the Bloch sphere.
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{.25\linewidth}
@@ -402,7 +404,7 @@ Some composite states can be written as a tensor product of single \emph{qubit} 
 \[
 \frac{1}{2}(\Ket{00}-\Ket{01}+\Ket{10}-\Ket{11}) = \frac{1}{\sqrt{2}}(\Ket{0}+\Ket{1}) \otimes \frac{1}{\sqrt{2}}(\Ket{0}-\Ket{1}) = \Ket{+}\Ket{-}.
 \]
-These states are called \emph{product states} or \emph{simply separable states}. There exist states that cannot be decomposed into simple states. In this case we speak of \emph{entangled states}, states in which complete knowledge of the state vector of the entire system does not provide any information about the states of the elements composing the system\footnote{Entanglement is one of the most interesting aspects of quantum mechanics. A detailed discussion of its physical implications is beyond the scope of this work. For some introductory material about entanglement the reader is referred to \cite{susskind2014quantum}.}.
+These states are called \emph{product states} or \emph{simply separable states}. There\marginpar{Entangled \\states} exist states that cannot be decomposed into simple states. In this case we speak of \emph{entangled states}, states in which complete knowledge of the state vector of the entire system does not provide any information about the states of the elements composing the system\footnote{Entanglement is one of the most interesting aspects of quantum mechanics. A detailed discussion of its physical implications is beyond the scope of this work. For some introductory material about entanglement the reader is referred to \cite{susskind2014quantum}.}.
 
 We study multiple qubits quantum gates precisely for their ability to create entangled states. The first gate that enables entanglement between \emph{qubits} is the \smallcaps{cnot} or \smallcaps{c}$X$.
 
@@ -429,12 +431,12 @@ Figure~\ref{fig:cnot} reports the matrix definition of the \smallcaps{cnot}. Thi
 	\label{eqn:cnot}
 \end{equation}
 
-The states $\Ket{\Psi^+}$, $\Ket{\Psi^-}$, $\Ket{\Phi^+}$ and $\Ket{\Phi^-}$ cannot be obtained as tensor products two of single \emph{qubit} states and are, therefore, entangled states. These four states are called \emph{Bell states}; they are orthogonal and form a basis called the \emph{Bell basis}.
+The\marginpar{Bell states} states $\Ket{\Psi^+}$, $\Ket{\Psi^-}$, $\Ket{\Phi^+}$ and $\Ket{\Phi^-}$ cannot be obtained as tensor products two of single \emph{qubit} states and are, therefore, entangled states. These four states are called \emph{Bell states}; they are orthogonal and form a basis called the \emph{Bell basis}.
 
 Other important quantum gates are those we have already encountered when discussing classical gates; we have already seen that a classical reversible gate is a valid quantum gate. The gates of most interest to us are the \smallcaps{toffoli} gate and the \smallcaps{crossover} gate.
 
 It is not possible, however, to construct a quantum analogue of the \smallcaps{fanout} gate; therefore we cannot obtain a copy of a \emph{qubit} without knowing its state. Measuring the state, however, would inevitably modify it, so in general we cannot duplicate a \emph{qubit}. This is an important theoretical result and is known as the \emph{non-cloning theorem}:
-\begin{theorem}
+\begin{theorem}\marginpar{\\ Non-cloning \\theorem}
 	It is impossible to make a copy of an unknown quantum state. Qubits cannot be copied.
 \end{theorem}
 
@@ -452,7 +454,7 @@ Although the set of gates we have implicitly defined $\Set{\text{\smallcaps{cnot
 \end{theorem}
 We call the circuits generated by this set of gates the \emph{Clifford group}, and the set $\Set{ \text{\smallcaps{cnot}}, H, S}$ consequently takes the name of \emph{Clifford group generator}. A set of universal gates must, therefore, generate more than the Clifford group, even though it has not been proven that this is a sufficient condition to be a universal set.
 
-Examples of universal gate sets are: 
+Examples\marginpar{Universal quantum\\gates sets} of universal gate sets are: 
 \begin{itemize}
 	\item $\Set{ \text{\smallcaps{cnot}}, H, T}$: replacing the phase gate with the $T$ gate in the Clifford group generator allows us to obtain a universal set of gates;
 	\item $\Set{ \text{\smallcaps{toffoli}}, H, S}$: starting again from the Clifford group generator, we obtain a universal set by replacing the \smallcaps{cnot} with the \smallcaps{toffoli} gate.
@@ -487,7 +489,7 @@ An oracle is a Boolean function, that is, a function that acts on \emph{qubits} 
 	\caption{Quantum oracle gate}
 	\label{fig:oracle}
 \end{wrapfigure}
-For example, if the function $f(x)$ acts on a single \emph{qubit} we can construct a reversible gate $\mathbf{U}_f$ as shown in Figure~\ref{fig:oracle}. It is easy to see that regardless of the action of $f(x)$, which may or may not be reversible, knowing the outputs of the gate it is possible to reconstruct the inputs. We can rewrite the application of $\mathbf{U}_f$ to the \emph{qubits} as:
+For\marginpar{\\Single qubit\\oracle} example, if the function $f(x)$ acts on a single \emph{qubit} we can construct a reversible gate $\mathbf{U}_f$ as shown in Figure~\ref{fig:oracle}. It is easy to see that regardless of the action of $f(x)$, which may or may not be reversible, knowing the outputs of the gate it is possible to reconstruct the inputs. We can rewrite the application of $\mathbf{U}_f$ to the \emph{qubits} as:
 \[
 \Ket{x}\Ket{y} \xrightarrow{\mathbf{U}_f} \Ket{x}\Ket{y \oplus f(x)}
 \]
@@ -521,7 +523,7 @@ where, in the last step, we omit the value of the target \emph{qubit} because it
 	\caption{Phase oracle}
 	\label{fig:phase_oracle}
 \end{wrapfigure}
-Since, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{y}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Pauli gate $X$ and then the Hadamard gate $H$.}.
+Since\marginpar{Phase oracle}, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{y}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Pauli gate $X$ and then the Hadamard gate $H$.}.
 
 \subsubsection*{Deutsch' algorithm}
 The Deutsch algorithm shows how to use the phase oracle to solve a computational problem. We will see that already with this first algorithm we obtain better performances compared to what we could achieve with a classical architecture. In this case, however, the performance gain is polynomial; therefore this is not one of those algorithms that suggest that quantum computers can efficiently solve a broader class of problems than classical computers\footnote{Showing these algorithms, including Shor's algorithm, is beyond the scope of this work.}.
@@ -538,11 +540,10 @@ Deutsch's algorithm allows us to obtain the parity value by querying the oracle 
 	\centering
 	\vspace{-.1cm}
 	\begin{tikzpicture}
-		\begin{yquant}[operator/separation=4mm]
+		\begin{yquant}[operator/separation=4mm, style={scale=1.2},register/separation=.5cm]
 			qubit {$\Ket{-}$} y;
 			qubit {$\Ket{0}$} x;
 			h x;
-			z y;
 			box {$\mathbf{U}_f$} (x, y);
 			h x;
 			measure x;
@@ -554,13 +555,13 @@ Deutsch's algorithm allows us to obtain the parity value by querying the oracle 
 	\label{fig:deutsch}
 \end{figure}
 
-Without developing all the algebraic steps, let us see what happens to the input \emph{qubit} $\Ket{0}$ as it passes through the quantum gates. The first quantum gate is the $H$ gate; its application transforms $\Ket{0}$ into
+Without developing all the algebraic steps, let us see what happens to the input qubit $\Ket{0}$ as it passes through the quantum gates. The first quantum gate is the $H$ gate; its application transforms $\Ket{0}$ into
 \[
 \Ket{0} \xrightarrow{H} \frac{1}{\sqrt{2}}\Ket{0} + \Ket{1} = \Ket{+}.
 \]
-We now query the oracle with an input in a superposition of states. The result of the query is
+We \marginpar{Phase oracle \\and superposition}now query the oracle with an input in a superposition of states. The result of the query is\footnote{Where, in the result, we omitted the answer qubit $\Ket{-}$.}
 \[
-\frac{1}{\sqrt{2}}(\Ket{0} + \Ket{1}) \xrightarrow{\mathbf{U}_f} \frac{1}{\sqrt{2}}\Big[(-1)^{f_0}\Ket{0} + (-1)^{f_1}\Ket{1}\Big].
+\left[\frac{1}{\sqrt{2}}(\Ket{0} + \Ket{1})\right] \Ket{-} \xrightarrow{\mathbf{U}_f} \frac{1}{\sqrt{2}}\Big[(-1)^{f_0}\Ket{0} + (-1)^{f_1}\Ket{1}\Big].
 \]
 Ignoring some steps we can simplify this expression as:
 \[
@@ -569,14 +570,14 @@ Ignoring some steps we can simplify this expression as:
 	(-1)^{b_0} \Ket{-} & \text{if } b_0\neq b_1
 \end{cases}.
 \]
-After the oracle, if $ b_0=b_1$, we obtain the state $\Ket{+}$ up to a global phase; if $ b_0\neq b_1$ we obtain the state $\Ket{-}$ up to a global phase. This phase does not modify the position of the \emph{qubit} on the Bloch sphere, and we can already distinguish the two states with a measurement parallel to the $x$ axis. Since, conventionally, measurements are performed with respect to the $z$ axis, we apply the $H$ gate once more obtaining
+After the oracle, if $ b_0=b_1$, we obtain the state $\Ket{+}$ up to a global phase; if $ b_0\neq b_1$ we obtain the state $\Ket{-}$ up to a global phase. This phase does not modify the position of the qubit on the Bloch sphere, and we can already distinguish the two states with a measurement parallel to the $x$ axis. Since, conventionally, measurements are performed with respect to the $z$ axis, we apply the $H$ gate once more obtaining
 \[
 \begin{cases}
 	(-1)^{b_0} \Ket{0} & \text{if } b_0=b_1\\
 	(-1)^{b_0} \Ket{1} & \text{if } b_0\neq b_1
 \end{cases}.
 \]
-The act of measurement discards the global phase and allows us to distinguish the two cases with certainty: we obtain $\Ket{0}$ if the unknown bits were equal (even parity) and, $\Ket{1}$ if the unknown bits were different (odd parity). It is interesting to note that throughout the entire algorithm we never learn the value of the individual bits, but only whether they are equal or not.
+The\marginpar{Global phases are\\ physically irrelevant} act of measurement discards the global phase and allows us to distinguish the two cases with certainty: we obtain $\Ket{0}$ if the unknown bits were equal (even parity) and, $\Ket{1}$ if the unknown bits were different (odd parity). It is interesting to note that throughout the entire algorithm we never learn the value of the individual bits, but only whether they are equal or not.
 
 Deutsch's algorithm allows us to halve the number of oracle queries, and it can be extended to an arbitrary number of bits whose parity we want to determine. This example concludes our discussion of the quantum gate-based paradigm. We will encounter this paradigm again in Chapter~\ref{ch:qaoa}, where we will combine it with the concepts of quantum annealing that we now illustrate.
 
@@ -591,7 +592,7 @@ Before describing this approach to quantum computation in more detail, it is nec
 AQC algorithms are designed to solve optimization problems formulated as follows: given an objective function $f: \mathbb{D}^n\rightarrow\mathbb{R}$ deﬁned on $n$ variables $x = x_1, \dots x_n$ from some discrete domain
 $\mathbb{D}$ , ﬁnd an assignment of values to x that minimizes $f(x)$.
 
-An AQC algorithm to solve optimization problem $P$ with objective function $f(x)$ is described by a time-varying Hamiltonian $\mathbf{H}(t)$ that defines the evolution of the system $Q$ composed of $n$ \emph{qubits}. $\mathbf{H}(t)$ is specified by three components:
+An AQC algorithm to solve optimization problem $P$ with objective function $f(x)$ is described by a time-varying Hamiltonian $\mathbf{H}(t)$ that defines the evolution\marginpar{Components of AQC} of the system $Q$ composed of $n$ \emph{qubits}. $\mathbf{H}(t)$ is specified by three components:
 \begin{itemize}
 	\item an \emph{initial Hamiltonian} $\mathbf{H}_i$ chosen so that its ground state is easy to find;
 	\item a \emph{final} or \emph{problem Hamiltonian} $\mathbf{H}_f$ that encodes the objective function so that the
@@ -610,7 +611,7 @@ To create the initial Hamiltonian we apply to all \emph{qubits} the Pauli operat
 \]
 where $X\,q_i$ indicates the application of the Pauli gate $X$ to the \emph{qubit} $i$. Then the ground state is formed by all $n$ \emph{qubits} in the state $\Ket{+}$. This means that a state has been created in which the eigenstates in the standard basis ($\Set{\Ket{0}, \Ket{1}}$) are equiprobably observable.
 
-In general, $\mathbf{H}_i$ is specified in a basis orthogonal to that of the final Hamiltonian in order to create a state of maximum superposition.
+In\marginpar{Initial state as\\maximum superposition} general, $\mathbf{H}_i$ is specified in a basis orthogonal to that of the final Hamiltonian in order to create a state of maximum superposition.
 
 Starting from the known ground state of $\mathbf{H}_i$ and evolving thanks to $s(t)$ up to $\mathbf{H}_f$, the \emph{adiabatic theorem} ensures that, under certain conditions, $Q$ will always remain in the ground state of $\mathbf{H}(t)$, and at time $t_s$ we will be able to read in the configuration of the \emph{qubits} the solution of problem $P$.
 
@@ -631,7 +632,7 @@ Assuming that throughout the entire evolution of the system the ground state is 
 where $\left|\left|\cdot\right|\right|$ is the matrix norm induced by the $L_2$ metric.
 
 Denoting by $\Ket{\Phi_g}$ the ground state of the final Hamiltonian, the \emph{adiabatic theorem} states that:
-\begin{theorem}\ 
+\begin{theorem}\ \marginpar{\\Adiabatic theorem}
 	\begin{itemize}
 		\item If the system is in the ground state at $s = 0$, and
 		\item if $\delta_s$ is strictly greater than $0$ throughout time $s$, and
@@ -645,10 +646,10 @@ To obtain an upper bound on the computational time $t_f$ for a problem $P$ of si
 
 The numerator is bounded by the maximum difference between the eigenvalues obtainable from the Hamiltonians $\mathbf{H}_i$ and $\mathbf{H}_f$. It is possible to show that this difference is polynomial in the size $n$ of the problem.
 
-In general, the analysis of the minimum spectral gap $\delta_m^2$ for a given algorithm $\mathbf{H}(s)$ and a given instance $I$ of a problem $P$ is difficult. In particular, when trying to develop an algorithm $\mathbf{H}_{L}(s)$ to decide a language $L \in \textbf{NP}$, it is not known whether $\delta_m^2$ is polynomial or exponential for $\mathbf{H}_{L}(s)$. Establishing this would mean proving $\mathbf{P} \neq \textbf{NP}$ or $\mathbf{P} = \textbf{NP}$ in this computational model.
-
+In\marginpar{Spectral gap\\and $\mathbf{P} \neq \textbf{NP}$} general, the analysis of the minimum spectral gap $\delta_m^2$ for a given algorithm $\mathbf{H}(s)$ and a given instance $I$ of a problem $P$ is difficult. In particular, when trying to develop an algorithm $\mathbf{H}_{L}(s)$ to decide a language $L \in \textbf{NP}$, it is not known whether $\delta_m^2$ is polynomial or exponential for $\mathbf{H}_{L}(s)$. Establishing this would mean proving $\mathbf{P} \neq \textbf{NP}$ or $\mathbf{P} = \textbf{NP}$ in this computational model.
+\newpage
 \subsubsection*{Relation with gate based model}
-By studying the relationships between AQC and quantum gate computing, it has been shown that a universal version of AQC can simulate the gate-based model with, at most, polynomial slowdown. It has also been shown that the converse is true: the quantum gate model can simulate any AQC computation efficiently. These two theorems show that adiabatic quantum computing and quantum gate computing are polynomially equivalent computational models. The class of problems solved efficiently by AQC algorithms is therefore \textbf{BQP}.
+By \marginpar{Equivalence between\\ AQC and quantum gates model} studying the relationships between AQC and quantum gate computing, it has been shown that a universal version of AQC can simulate the gate-based model with, at most, polynomial slowdown. It has also been shown that the converse is true: the quantum gate model can simulate any AQC computation efficiently. These two theorems show that adiabatic quantum computing and quantum gate computing are polynomially equivalent computational models. The class of problems solved efficiently by AQC algorithms is therefore \textbf{BQP}.
 
 \subsection{Quantum annealing}
 \emph{Quantum annealing} (QA) is an approach based on heuristics that allows solving combinatorial optimization problems. It is a system inspired by \emph{simulated annealing}. Simulated annealing is a stochastic algorithm for finding the minimum energy of a system inspired by thermodynamics.
@@ -658,7 +659,7 @@ There is a close relationship between AQC and QA; in particular, it is establish
 	\item An AQC algorithm is designed to be implemented in the universal AQC model. This is the computational model discussed in the previous section and is polynomially equivalent to the quantum gate-based model;
 	\item A QA algorithm aims to solve a certain type of problems: combinatorial optimization problems. This allows imposing restrictions on the final Hamiltonian and relaxing the conditions of the AQC model.
 \end{itemize}
-In a QA algorithm, the final Hamiltonian $\mathbf{H}_f$ represents a classical ground state, that is, without superposition at the time of reading the results. The condition that is relaxed with respect to AQC, instead, is the adiabaticity of the evolution of the physical system. In particular, it is no longer required that the entire computation occurs in the ground state of $\mathbf{H}(t)$.
+In\marginpar{difference between\\ AQC and QA} a QA algorithm, the final Hamiltonian $\mathbf{H}_f$ represents a classical ground state, that is, without superposition at the time of reading the results. The condition that is relaxed with respect to AQC, instead, is the adiabaticity of the evolution of the physical system. In particular, it is no longer required that the entire computation occurs in the ground state of $\mathbf{H}(t)$.
 
 \subsubsection*{Annealing}
 Let us now examine the ideas underlying annealing-based systems, starting from simulated annealing developed for classical computation models, and then seeing how quantum annealing fits into the discussion and what advantages the latter has over the classical model.
@@ -667,11 +668,11 @@ Let us now examine the ideas underlying annealing-based systems, starting from s
 
 The physical system starts in a certain (non-optimal) configuration and with a certain (simulated) temperature $T$. The system changes configuration according to a certain heuristic and in the new configuration it will have a new energy; let $\Delta E$ be the difference between the energy in the second configuration and the energy in the first. If $\Delta E < 0$ the new configuration is accepted. If $\Delta E > 0$ the transition is not immediately discarded but is accepted with a certain probability equal to the Boltzmann factor $e^{-\frac{\Delta E}{k_b T}}$ where $k_b$ is the Boltzmann constant. We observe that the higher the temperature, the higher the probability of overcoming high energy barriers. As the temperature decreases \textemdash{}thus assuming we are approaching the global minimum\textemdash{} transitions to higher-energy configurations become rarer. When we reach $T = 0$, the total energy is given only by the internal energy of the system, and, at the end of the annealing, the system is in the state of minimum internal energy.
 
-The time $\tau$ required to evolve from $T = T_i$ to $T = 0$ is called the \emph{thermal relaxation time of the system}. If the system is \emph{ergodic}\footnote{For more information about ergodic systems see \cite{kim2005ergodicity}.}, the relaxation time increases linearly with the size of the problem (while the possible configurations increase exponentially); in this case simulated annealing is an efficient algorithm for finding the ground state of the system. However, if the system is not ergodic, any thermal fluctuation at finite temperature would require an infinite relaxation time to bring the system to the minimum energy configuration; that is, if the system is not ergodic $\tau \rightarrow \infty$.
+The time $\tau$ required to evolve from $T = T_i$ to $T = 0$ is called the \emph{thermal relaxation time of the system}. If the system is \emph{ergodic}\footnote{For more information about ergodic systems see \cite{kim2005ergodicity}.}, the relaxation time increases linearly with the size of the problem (while the possible configurations increase exponentially); in this case simulated annealing is an efficient algorithm for finding the ground state of the system. However\marginpar{Limits of \\simulated annealing}, if the system is not ergodic, any thermal fluctuation at finite temperature would require an infinite relaxation time to bring the system to the minimum energy configuration; that is, if the system is not ergodic $\tau \rightarrow \infty$.
 
 \paragraph{Quantum Annealing:} Quantum annealing, like its classical version, can be seen as a heuristic that moves within a solution space searching for the best one. The way the space is explored by a QA algorithm is described by a parameterized Markov chain. To move from one configuration to another, temperature $T$ is no longer used but a \emph{transverse field coefficient} $\Gamma$ (also called the \emph{tunneling coefficient}). Like $T$, $\Gamma$ also starts with a high value and decreases to zero following a certain scheduling.
 
-Quantum annealing introduces a \emph{transverse field} or \emph{disordering Hamiltonian} $\mathbf{H}_d$ that does not commute with $\mathbf{H}_f$ and is scaled with the tunneling coefficient. The Hamiltonian that describes the time evolution of the system is therefore:
+Quantum\marginpar{Disordering Hamiltonian} annealing introduces a \emph{transverse field} or \emph{disordering Hamiltonian} $\mathbf{H}_d$ that does not commute with $\mathbf{H}_f$ and is scaled with the tunneling coefficient. The Hamiltonian that describes the time evolution of the system is therefore:
 \begin{equation}
 	\mathbf{H}(t) = \mathbf{H}_f + \Gamma(t) \mathbf{H}_d.
 \end{equation}
@@ -685,7 +686,7 @@ Quantum annealing introduces a \emph{transverse field} or \emph{disordering Hami
 
 The disordering Hamiltonian $\mathbf{H}_d$ introduces kinetic energy to the annealing process in the form of quantum fluctuations of the solution space. Decreasing $\Gamma(t)$ moves the system closer to $\mathbf{H}_f$ while damping the quantum fluctuations. Figure~\ref{fig:qa} graphically shows the advantage of QA compared to the classical counterpart: high values of $\Gamma(t)$ allow the computation to escape local minima by \emph{tunneling} through hills instead of climbing over them incrementally. This allows the algorithm to move faster and further across the landscape early in the process.
 
-Another advantage of QA is that, during the evolution, the system is not in a single state, but in a superposition of states whose probability is defined by $\mathbf{H}(t)$. This idea is also adopted by algorithms that implement QA on classical architectures. In this case we refer to \emph{simulated quantum annealing} and the objective is to try to capture the superposition property by representing many states in parallel\footnote{A more in-depth discussion on simulated quantum annealing is beyond the scope of this work, but can be found in \cite{suzuki2005simulated}.}.
+Another advantage of QA is that, during the evolution, the system is not in a single state, but in a superposition of states whose probability is defined by $\mathbf{H}(t)$. This idea is also adopted by algorithms that implement QA on classical architectures. In\marginpar{Simulated quantum\\annealing} this case we refer to \emph{simulated quantum annealing} and the objective is to try to capture the superposition property by representing many states in parallel\footnote{A more in-depth discussion on simulated quantum annealing is beyond the scope of this work, but can be found in \cite{suzuki2005simulated}.}.
 
 \subsubsection*{Formulating a problem for annealing}
 \label{sec:annealing_form}
@@ -693,7 +694,7 @@ Let us see how to formulate a problem so that it can be solved with a \emph{quan
 
 \paragraph{Ising Model:} it is a mathematical model that describes phase transitions and other properties of a physical system that evolves over time. The problem is defined by $n$ particles arranged on a graph $G = (V, E)$ that can be described as a $d$-dimensional grid. Each particle can be in a spin state $\in \Set{+1, -1}$. We call \emph{spin configuration} $s = s_1,\dots, s_n$ an assignment of spins to the particles.
 
-Two types of forces can act on the described system:
+Two\marginpar{Forces on \\particles} types of forces can act on the described system:
 \begin{itemize}
 	\item \emph{external forces} $h_i$ applied to individual particles;
 	\item \emph{interaction forces} $J_{ij}$ between grid neighbors (two vertices $v_i$ and $v_j$ connected by an edge $e_{ij}$). If there are no edges between $v_i$ and $v_j$ we assume $J_{ij} = 0$.
@@ -717,7 +718,7 @@ Where $Z\,q_i$ indicates the application of the Pauli gate $Z$ to the \emph{qubi
 	\label{eqn:qubo}
 \end{equation}
 
-It is possible to show that a problem in QUBO form always has a corresponding version in Ising model form, and to move from one formulation to the other one imposes $s_i = 1 - 2 x_i$ \cite{bian2010ising}. It is also possible to show that the ground state of the problem in QUBO form is the same as that of the problem in Ising form up to a finite offset $\delta_e$
+It \marginpar{from QUBO form to Ising\\form and vice-versa}is possible to show that a problem in QUBO form always has a corresponding version in Ising model form, and to move from one formulation to the other one imposes $s_i = 1 - 2 x_i$ \cite{bian2010ising}. It is also possible to show that the ground state of the problem in QUBO form is the same as that of the problem in Ising form up to a finite offset $\delta_e$
 \begin{equation}
 	\min_{s\in\Set{-1, +1}}  \sum_{i}h_i\cdot s_i + \sum_{j < i} J_{ij}\cdot s_i s_j = \min_{x\in\Set{0, 1}} \sum_{i, j}Q_{ij}\cdot x_ix_j + \delta_e\ .
 	\label{eqn:ising_qubo}

@@ -1,0 +1,96 @@
+\section{Ontologie}
+\begin{frame}{Ontologie}
+	\begin{minipage}{.48\linewidth}
+        \begin{block}{Cos'è un'ontologia}
+            \begin{itemize}
+                \item Insieme di fatti
+                \item Riguardanti un dominio di interesse
+                \item Prevengono interpretazioni sbagliate
+                \item Assicurano la cooperazione tra software
+            \end{itemize}
+        \end{block}
+        \begin{block}{Come si definisce un'ontologia}
+            \begin{itemize}
+                \item Ontology Web Language (OWL)
+                \item Diversi \say{flavours}
+                \begin{itemize}
+                    \item OWL Full
+                    \item OWL DL
+                \end{itemize}
+                \item Classi Individui e Relazioni
+            \end{itemize}
+        \end{block}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.48\linewidth}
+        \begin{figure}[h]
+            \includegraphics[width=\linewidth]{europeana_relation.pdf}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Inferenze in OWL}
+	\begin{minipage}{.48\linewidth}
+        \begin{block}{Complessità}
+            \begin{itemize}
+                \item Variazione sintattica di $\mathcal{SROIQ}$
+                \item $\mathcal{ALC}$ è una restrizione di $\mathcal{SROIQ}$
+                \item $\mathcal{ALC}$ è PSpace-hard
+            \end{itemize}
+        \end{block}
+        \begin{block}{Reasoner}
+            \begin{itemize}
+                \item Pellet
+                \item Fact++
+                \item HermiT
+                \item \dots
+            \end{itemize}
+        \end{block}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.48\linewidth}
+        \begin{figure}[h]
+            \includegraphics[width=.8\linewidth]{Complexity.pdf}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Limitazioni del simulatore}
+	\begin{minipage}{.35\linewidth}
+		\begin{figure}
+			\begin{minipage}{.95\linewidth}
+				\hrule
+				\begin{minted}{Prolog}
+
+cousins(P, Q):-
+	gran_parent_of(X, P),
+	gran_parent_of(X, Q),
+	parent_of(Y, P),
+	parent_of(Z, Q),
+	Z \= Y.
+				\end{minted}
+				\hrule
+                \caption{Cousins rule}
+			\end{minipage}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.62\linewidth}
+        \begin{block}{Interrogazione}
+			\begin{center}
+				\scriptsize \texttt{QA-Prolog --verbose --qmasm-args="--solver=sim\_anneal --postproc=opt" --query='cousins(P1, P2).' family.pl}
+			\end{center}
+		\end{block}
+		\begin{figure}
+			\begin{minipage}{.55\linewidth}
+				\hrule
+				\begin{minted}{text}
+
+QA-Prolog: No solutions were found
+				\end{minted}
+				\hrule
+			\end{minipage}
+			\caption{Query Result}
+		\end{figure}
+	\end{minipage}
+\end{frame}

@@ -12,7 +12,7 @@ The QAOA algorithm is inspired by QAC; both attempt to find the minimum eigenval
 
 As described in Section~\ref{sec:qac} QAC starts from a Hamiltonian whose ground state is easy to know and evolves, adiabatically (to remain in the ground state), towards the Hamiltonian with unknown ground state~\cite{fakhimi2023quantum}. The evolution time from one Hamiltonian to another can be exponential\cite{farhi2014quantum}; moreover, generally the success probability of QAC does not increase as the annealing time increases.
 
-QAOA is a modular algorithm that targets quantum gate based machines and, once its parameters are optimized, the quality of the result increases as the number of modules, called \emph{levels}, increases.
+QAOA\marginpar{QAOA levels} is a modular algorithm that targets quantum gate based machines and, once its parameters are optimized, the quality of the result increases as the number of modules, called \emph{levels}, increases.
 
 In the gate model the algorithm is described by the circuit and vice versa a circuit define an algorithm. From now on we use the term circuit and algorithm interchangeably.
 
@@ -22,7 +22,7 @@ The QAOA circuit take in input $n$ \emph{qubits}, these are the boolean veriable
 
 The QAOA algorithm stats preparing the state $\Ket{s}$ with maximum superposition. It is possible to obtain this state starting from the state with $n$ \emph{qubits} set to zero applying the Hadamard gate ($H$) to each of them~\cite{fakhimi2023quantum}; we denote this operator with $H^{\otimes n}$. State $\Ket{s}$ is prepared by the blue gate in Figure~\ref{fig:qaoa}.
 
-The QAOA circuit then consists of $p$ identical levels. Each level is composed of two operators (two quantum gates): 
+The \marginpar{QAOA gates}QAOA circuit then consists of $p$ identical levels. Each level is composed of two operators (two quantum gates): 
 \begin{itemize}
 	\item \emph{phase separation operator} (gates orange in Figure~\ref{fig:qaoa}): $U_P(\gamma) = e ^{-i\gamma\mathbf{H}}$ where $\mathbf{H}$ is the Hamiltonian of the system, and $\gamma \in [0, 2\pi]$ is a parameter;
 	\item \emph{mixing operator} (gates green in Figure~\ref{fig:qaoa}):  $U_M(\beta) = e ^{-i\beta B}$ where $B$ is the operator that applies the Pauli Gates $X$ to every \emph{qubit}, and $\beta \in [0, \pi]$ is a parameter.
@@ -45,7 +45,7 @@ Given $\vec{\gamma} = (\gamma_1, \gamma_2,\dots,\gamma_p)$ and $\vec{\beta} = (\
 \Ket{\psi(\vec{\gamma},\vec{\beta})} = U_M(\beta_p)U_P(\gamma_p)\cdots U_M(\beta_1)U_P(\gamma_1)\Ket{s}.
 \label{eq:qaoa_state}
 \end{equation}
-The circuit ends with the measurement; the expected value of this measurement is:
+The circuit ends with the measurement; the expected value of this measurement is:\marginpar{\\ Energy of the \\system}
 \begin{equation}
 F(\vec{\gamma},\vec{\beta}) =\Braket{\psi(\vec{\gamma},\vec{\beta}) | \mathbf{H} | \psi(\vec{\gamma},\vec{\beta})}.
 \label{eq:qaoa_value}
@@ -65,7 +65,7 @@ QAOA requires tuning the parameters to minimize the expected objective value for
 (\vec{\gamma^*},\vec{\beta^*}) = \argmin_{\vec{\gamma},\vec{\beta}} F(\vec{\gamma},\vec{\beta}) 
 \label{eqn:optimized}
 \end{equation}
-This parameter tuning problem is nonconvex and NP-hard~\cite{fakhimi2023quantum}. Even with one level, the gradient of $F(\vec{\gamma},\vec{\beta})$  vanishes rapidly; this phenomenon is known as the barren plateau~\cite{arrasmith2021effect, mcclean2018barren}. The barren plateau expands exponentially as the number of qubits
+This\marginpar{Limits of \\optimization} parameter tuning problem is nonconvex and \textbf{NP}-hard~\cite{fakhimi2023quantum}. Even with one level, the gradient of $F(\vec{\gamma},\vec{\beta})$  vanishes rapidly; this phenomenon is known as the barren plateau~\cite{arrasmith2021effect, mcclean2018barren}. The barren plateau expands exponentially as the number of qubits
 grows, making the tuning process even more challenging~\cite{mcclean2018barren}.
 
 The parameter optimization process is executed on a classical CPU rather than on a quantum computer. This makes QAOA a hybrid algorithm~\cite{fakhimi2023quantum}.
@@ -105,7 +105,7 @@ Listing~\ref{lst:qubo_ising} shows how it is possible to move from one formulati
 	\item we discard the constant term;
 	\item we construct the matrix with the weights of the problem in Ising form.
 \end{enumerate}
-The most interesting aspect of this procedure is the removal of the constant term; this value is used to align the ground state of the problem in QUBO form and Ising form (Equation~\ref{eqn:ising_qubo}) to the same energy. Since our objective is to find the ground state, regardless of its value, we can ignore this offset and consider only the coefficients of the variables.
+The\marginpar{Discarding \\energy offset} most interesting aspect of this procedure is the removal of the constant term; this value is used to align the ground state of the problem in QUBO form and Ising form (Equation~\ref{eqn:ising_qubo}) to the same energy. Since our objective is to find the ground state, regardless of its value, we can ignore this offset and consider only the coefficients of the variables.
 
 \subsection{Hamiltonian as Pauli operator}
 Consider the upper triangular Hamiltonian $\mathbf{H}$ that describes our problem in Ising form. Each element belonging to the diagonal $h_{i,i}$ is translated into a Pauli Gate $Z$ that measures the $z$ component of the  \emph{qubit} $i$'s spin and applies the identity transformation to all the other \emph{qubits}\footnote{Recalling the observation made in Paragraph~\ref{par:single_gate} where we pointed out that Pauli Gate $Z$ is both unitary (a valid quantum gate), both Hermitian (therefore represent an observable)}. The elements $h_{i,j}$\footnote{With $j>i$ because $\mathbf{H}$ is upper triangular.} are transformed into gates that measure the spin along the $Z$ axis of the \emph{qubits} $i$ and $j$, and apply the identity operator to the other \emph{qubits}. 
@@ -179,7 +179,7 @@ The circuit ends by measuring the value of the \emph{qubits}. Listing~\ref{lst:c
 	\label{fig:qaoa_circ}
 \end{figure}
 
-By carefully examining the operators that constitute the gate $U_P(\gamma)$ (first and third block in Figure~\ref{fig:qaoa_2}) we can observe that the order of the qubits is inverted. For example, the operator $IIZ$ represents the element of $\mathbf{H}$ in position $(0,0)$: $I$ is the identity gate applied to the third and second \emph{qubits}, and $Z$ is the Pauli Gate $Z$ applied to the first \emph{qubit}. The operator $ZZI$ represents the element in position $(1,2)$. This observation must be kept in mind when reading the results of the circuit.
+By carefully examining the operators that constitute the gate $U_P(\gamma)$ (first and third block in Figure~\ref{fig:qaoa_2}) we can observe that the order of the qubits is inverted.\marginpar{Reversed\\qubits string} For example, the operator $IIZ$ represents the element of $\mathbf{H}$ in position $(0,0)$: $I$ is the identity gate applied to the third and second \emph{qubits}, and $Z$ is the Pauli Gate $Z$ applied to the first \emph{qubit}. The operator $ZZI$ represents the element in position $(1,2)$. This observation must be kept in mind when reading the results of the circuit.
 
 \subsection{Parameter optimization}
 We define a procedure to obtain the cost $F(\vec{\gamma}, \vec{\beta})$ (Equation~\ref{eq:qaoa_value}) as the expected value of the result of executing the quantum circuit defined earlier. This cost must be minimized by optimizing the parameters $\vec{\gamma}$ and $\vec{\beta}$. Following \cite{ibm_qaoa_tutorial}, we use the Python library \mintinline{text}|scipy| to minimize $F(\vec{\gamma}, \vec{\beta})$.
@@ -223,7 +223,7 @@ Consider the satisfiability problem $y = x_1 \land\neg(x_2 \lor x_3)$ (Equation~
 
 As shown in Example~\ref{ex:sat_prolog}, starting from Prolog code to solve the satisfiability problem introduces a significant amount of overhead. To minimize the number of \emph{qubits} required to represent the problem we focus only on the last part of the pipeline, starting from the Verilog code of Example~\ref{ex:sat_verilog}.
 
-The QUBO problem that we obtain is represented by an $11\times11$ matrix, this means that we need eleven \emph{qubits} to encode our problem.
+The\marginpar{QUBO and Ising\\matrices} QUBO problem that we obtain is represented by an $11\times11$ matrix, this means that we need eleven \emph{qubits} to encode our problem.
 
 \begin{figure}[h]
 	\centering
@@ -255,7 +255,7 @@ However, increasing the number of levels also leads to longer execution time and
 	\caption{Cost minimization}
 	\label{fig:optimization}
 \end{wrapfigure}
-Figure~\ref{fig:optimization} shows the parameter optimization process: as better parameters are found, the estimated cost decreases. In this case, the parameters were optimized after approximately $130$ iterations. Each iteration involves $1000$ runs of the quantum circuit. During these $1000$ shots, the circuit remains unchanged, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are fixed. After each iteration (i.e., after $1000$ shots), the expected value of the system’s energy is estimated, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are updated.
+Figure~\ref{fig:optimization}\marginpar{\\Parameter\\optimization} shows the parameter optimization process: as better parameters are found, the estimated cost decreases. In this case, the parameters were optimized after approximately $130$ iterations. Each iteration involves $1000$ runs of the quantum circuit. During these $1000$ shots, the circuit remains unchanged, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are fixed. After each iteration (i.e., after $1000$ shots), the expected value of the system’s energy is estimated, and the parameters $\vec{\gamma}$ and $\vec{\beta}$ are updated.
 
 After the optimization phase, we obtain an approximation of the optimal parameters $\vec{\gamma}^*$ and $\vec{\beta}^*$ (Equation~\ref{eqn:optimized}). We can then sample the optimized circuit to obtain the solution to our problem. Each shot, both in the optimization phase and in the final sampling phase uses the same initial \emph{qubit} configuration. The algorithm starts with all \emph{qubits} in state $\Ket{0}$, and then prepares the state $\Ket{s}$ by applying the Hadamard gate $H$ to each \emph{qubit}.
 
@@ -279,7 +279,7 @@ Figure~\ref{fig:qaoa_r_1} shows the sampling results ($10000$ runs of the quantu
 \end{figure}
 
 
-The histogram in Figure~\ref{fig:qaoa_r_1} is difficult to interpret; moreover it shows the result of all eleven \emph{qubits} that form the polynomial to be minimized. We are interested only in the value of the variables $x_1$, $x_2$ and $x_3$, the others are ancillary. Figure~\ref{fig:qaoa_r_2} shows the sampling result where we consider only the variables of interest. These were extracted by checking which \emph{qubits} had been mapped by QMASM to the variables $x_1$, $x_2$ and $x_3$, and considering that the obtained bitstring must be read in reverse.
+The\marginpar{Retrieving the\\results} histogram in Figure~\ref{fig:qaoa_r_1} is difficult to interpret; moreover it shows the result of all eleven \emph{qubits} that form the polynomial to be minimized. We are interested only in the value of the variables $x_1$, $x_2$ and $x_3$, the others are ancillary. Figure~\ref{fig:qaoa_r_2} shows the sampling result where we consider only the variables of interest. These were extracted by checking which \emph{qubits} had been mapped by QMASM to the variables $x_1$, $x_2$ and $x_3$, and considering that the obtained bitstring must be read in reverse.
 
 The obtained result is the expected one; in fact we obtained the string $1\ 0\ 0$ as the most probable sample. These values must be associated respectively with the variables $x_1$, $x_3$ and $x_2$, and we can easily verify that this assignment satisfies Equation~\ref{eqn:simple_logic}.
 

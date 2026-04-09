@@ -20,7 +20,7 @@
 \ttl@tocsep 
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Graph for T-Box}}{52}{figure.caption.30}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Simpson family tree}}{52}{figure.caption.32}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces First layer of DOLCE taxonomy}}{53}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces First layer of DOLCE taxonomy~\blx@tocontentsinit {0}\cite {borgo2022dolce}}}{53}{figure.caption.33}%
 \contentsline {figure}{\numberline {3.4}{\ignorespaces Complexity classes}}{55}{figure.caption.37}%
 \ttl@tocsep 
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Qiskit software stack}}{59}{figure.caption.38}%

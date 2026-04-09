@@ -27,7 +27,7 @@ The T-Box of our ontology can be seen in Figure~\ref{fig:ont_animal}, we define 
 \subsection{Ontology constraints}
 In this section, we present the constraints on classes and individuals represented in our ontology. These constraints allow us to make inference on the ontology and derive new information from what is already present. Thanks to these constraints we can determine if all the information contained in the ontology is consistent with the theoretical model we are describing.
 
-Constrains defined in animal ontology are:
+Constrains defined in animal ontology are:\marginpar{Ontology\\ constrains}
 \begin{itemize}
 	\item Constrain on classes:
 	\begin{itemize}
@@ -60,7 +60,7 @@ We now examine some facts about the individuals that populate our KB:
 
 From this information, we can deduce that Beary and Reiny are predators, Sealy and Penguy are both predators and prey; and Sardy is a prey.
 
-\paragraph{Contradiction: } A contradiction has also been deliberately introduced into the ontology. From the fact that Reiny hunts, it follows that she is a carnivorous animal; however, her species is labeled as herbivorous. Reiny is therefore both herbivorous and carnivorous. Moreover, herbivores and carnivores are disjoint classes. This makes the KB inconsistent.
+\paragraph{Contradiction: } A\marginpar{Inconsistency source} contradiction has also been deliberately introduced into the ontology. From the fact that Reiny hunts, it follows that she is a carnivorous animal; however, her species is labeled as herbivorous. Reiny is therefore both herbivorous and carnivorous. Moreover, herbivores and carnivores are disjoint classes. This makes the KB inconsistent.
 
 If we used a reasoner to verify the consistency of the KB, for example HermiT~\cite{glimm2014hermit}, we would obtain an error message informing us that the ontology is inconsistent and that the reasoner’s results cannot therefore be considered reliable.
 
@@ -106,12 +106,12 @@ We start our KB describing the T-Box of the ontology: here we define the classes
 	\label{lst:t_box_pl}
 \end{listingenv}
 
-We must now create a rule to ensure that the subclass relation satisfies the transitive property:
+We\marginpar{Transitivity property of\\subclass relationship} must now create a rule to ensure that the subclass relation satisfies the transitive property:
 \[
 \text{X subclass of Y}\land\text{Y subclass of Z}\Rightarrow\text{X subclass of Z.}
 \]
 
-In our ontology, for example,  this rule is needed to establish that a penguin is an animal, but not a mammal. The most natural way, in a logic programming language, to enforce the transitive property is through a recursive definition. Listing~\ref{lst:subclass_rec} shows how the rule is defined: lines $1$ and $2$ implement the base case of the recursion, while lines $4$, $5$, and $6$ implement the recursive call.
+In our ontology, for example,  this rule is needed to establish that a penguin is an animal, but not a mammal. The most natural way, in a logic programming language, to enforce the transitive property is through a recursive definition. Listing~\ref{lst:subclass_rec}\marginpar{Recursive rule} shows how the rule is defined: lines $1$ and $2$ implement the base case of the recursion, while lines $4$, $5$, and $6$ implement the recursive call.
 
 \begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/subclass_rec.pl}
@@ -145,7 +145,7 @@ We define individuals by assigning them to a class; to do so, we use the predica
 
 The predicate \mintinline{text}|isa(I, C)| allows us to define the class of an individual, but it does not take the class hierarchy into account. For example, we know that Beary is a polar bear, but we cannot infer that he is a mammal or an animal.
 
-To also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, permits to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
+To\marginpar{\texttt{isA} predicate\\definition} also consider the superclasses of an individual’s class, we define the predicate \mintinline{text}|isA(I, C)|. This predicate, thanks to the recursive definition of \mintinline{text}|subClass(C1, C2)|, permits to assign to an individual all the classes inherited from the class defined through the predicate \mintinline{text}|isa(I, C)|. Listing~\ref{lst:isa} shows the implementation of rule \mintinline{text}|isA(I, C)|.
 
 \begin{listingenv}[h]
 	\mylisting{.5}{Prolog}{code/quantum_ontology/isa.pl}
@@ -175,7 +175,7 @@ In particular, we now present the rules to: assign a class to an individual, ide
 	\label{lst:ancestor}
 \end{listingenv}
 
-Although in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
+Although\marginpar{Ancestor predicate\\characteristic} in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
 \begin{itemize}
 	\item define a predicate that can be expanded with other rules: in Listing~\ref{lst:ancestor} we define only the base step and the recursive call, but by imagining building an ontology that deals with people, we can enrich the predicate with numerous rules that reflect family relationships between humans;
 	\item have a predicate that can trigger many recursive calls\footnote{It will be useful in Section~\ref{sec:unfold}.}: the number of individuals populating an ontology can be considerable and can increase over time; moreover, if complex relationships are also considered \textemdash{}such as those suggested in the previous point\textemdash{} the number of ancestors of an individual can be very high and not easily known a priori.
@@ -195,7 +195,7 @@ Providing a detailed explanation of \mintinline{text}|logicNot(P)| predicate is 
 
 Identifying the inconsistency of our KB means finding a statement that is both true and false. In particular, Reiny is carnivorous because she hunts (line $5$ Listing~\ref{lst:a_box_pl}), but she cannot be so because she is a reindeer and reindeers are herbivores (line $9$ Listing~\ref{lst:t_box_pl}).
 
-It is possible to identify a proposition that is simultaneously true and false with the rule shown in Listing~\ref{lst:error}. The head of the rule is a list composed of a string (which serves only to print an informational message) and the proposition \mintinline{text}|P|. For the predicate to be true, the proposition \mintinline{text}|P| must be both false and true.
+It\marginpar{Inconsistency\\finding rule} is possible to identify a proposition that is simultaneously true and false with the rule shown in Listing~\ref{lst:error}. The head of the rule is a list composed of a string (which serves only to print an informational message) and the proposition \mintinline{text}|P|. For the predicate to be true, the proposition \mintinline{text}|P| must be both false and true.
 \begin{listingenv}[h]
 	\mylistingnonumber{.9}{Prolog}{code/quantum_ontology/error.pl}
 	\caption{Error rule}
@@ -242,7 +242,7 @@ In our KB, only class membership can generate inconsistency, so a single rule is
 \label{sec:unfold}
 In our KB there are two rules that are defined recursively: \mintinline{text}|subClass(C1, C2)| and \mintinline{text}|hasproperty(I1, R, I2)|. 
 
-To eliminate recursion, we can \emph{unfold} the recursive calls. The procedure is analogous to the \emph{loop unrolling} performed by modern compilers to speed up the execution of machine code. Loop unrolling consists of transforming a loop of instructions into a repeated sequence of instructions; this increases the length of the code but reduces the number of loop condition checks.
+To\marginpar{Unfolding and\\loop unrolling} eliminate recursion, we can \emph{unfold} the recursive calls. The procedure is analogous to the \emph{loop unrolling} performed by modern compilers to speed up the execution of machine code. Loop unrolling consists of transforming a loop of instructions into a repeated sequence of instructions; this increases the length of the code but reduces the number of loop condition checks.
 
 Unfolding consists of developing the recursion by explicitly repeating the function call; in this way the recursive call is replaced by many calls to the function \mintinline{text}|A| in the function \mintinline{text}|B|.
 
@@ -278,7 +278,7 @@ If the rules with recursive calls involve the T-Box, it can be possible to know 
 
 An example of this stopping criterion was shown in the rewriting of the rule \mintinline{text}|subClass(C1, C2)|. Once the class hierarchy is known, it is possible to compute the maximum depth and use it as a criterion to stop the unfolding process.
 
-\paragraph{A-Box:} The A-Box contains the individuals populating the ontology. For this reason, the A-Box is much more subject to change than the T-Box and, as discussed when presenting the ancestor-descendant relationship, relationships between individuals can also be very complex.
+\paragraph{A-Box:} The\marginpar{A-Box is more\\challenging in \\unfolding process} A-Box contains the individuals populating the ontology. For this reason, the A-Box is much more subject to change than the T-Box and, as discussed when presenting the ancestor-descendant relationship, relationships between individuals can also be very complex.
 
 Each time an individual is added to the KB or its relationships are modified, the depth of the recursive calls may change.
 
@@ -372,7 +372,7 @@ From the obtained results, it is clear that, depending on the query, we obtain H
 
 One may then ask which step of the pipeline is responsible for this extraction. By observing the files in the QA-Prolog working directory, it can be noted that the Verilog file is the same for all queries, whereas the EDIF file, synthesized by Yosys (Section~\ref{sec:yosys_edif2qmasm}), is radically different from one query to another.
 
-The optimization therefore occurs at the level of the logic circuit: once the output of our circuit has been defined through the query, Yosys is able to discard all those parts of the circuit described in Verilog that are not necessary to define the output. Yosys generates a EDIF file using only the Verilog module connected, in circuit term, to the output. This step, as highlighted by the graph in Figure~\ref{fig:prob_size}, is able to significantly reduce the dimension of the problem.
+The \marginpar{Yosys optimization}optimization therefore occurs at the level of the logic circuit: once the output of our circuit has been defined through the query, Yosys is able to discard all those parts of the circuit described in Verilog that are not necessary to define the output. Yosys generates a EDIF file using only the Verilog module connected, in circuit term, to the output. This step, as highlighted by the graph in Figure~\ref{fig:prob_size}, is able to significantly reduce the dimension of the problem.
 
 \subsection{Impact of unfolding on performance}
 \label{sec:unfold_performance}
@@ -427,7 +427,7 @@ Another qualitative observation that can be made is that the number of variables
 	\item exponential function.
 \end{itemize}
 
-The function that best interpolates the experimental points is the second-degree polynomial. Figure~\ref{fig:unfold_fitting_1} shows the result of the fitting. A very high value of $\chi^2$ can be observed; this would lead us to reject the hypothesis that a parabola correctly interpolates the experimental data. However, it should be recalled that the $\chi^2$ test assumes that a reasonable estimate of the error associated with each measurement is available~\cite{filatrella2009elaborazione}: in this case we cannot associate any error to the measurement even by repeating the test many times. The conclusion we can nevertheless reach is that, among the classes of functions studied, the parabola is the one that best interpolates the data.
+The \marginpar{Quadratic growing\\of problem dimension}function that best interpolates the experimental points is the second-degree polynomial. Figure~\ref{fig:unfold_fitting_1} shows the result of the fitting. A very high value of $\chi^2$ can be observed; this would lead us to reject the hypothesis that a parabola correctly interpolates the experimental data. However, it should be recalled that the $\chi^2$ test assumes that a reasonable estimate of the error associated with each measurement is available~\cite{filatrella2009elaborazione}: in this case we cannot associate any error to the measurement even by repeating the test many times. The conclusion we can nevertheless reach is that, among the classes of functions studied, the parabola is the one that best interpolates the data.
 
 By observing more closely the graph in Figure~\ref{fig:unfold}, we can notice what appears to be a jump in the distribution of the points (between point $10$ and $11$). We can therefore try to consider two different quadratic functions that approximate respectively the first set of points and the second. Figure~\ref{fig:unfold_fitting_2} shows the result of this hypothesis. 
 

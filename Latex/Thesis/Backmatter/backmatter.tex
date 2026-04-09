@@ -1,11 +1,6 @@
 \let\origcleardoublepage\cleardoublepage
 
-\chapter{Bibliography}
 
-\let\cleardoublepage\null
-\vspace{-2.6cm}
-\printbibliography[title={\ }]
-\let\cleardoublepage\origcleardoublepage
 
 \chapter{List of Figures}
 \renewcommand{\listfigurename}{}
@@ -23,4 +18,11 @@
 \let\cleardoublepage\null
 \vspace{-2.6cm}
 \listoflistingenv
+\let\cleardoublepage\origcleardoublepage
+
+\chapter{Bibliography}
+
+\let\cleardoublepage\null
+\vspace{-2.6cm}
+\printbibliography[title={\ }]
 \let\cleardoublepage\origcleardoublepage

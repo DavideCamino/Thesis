@@ -16,7 +16,7 @@ Thanks to the advent of the internet and the development of bigger and bigger so
 To address the incompatibility problem between software, databases, and research groups, ontologies have become an important research topic in computer science where the goal is to define standards for data exchange, information integration, and interoperability~\cite{zarri2005ontologies}.
 
 In this field the term ontology gains a new meaning:
-\begin{definition}
+\begin{definition}\marginpar{\\ Ontology\\definition}
 	Ontologies represent a formal and explicit specification of a shared conceptualization~\cite{gruber1993translation}.
 \end{definition}
 In this definition the keywords are:
@@ -27,7 +27,7 @@ In this definition the keywords are:
 	\item[Shared:] the knowledge represented by the ontology has to be accepted by a group of people, ideally by everyone.
 \end{description}
 
-When we use an ontology to represent knowledge we are describing a graph where entities are bound together through relationships, and classified according to a formal description of the world~\cite{fossati2018n}. Knowledge bases expressed with this formalism are divided into two components~\cite{de1996tbox}: 
+When we use an ontology to represent knowledge we are describing a graph where entities are bound together through relationships, and classified according to a formal description of the world~\cite{fossati2018n}. Knowledge\marginpar{\smallcaps{A-Box} and \smallcaps{T-Box}} bases expressed with this formalism are divided into two components~\cite{de1996tbox}: 
 \begin{description}
 	\item[T-Box:] stores a set of universally quantified assertions (inclusion assertions) stating general properties of concepts and roles;
 	\item[A-Box:] contains assertions on individual objects (instance assertions).
@@ -44,7 +44,7 @@ Ontologies, on the other hand, make the \emph{open world assumption}~\cite{krotz
 \label{sec:owl}
 OWL 2 Web Ontology Language is an ontology language for the Semantic Web with a formally defined meaning~\cite{hitzler2012owl}. Thanks to OWL we can model classes and relations between classes (T-Box) and individuals with their specific properties and relations between individuals (A-Box). 
 
-OWL is a declarative language and defines the state of the world in a logical way. In particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, decidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world~\cite{hitzler2012owl}. 
+OWL is a declarative language and defines the state of the world in a logical way. In\marginpar{OWL DL} particular, we are interested in OWL DL where the meaning of ontologies expressed with this language is assigned in a Description Logic style. OWL DL is, therefore, decidable and an appropriate tool (so-called reasoner) can then be used to infer further information about that state of the world~\cite{hitzler2012owl}. 
 
 OWL per se does not specify any syntax, it states only what can or cannot be expressed in an ontology. The World Wide Web Consortium (W3C) standardizes various syntaxes, some inspired by functional languages, others more suitable for storing on web pages. The only syntax that must be implemented by all tools to be compliant with the OWL standard is the RDF/XML syntax~\cite{hitzler2012owl} (examples of this syntax are provided in Section~\ref{sec:ont_ex}).
 
@@ -73,7 +73,7 @@ This simple ontology about parental relationships shows the basic structure of a
 
 In Figure~\ref{fig:ont_people}, we can see the T-Box of the ontology: this structure specifies what our domain of interest is, and what entities could possibly populate our world. This ontology is about people, so the main class/concept is \mintinline{text}|People|: this class has several subclasses that represent parents, children, and married people. We can assert that a person belongs to the married class without specifying the partner (open world assumption) but we can also infer that a person belongs to the parents class because we have created a relationship of type \mintinline{text}|parent_of| between that person and another person.
 
-OWL allows us to express rules to infer when a member of a class belongs also to another class. The following code shows (in the RDF/XML syntax) the definition of the class \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{url}.}:
+OWL allows us to express rules to infer when a member of a class belongs also to another class. The following code shows (in the RDF/XML syntax) the definition of the class \mintinline{text}|Parent|\footnote{The complete code of the ontology can be seen at \url{https://github.com/DavideCamino/Thesis/blob/main/Code/Ontology/people.rdf}.}:
 
 \begin{listingenv}[h]
 	\centering
@@ -81,15 +81,12 @@ OWL allows us to express rules to infer when a member of a class belongs also to
 	\caption{Definition of parents}
 	\label{lst:ont_parent}
 \end{listingenv}
-At line 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People|, and at lines 4 and 5 it is specified that a parent is a person that is \mintinline{text}|parent_of| another person.
-
-From Figure~\ref{fig:ont_people} we can also see some properties of the relations:
+At line 8 we can see that \mintinline{text}|Parent| is a subclass of \mintinline{text}|People|, and at lines 4 and 5 it is specified that a parent is a person that is \mintinline{text}|parent_of| another person. Other interesting properties that we can specify thanks to OWL constructs are:
 \begin{itemize}
 	\item relation \mintinline{text}|marry| is symmetric;
 	\item relation \mintinline{text}|parent_of| is the inverse of \mintinline{text}|son_of|;
 	\item we can specify a domain and a range for relations. 
 \end{itemize}
-OWL gives us constructs for all of these specifications (and other more complex ones).
 
 \begin{wrapfigure}{r}{.5\linewidth}
 	\centering
@@ -107,9 +104,9 @@ DOLCE (Descriptive Ontology for Linguistic and Cognitive Engineering) is a top-l
 
 \begin{figure}[h]
 	\includegraphics[width=\linewidth]{ontology/DOLCE}
-	\caption{First layer of DOLCE taxonomy}
+	\caption{First layer of DOLCE taxonomy~\cite{borgo2022dolce}}
 \end{figure}
-\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time; for this reason DOLCE distinguishes between \emph{endurants} and \emph{perdurants}. Endurants may acquire or lose properties and parts through time, perdurants are fixed in time~\cite{borgo2022dolce}. With a simplification we can see endurants as the physical entities that are modified by the passing of time (like objects, animals, and people) and perdurants as events that, once they have passed, cannot be changed anymore (like a tennis match or a conference).
+\paragraph{Structure of DOLCE:} in DOLCE we can model the modification of objects during time; for this reason DOLCE distinguishes between \emph{endurants}\marginpar{endurants and\\ perdurants} and \emph{perdurants}. Endurants may acquire or lose properties and parts through time, perdurants are fixed in time~\cite{borgo2022dolce}. With a simplification we can see endurants as the physical entities that are modified by the passing of time (like objects, animals, and people) and perdurants as events that, once they have passed, cannot be changed anymore (like a tennis match or a conference).
 
 The relation connecting endurants and perdurants is called participation. A physical entity can be in time by participating in a perdurant, and perdurants happen in time by having endurants as participants~\cite{borgo2022dolce}.
 
@@ -125,7 +122,7 @@ The semantics of OWL DL extends the semantics of the description logic (DL) \dl{
 
 Description logics allow the modeling of the domain of interest with three kinds of entity: concepts, roles, and individual names. These entities correspond to unary predicates, binary predicates, and constants in first-order logic~\cite{krotzsch2012description}. From the point of view of ontology and OWL, concepts are classes, roles are relationships, and individual names are the individuals that can belong to one or more classes.
 
-\dl{SROIQ} is one of the most expressive description logics where we have constructors for:
+\dl{SROIQ}\marginpar{Construct in \\\dl{SROIQ} DL} is one of the most expressive description logics where we have constructors for:
 \begin{itemize}
 	\item transitive roles: \dl{S}
 	\item role inclusions, local reflexivity, universal role, symmetry, asymmetry, role disjointness, reflexivity, and irreflexivity: \dl{R};
@@ -157,7 +154,7 @@ An interpretation $\mathit{I}$ consists of a domain $\Delta^\mathit{I}$ and an i
 	\text{named individual } a \rightarrow a^\mathit{I} \in \Delta^\mathit{I}
 \end{gather*}
 
-In other words $\mathit{I}$ assigns a fixed meaning to all entities in the KB~\cite{krotzsch2012description}. By having a fixed meaning, we can say if an axiom $\alpha$ holds in $\mathit{I}$ or not; in the first case we say that $\mathit{I}$ satisfies $\alpha$ and we write $\mathit{I} \models \alpha$. 
+In\marginpar{Meaning of\\ interpretation} other words $\mathit{I}$ assigns a fixed meaning to all entities in the KB~\cite{krotzsch2012description}. By having a fixed meaning, we can say if an axiom $\alpha$ holds in $\mathit{I}$ or not; in the first case we say that $\mathit{I}$ satisfies $\alpha$ and we write $\mathit{I} \models \alpha$. 
 
 If all axioms in an ontology are satisfied by $\mathit{I}$ we say that $\mathit{I}$ is a \emph{model} of the ontology. An ontology is consistent if it accepts at least one model.
 
@@ -192,9 +189,7 @@ The AND-branching is responsible for the exponential size of a single interpreta
 	\includegraphics[width=.9\linewidth]{ontology/complexity}
 	\caption{Complexity classes}
 \end{wrapfigure}
-To discuss the complexity of reasoning we take into account the description logic \dl{ALC}; this DL is a restriction of \dl{SROIQ}~\cite{krotzsch2012description}, so its complexity is a lower bound for \dl{SROIQ}. It is possible to prove the PSpace-hardness of satisfiability in \dl{ALC}~\cite{baader2003description}, therefore also \dl{SROIQ} DL is at least PSpace-hard. 
-
-This result shows that, unless $\text{PSpace} = \text{PTime}$, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved .
+To discuss the complexity of reasoning we take into account the description logic \dl{ALC}; this DL is a restriction of \dl{SROIQ}~\cite{krotzsch2012description}, so its complexity is a lower bound for \dl{SROIQ}. It is possible to prove the \textbf{PSPACE}-hardness of satisfiability in \dl{ALC}~\cite{baader2003description}, therefore also \dl{SROIQ} DL\marginpar{\dl{SROIQ} $\in \textbf{PSPACE}$} is at least \textbf{PSPACE}-hard. This result shows that, unless $\textbf{PSPACE} = \textbf{P}$, the exponential time complexity of any algorithm that makes inference on an ontology cannot be improved .
 
 For those interested in some numerical examples to better understand what this class of complexity means in a real context, \cite{glimm2014hermit} presents the reasoner HermiT and evaluates its performance on some real ontologies.
 
