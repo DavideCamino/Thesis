@@ -175,7 +175,7 @@ In particular, we now present the rules to: assign a class to an individual, ide
 	\label{lst:ancestor}
 \end{listingenv}
 
-Although\marginpar{Ancestor predicate\\characteristic} in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
+Although\marginpar{Ancestor predicate\\characteristics} in an ontology that deals with the animal kingdom this predicate may seem of little interest, it provides us with a pretext to:
 \begin{itemize}
 	\item define a predicate that can be expanded with other rules: in Listing~\ref{lst:ancestor} we define only the base step and the recursive call, but by imagining building an ontology that deals with people, we can enrich the predicate with numerous rules that reflect family relationships between humans;
 	\item have a predicate that can trigger many recursive calls\footnote{It will be useful in Section~\ref{sec:unfold}.}: the number of individuals populating an ontology can be considerable and can increase over time; moreover, if complex relationships are also considered \textemdash{}such as those suggested in the previous point\textemdash{} the number of ancestors of an individual can be very high and not easily known a priori.
@@ -278,7 +278,7 @@ If the rules with recursive calls involve the T-Box, it can be possible to know 
 
 An example of this stopping criterion was shown in the rewriting of the rule \mintinline{text}|subClass(C1, C2)|. Once the class hierarchy is known, it is possible to compute the maximum depth and use it as a criterion to stop the unfolding process.
 
-\paragraph{A-Box:} The\marginpar{A-Box is more\\challenging in \\unfolding process} A-Box contains the individuals populating the ontology. For this reason, the A-Box is much more subject to change than the T-Box and, as discussed when presenting the ancestor-descendant relationship, relationships between individuals can also be very complex.
+\paragraph{A-Box:} The\marginpar{A-Box is more\\challenging in  the\\unfolding process} A-Box contains the individuals populating the ontology. For this reason, the A-Box is much more subject to change than the T-Box and, as discussed when presenting the ancestor-descendant relationship, relationships between individuals can also be very complex.
 
 Each time an individual is added to the KB or its relationships are modified, the depth of the recursive calls may change.
 
@@ -333,7 +333,7 @@ The obtained KB\footnote{Available at \url{https://github.com/DavideCamino/Thesi
 
 Formulating a query is essential because it defines the outputs of our program and, therefore, allows us to build the digital circuit, which is the first step of the pipeline.
 
-To evaluate the result of the translation, we do not consider the outcome of the query evaluation because, as already shown in the chapter on the pipeline in Section~\ref{sec:qa_p_query}, the simulators offered by the Ocean framework are able to find the solution only for very small problem instances and we will see, in Section~\ref{sec:qa_ont_result}, that we will obtain instances of problems with a very large number of \emph{qubits}. 
+To evaluate the result of the translation, we do not consider the outcome of the query evaluation because, as already shown in the chapter on the pipeline in Section~\ref{sec:qa_p_query}, the simulators offered by the Ocean framework are able to find the solution only for very small problem instances and we will see, in Section~\ref{sec:qa_ont_result}, that we will obtain instances of problems with a very large number of qubits. 
 
 What we consider instead is the dimension of the minimization problem obtained at the end of the pipeline, extracting the number of qubits composing the polynomial to be minimized, and attempting to provide a justification for the different dimensions we obtain.
 
@@ -360,13 +360,13 @@ In the results we will refer to the queries directly by the number associated wi
 	\caption{Problem size}
 	\label{fig:prob_size}
 \end{wrapfigure}
-As can be seen from Figure~\ref{fig:prob_size}, the number of \emph{qubits} required to represent the problem varies significantly, from a few dozen, for the first queries to almost ten thousand \emph{qubits}, for the query related to the ancestors of an individual.
+As can be seen from Figure~\ref{fig:prob_size}, the number of qubits required to represent the problem varies significantly, from a few dozen, for the first queries to almost ten thousand qubits, for the query related to the ancestors of an individual.
 
-The large difference in the number of \emph{qubits} used is due to the complexity of the query, to how many facts and rules must be used in order to find its solution. 
+The large difference in the number of qubits used is due to the complexity of the query, to how many facts and rules must be used in order to find its solution. 
 
-For simple queries such as the first two, it is sufficient to scan the list of facts. Query $3$, which generates a problem with $1072$ Boolean variables, requires the construction of the entire class hierarchy. Query $4$ ($2013$ \emph{qubits}) also requires the class hierarchy; moreover, all the rules that allow us to define an individual as belonging to a certain class must be considered (rules of Listing~\ref{lst:class_attr}).
+For simple queries such as the first two, it is sufficient to scan the list of facts. Query $3$, which generates a problem with $1072$ Boolean variables, requires the construction of the entire class hierarchy. Query $4$ ($2013$ qubits) also requires the class hierarchy; moreover, all the rules that allow us to define an individual as belonging to a certain class must be considered (rules of Listing~\ref{lst:class_attr}).
 
-Query $5$ adds, to all the rules necessary to solve query $4$, also the disjointness between classes and the rule that defines inconsistencies. The number of variables thus increases to $3812$. Finally, query $6$ uses relationships between individuals and in particular requires the relation that defines ancestors, which was unfolded in Listing~\ref{lst:ancestor_qa}. Precisely because of the unfolding, the number of rules increases significantly and, consequently, the dimension of the problem grows up to $9519$ \emph{qubits}.
+Query $5$ adds, to all the rules necessary to solve query $4$, also the disjointness between classes and the rule that defines inconsistencies. The number of variables thus increases to $3812$. Finally, query $6$ uses relationships between individuals and in particular requires the relation that defines ancestors, which was unfolded in Listing~\ref{lst:ancestor_qa}. Precisely because of the unfolding, the number of rules increases significantly and, consequently, the dimension of the problem grows up to $9519$ qubits.
 
 From the obtained results, it is clear that, depending on the query, we obtain Hamiltonians of very different sizes. This is advantageous because it allows us not to consider the entire KB for each query, but to extract only the part necessary to answer our specific question.
 
@@ -409,7 +409,7 @@ The problem's size, in terms of the number of Boolean variables, was evaluated f
 
 
 
-\paragraph{Qualitative results:} In Figure~\ref{fig:unfold}, it is possible to observe the impact of unfolding on the problem dimensions. As can be noted, as the number of rules increases, the number of \emph{qubits} required to represent the problem increases as well.
+\paragraph{Qualitative results:} In Figure~\ref{fig:unfold}, it is possible to observe the impact of unfolding on the problem dimensions. As can be noted, as the number of rules increases, the number of qubits required to represent the problem increases as well.
 
 \begin{wrapfigure}{l}{.65\linewidth}
 	\centering
@@ -450,9 +450,9 @@ By observing more closely the graph in Figure~\ref{fig:unfold}, we can notice wh
 
 In this case we observe a very low $\chi^2$ for both interpolating functions. Again, such a result should surprise us because obtaining such a good fit starting from an experimental data distribution is highly unlikely. 
 
-In our case, such a low value indicates that the collected data lie perfectly on a parabola, and the absence of experimental error makes this agreement exact. The \say{jump} in the data distribution could be due to the internal representation of the rules. Below a certain number of rules, they are identified with a certain number of \emph{qubits}; once this limit is exceeded, more \emph{qubits} are required to identify each rule. 
+In our case, such a low value indicates that the collected data lie perfectly on a parabola, and the absence of experimental error makes this agreement exact. The \say{jump} in the data distribution could be due to the internal representation of the rules. Below a certain number of rules, they are identified with a certain number of qubits; once this limit is exceeded, more qubits are required to identify each rule. 
 
-If this hypothesis is correct, we should expect further jumps in the trend of the number of variables, but the growth will always remain quadratic. Moreover, the continuous segments will each be twice as long as the previous one, because each extra \emph{qubit} allows doubling the number of unique identifiers for the rules.
+If this hypothesis is correct, we should expect further jumps in the trend of the number of variables, but the growth will always remain quadratic. Moreover, the continuous segments will each be twice as long as the previous one, because each extra qubit allows doubling the number of unique identifiers for the rules.
 
 \section{Conclusion}
 In this chapter we have shown how it is possible to move from an ontology expressed in OWL to a KB expressed in Prolog on which it is possible to highlight inconsistencies in the facts and perform reasoning as on the original ontology.

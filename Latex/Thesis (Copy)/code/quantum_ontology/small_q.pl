@@ -1,1 +1,0 @@
-?- subClass(mammal, animal)

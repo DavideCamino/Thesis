@@ -1,0 +1,106 @@
+\section{QAOA}
+\begin{frame}{Non un solo paradigma}
+	\begin{center}
+		\begin{minipage}{.6\linewidth}
+			\begin{block}{}
+				\centering
+				Problema QUBO/Ising
+				\vspace{-.3cm}
+				\[
+				\mathcal{H}_f
+				\]
+			\end{block}
+		\end{minipage}
+	\end{center}
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}{0.3\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{simulate_annealing}
+			\caption{Simulated annealing (Li Yang)}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{QA}
+			\caption{Quantum annealing (K. Chakrabarti, A. Das)}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{QAOA_sketch}
+			\caption{QAOA (Z. Zhou, Y. Du, X. Tian, D. Tao)}
+		\end{subfigure}
+		\caption{Single rappresentation 3 different approaches}
+	\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Esempio}
+	\begin{minipage}{.33\linewidth}
+		\begin{figure}[h]
+			\vspace{.3cm}
+			\includegraphics[width=.8\linewidth]{sat_circ.pdf}
+			\vspace{.5cm}
+			\hrule
+			\begin{minted}{text}
+				
+				!begin_macro sat
+				!use_macro AND $id00006
+				!use_macro NOT $id00004
+				!use_macro OR $id00005
+				$id00004.A = $id00005.Y
+				$id00005.A = b
+				$id00005.B = c
+				$id00006.A = a
+				$id00006.B = $id00004.Y
+				$id00006.Y = y
+				!end_macro sat
+			\end{minted}
+			\hrule
+			\caption{CircSat}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.65\linewidth}
+		{
+			\tiny
+			\[
+			\begin{pmatrix}
+				0.5 & 0.5 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -2 \\
+				0 & 0.5 & -1 & 0 & -2 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 1 & 0 & 0 & -2 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & -0.5 & 0.5 & -1 & -2 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & -0.5 & -1 & 0 & -2 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+				0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+			\end{pmatrix}
+			\]
+		}
+		\vspace{-.4cm}
+		\begin{figure}[h]
+			\includegraphics[width=.65\linewidth]{QAOA_qc}
+			\vspace{-.1cm}
+			\caption{$\mathcal{H}_f$ and QAOA Quantum Circuit}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}{Esempio}{Risultato}
+	\begin{minipage}{.337\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_r_2}
+			\caption{3 \say{interesting} bit}
+		\end{figure}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.65\linewidth}
+		\begin{figure}
+			\includegraphics[width=\linewidth]{QAOA_r_3}
+			\caption{Multilpe experiment runs}
+		\end{figure}
+	\end{minipage}
+\end{frame}

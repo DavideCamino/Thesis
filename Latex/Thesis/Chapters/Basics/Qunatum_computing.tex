@@ -188,7 +188,7 @@ With this model we can define the class \textbf{BPP}, that is \emph{bounded-erro
 The \emph{Chernoff bound} implies that with a limited number of repetitions of the algorithm, the probability of success is amplified to the point of being essentially one. For this reason, languages in \textbf{BPP}, even more than those in \textbf{P}, are considered those that can be solved efficiently on a classical computer.
 
 \subsection{Quantum computational complexity}
-We now extend the classification of computational problems by considering a new computational model: \emph{quantum circuits}. In Section~\ref{sec:quantum_gate} we will precisely define what a \emph{quantum gate} is and how they can be assembled to create quantum circuits. For now, it is sufficient to know that a quantum gate applies a unitary transformation (introduced in Section~\ref{sec:unitary_operator}) to one or more quantum bits (\emph{qubits}). The size of a quantum circuit is defined by the number of gates that are in the circuit and by the depth of the circuit\footnote{In Section~\ref{sec:qa_algo} we will  use another way of measuring the complexity: the number of query to an oracle.}. The latter is the number of distinct timesteps at which gates are applied.
+We now extend the classification of computational problems by considering a new computational model: \emph{quantum circuits}. In Section~\ref{sec:quantum_gate} we will precisely define what a \emph{quantum gate} is and how they can be assembled to create quantum circuits. For now, it is sufficient to know that a quantum gate applies a unitary transformation (introduced in Section~\ref{sec:unitary_operator}) to one or more quantum bits (qubits). The size of a quantum circuit is defined by the number of gates that are in the circuit and by the depth of the circuit\footnote{In Section~\ref{sec:qa_algo} we will  use another way of measuring the complexity: the number of query to an oracle.}. The latter is the number of distinct timesteps at which gates are applied.
 
 \subsubsection*{BPQ Class}
 Thanks to the concept of quantum circuits we can define the quantum alternative to the class \textbf{BBP}: class of problems \textbf{BQP}. This set contains the decision problems that can be solved with bounded probability of error using a polynomial size quantum circuit (both the number of gate and the depth). To be precise a circuit is a fixed entity that can found the solution of a problem up to a certain input dimension. To better formalize the \textbf{BQP} class we recall the concept of circuit family. Considering \marginpar{Quantum circuit\\ model definition} a language $L$ and an input string $x$ of size $n$ we say that $L \in \textbf{BPQ}$ if: 
@@ -225,11 +225,11 @@ The factoring problem is believed to be in \textbf{NPI} and the Shor's algorithm
 \label{sec:gate_model}
 The quantum gate-based computation paradigm is the direct implementation of the computational model that we have just described. This approach to quantum computation is founded on extensive theoretical work, part of which we have mentioned in the previous section, and for this reason most of the theoretical results on quantum computation derive from this paradigm.
 
-As suggested by the name, this model is based on quantum gates; quantum gates manipulate \emph{qubits} by applying physical transformations to them. The purpose of Chapter~\ref{ch:physics} was to convince us that these gates must have certain characteristics in order to comply with the laws of physics.
+As suggested by the name, this model is based on quantum gates; quantum gates manipulate qubits by applying physical transformations to them. The purpose of Chapter~\ref{ch:physics} was to convince us that these gates must have certain characteristics in order to comply with the laws of physics.
 
-Quantum gates modify \emph{qubits} by applying unitary operators. We focused on the physical meaning of a unitary operator in Section~\ref{sec:unitary_operator} where we saw how, knowing the state of the system after the application of the operator, we could infer the initial state.
+Quantum gates modify qubits by applying unitary operators. We focused on the physical meaning of a unitary operator in Section~\ref{sec:unitary_operator} where we saw how, knowing the state of the system after the application of the operator, we could infer the initial state.
 
-We now focus on the implications that a unitary operator has on a computational model. The first consequence, the most obvious one, is that we are allowed to construct only reversible gates, that is, gates that allow us to determine the state of the input \emph{qubits} if we know the state of the output \emph{qubits}.
+We now focus on the implications that a unitary operator has on a computational model. The first consequence, the most obvious one, is that we are allowed to construct only reversible gates, that is, gates that allow us to determine the state of the input qubits if we know the state of the output qubits.
 
 \subsection{Classical reversible gates}
 \label{sec:reversible_gate}
@@ -270,11 +270,11 @@ If we observe the truth table of the \smallcaps{Toffoli} gate (Figure~\ref{fig:t
 \end{theorem}
 This concept of permutation of the input will also reappear when we discuss quantum gates.
 \subsection{Quantum gate}
-In Chapter~\ref{ch:physics} we saw that spin is an example of a binary property, and we classified as \emph{qubit} all those physical properties that, when measured, return only two values. We measured spin with respect to the coordinate axes and identified different spin states (\emph{up} and \emph{down}, \emph{left} and \emph{right}, \emph{in} and \emph{out}). 
+In Chapter~\ref{ch:physics} we saw that spin is an example of a binary property, and we classified as qubit all those physical properties that, when measured, return only two values. We measured spin with respect to the coordinate axes and identified different spin states (\emph{up} and \emph{down}, \emph{left} and \emph{right}, \emph{in} and \emph{out}). 
 
-These states slightly change notation when we move from the study of physics to computer science. Before describing quantum gates we introduce this alternative notation for the states of a \emph{qubit} and show a graphical representation that will be useful to understand the effect of quantum gates.
+These states slightly change notation when we move from the study of physics to computer science. Before describing quantum gates we introduce this alternative notation for the states of a qubit and show a graphical representation that will be useful to understand the effect of quantum gates.
 \subsubsection*{qubits}
-In\marginpar{Spin and qubits} computer science the states \emph{up} and \emph{down} (Equations~\ref{eqn:ket_u} and \ref{eqn:ket_d}) represent respectively a \emph{qubit} off $\Ket{0}$ and on $\Ket{1}$. We denote with $\Ket{+}$ and $\Ket{-}$ the \emph{qubits} in the states \emph{right} and \emph{left} (Equations~\ref{eqn:ket_r} and \ref{eqn:ket_l}); finally the states \emph{in} and \emph{out} (Equations~\ref{eqn:ket_i} and \ref{eqn:ket_o}) are represented by $\Ket{i}$ and $\Ket{-i}$. We can rewrite the cited equations considering the new notation:
+In\marginpar{Spin and qubits} computer science the states \emph{up} and \emph{down} (Equations~\ref{eqn:ket_u} and \ref{eqn:ket_d}) represent respectively a qubit off $\Ket{0}$ and on $\Ket{1}$. We denote with $\Ket{+}$ and $\Ket{-}$ the qubits in the states \emph{right} and \emph{left} (Equations~\ref{eqn:ket_r} and \ref{eqn:ket_l}); finally the states \emph{in} and \emph{out} (Equations~\ref{eqn:ket_i} and \ref{eqn:ket_o}) are represented by $\Ket{i}$ and $\Ket{-i}$. We can rewrite the cited equations considering the new notation:
 \begin{equation}
 	\Ket{+}=\frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) \qquad \Ket{-}=\frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1})
 \end{equation}
@@ -283,7 +283,7 @@ and:
 	\Ket{i}=\frac{1}{\sqrt{2}} (\Ket{0} + i\Ket{1}) \qquad \Ket{-i}=\frac{1}{\sqrt{2}} (\Ket{0} - i\Ket{1})
 \end{equation}
 
-To\marginpar{Bloch \\sphere} represent \emph{qubits} in a graphical way that respects the mathematical properties of quantum states, we can use a sphere called the \emph{Bloch sphere}. The sphere has radius 1 and every point on the sphere represents a \emph{qubit}\footnote{Up to a global phase, which is however irrelevant.}. Figure~\ref{fig:bloch_sphere} shows, on the Bloch sphere, the \emph{qubits} described above.
+To\marginpar{Bloch \\sphere} represent qubits in a graphical way that respects the mathematical properties of quantum states, we can use a sphere called the \emph{Bloch sphere}. The sphere has radius 1 and every point on the sphere represents a qubit\footnote{Up to a global phase, which is however irrelevant.}. Figure~\ref{fig:bloch_sphere} shows, on the Bloch sphere, the qubits described above.
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[c]{.3\linewidth}
@@ -312,15 +312,15 @@ A state represented as a point on the surface of the Bloch sphere is called a \e
 \label{sec:quantum_gate}
 Recalling\marginpar{Quantum gates\\properties} the results achieved in Chapter~\ref{ch:physics} and also considering what we have said about classical reversible gates in Section~\ref{sec:reversible_gate}, we can make the following statements regarding quantum gates:
 \begin{itemize}
-	\item quantum gates are linear maps preserving the total probability equal to $1$\footnote{Recall that the total probability of the state $\Ket{s} = c_1 \Ket{0} + c_2  \Ket{1}$ formed by a \emph{qubit} is $\alpha^2 + \beta^2$.};
+	\item quantum gates are linear maps preserving the total probability equal to $1$\footnote{Recall that the total probability of the state $\Ket{s} = c_1 \Ket{0} + c_2  \Ket{1}$ formed by a qubit is $\alpha^2 + \beta^2$.};
 	\item we can represent a quantum gate as a matrix that preserves the total probability equal to $1$;
 	\item quantum gates are unitary matrices and unitary matrices are quantum gates;
 	\item a quantum gate $\mathbf{U}$ is reversible and $\mathbf{U}^\dagger$ is the inverse gate;
 	\item classical reversible gates are valid quantum gates\footnote{In particular, it is possible to show that a classical reversible gate permutes probability amplitudes, thus preserving the total probability equal to $1$.}.
 \end{itemize}
 
-Now that we have described the main properties of quantum gates we can examine the effect that these gates have on \emph{qubits}; we begin our analysis with gates that operate on a single \emph{qubit}.
-\paragraph{single qubit quantum gate:}\label{par:single_gate} Quantum gates that operate on a single \emph{qubit} can be visualized as \emph{rotations} on the Bloch sphere. Any rotation can be traversed both forward and backward, which makes rotations reversible and, consequently, valid quantum gates. We now examine some rotations that define particularly interesting gates.
+Now that we have described the main properties of quantum gates we can examine the effect that these gates have on qubits; we begin our analysis with gates that operate on a single qubit.
+\paragraph{single qubit quantum gate:}\label{par:single_gate} Quantum gates that operate on a single qubit can be visualized as \emph{rotations} on the Bloch sphere. Any rotation can be traversed both forward and backward, which makes rotations reversible and, consequently, valid quantum gates. We now examine some rotations that define particularly interesting gates.
 
 Rotations\marginpar{Pauli gates} of $180^\circ$ with respect to the axes define the \emph{Pauli gates}:
 \begin{itemize}
@@ -328,7 +328,7 @@ Rotations\marginpar{Pauli gates} of $180^\circ$ with respect to the axes define 
 	\[
 	X\Ket{0} = \Ket{1} \qquad  X\Ket{1} = \Ket{0};
 	\]
-	\item Pauli gate $Y$: rotation with respect to the $y$ axis. This gate has no classical counterpart and, applied to the \emph{qubits} $\Ket{0}$ and $\Ket{1}$, modifies them as follows:
+	\item Pauli gate $Y$: rotation with respect to the $y$ axis. This gate has no classical counterpart and, applied to the qubits $\Ket{0}$ and $\Ket{1}$, modifies them as follows:
 	\[
 	Y\Ket{0} = i\Ket{1} \qquad  Y\Ket{1} = -i\Ket{0};
 	\]
@@ -336,7 +336,7 @@ Rotations\marginpar{Pauli gates} of $180^\circ$ with respect to the axes define 
 	\[
 	Z\Ket{0} = \Ket{0} \qquad  Z\Ket{1} = -\Ket{1};
 	\]
-	\item Pauli gate $I$: zero rotation. This gate does not modify the state of the \emph{qubits}:
+	\item Pauli gate $I$: zero rotation. This gate does not modify the state of the qubits:
 	\[
 	I\Ket{0} = \Ket{0} \qquad  I\Ket{1} = \Ket{1}.
 	\]
@@ -348,7 +348,7 @@ We can then consider rotations smaller than $180^\circ$; we define the $S$ gate 
 T\Ket{0} = \Ket{0} \qquad  T\Ket{1} = e^{i\frac{\pi}{4}}\Ket{1}.
 \]
 
-The last gate that acts on a single \emph{qubit} that we consider is the \emph{Hadamard gate} ($H$). This gate can be interpreted as a rotation of $180^\circ$ with respect to the $x+z$ axis. $H$ allows the creation of superposition of states\footnote{We will return to this in Section~\ref{sec:q_gate_univ}.}, in particular:
+The last gate that acts on a single qubit that we consider is the \emph{Hadamard gate} ($H$). This gate can be interpreted as a rotation of $180^\circ$ with respect to the $x+z$ axis. $H$ allows the creation of superposition of states\footnote{We will return to this in Section~\ref{sec:q_gate_univ}.}, in particular:
 \[
 H\Ket{0} = \frac{1}{\sqrt{2}} (\Ket{0} + \Ket{1}) = \Ket{+} \qquad  H\Ket{1} = \frac{1}{\sqrt{2}} (\Ket{0} - \Ket{1}) = \Ket{-}.
 \]
@@ -389,24 +389,24 @@ Figure~\ref{fig:bloch_gate}\marginpar{Important gates\\ on the Bloch sphere} sho
 	\label{fig:bloch_gate}
 \end{figure}
 \paragraph{multiple qubits quantum gate:}
-When we describe states composed of multiple \emph{qubits} we must represent them as a \emph{tensor product} $\otimes$\footnote{Describing mathematically the tensor product is beyond the goal of this work.}. For example, a state in which two \emph{qubits} are both in the state $\Ket{0}$ is written:
+When we describe states composed of multiple qubits we must represent them as a \emph{tensor product} $\otimes$\footnote{Describing mathematically the tensor product is beyond the goal of this work.}. For example, a state in which two qubits are both in the state $\Ket{0}$ is written:
 \[
 \Ket{0}\otimes\Ket{0} \text{ abbreviated as } \Ket{0}\Ket{0} \text{ abbreviated as } \Ket{00}.
 \]
 
-With two \emph{qubits} the $z$ basis is $\Set{\Ket{00}, \Ket{01}, \Ket{10}, \Ket{11}}$. A generic state $\Ket{s}$ will be the superposition of the basis states
+With two qubits the $z$ basis is $\Set{\Ket{00}, \Ket{01}, \Ket{10}, \Ket{11}}$. A generic state $\Ket{s}$ will be the superposition of the basis states
 \[
 \Ket{s} = c_1 \Ket{00}+c_2\Ket{01}+c_3 \Ket{10}+c_4 \Ket{11},
 \]
 and the total probability will be $|c_1|^2+|c_2|^2+|c_3|^2 + |c_4|^2$ which, if the state is normalized, will be equal to $1$.
 
-Some composite states can be written as a tensor product of single \emph{qubit} states, for example:
+Some composite states can be written as a tensor product of single qubit states, for example:
 \[
 \frac{1}{2}(\Ket{00}-\Ket{01}+\Ket{10}-\Ket{11}) = \frac{1}{\sqrt{2}}(\Ket{0}+\Ket{1}) \otimes \frac{1}{\sqrt{2}}(\Ket{0}-\Ket{1}) = \Ket{+}\Ket{-}.
 \]
 These states are called \emph{product states} or \emph{simply separable states}. There\marginpar{Entangled \\states} exist states that cannot be decomposed into simple states. In this case we speak of \emph{entangled states}, states in which complete knowledge of the state vector of the entire system does not provide any information about the states of the elements composing the system\footnote{Entanglement is one of the most interesting aspects of quantum mechanics. A detailed discussion of its physical implications is beyond the scope of this work. For some introductory material about entanglement the reader is referred to \cite{susskind2014quantum}.}.
 
-We study multiple qubits quantum gates precisely for their ability to create entangled states. The first gate that enables entanglement between \emph{qubits} is the \smallcaps{cnot} or \smallcaps{c}$X$.
+We study multiple qubits quantum gates precisely for their ability to create entangled states. The first gate that enables entanglement between qubits is the \smallcaps{cnot} or \smallcaps{c}$X$.
 
 \begin{wrapfigure}{r}{.45\linewidth}
 	\centering
@@ -415,7 +415,7 @@ We study multiple qubits quantum gates precisely for their ability to create ent
 	\caption{\smallcaps{cnot} gate}
 	\label{fig:cnot}
 \end{wrapfigure}
-The \smallcaps{cnot} gate (\emph{controlled} \smallcaps{not}) is a two-\emph{qubit} gate; the first is called the \emph{control}, the second is the \emph{target qubit}. If the control \emph{qubit} is set, the target \emph{qubit} is flipped (hence the name controlled \smallcaps{not}). The behavior of the \smallcaps{cnot} gate can be described as:
+The \smallcaps{cnot} gate (\emph{controlled} \smallcaps{not}) is a two-qubit gate; the first is called the \emph{control}, the second is the \emph{target qubit}. If the control qubit is set, the target qubit is flipped (hence the name controlled \smallcaps{not}). The behavior of the \smallcaps{cnot} gate can be described as:
 \[
 \text{\smallcaps{cnot}}\Ket{a}\Ket{b}= \Ket{a} \Ket{a\oplus b}.
 \]
@@ -431,11 +431,11 @@ Figure~\ref{fig:cnot} reports the matrix definition of the \smallcaps{cnot}. Thi
 	\label{eqn:cnot}
 \end{equation}
 
-The\marginpar{Bell states} states $\Ket{\Psi^+}$, $\Ket{\Psi^-}$, $\Ket{\Phi^+}$ and $\Ket{\Phi^-}$ cannot be obtained as tensor products two of single \emph{qubit} states and are, therefore, entangled states. These four states are called \emph{Bell states}; they are orthogonal and form a basis called the \emph{Bell basis}.
+The\marginpar{Bell states} states $\Ket{\Psi^+}$, $\Ket{\Psi^-}$, $\Ket{\Phi^+}$ and $\Ket{\Phi^-}$ cannot be obtained as tensor products two of single qubit states and are, therefore, entangled states. These four states are called \emph{Bell states}; they are orthogonal and form a basis called the \emph{Bell basis}.
 
 Other important quantum gates are those we have already encountered when discussing classical gates; we have already seen that a classical reversible gate is a valid quantum gate. The gates of most interest to us are the \smallcaps{toffoli} gate and the \smallcaps{crossover} gate.
 
-It is not possible, however, to construct a quantum analogue of the \smallcaps{fanout} gate; therefore we cannot obtain a copy of a \emph{qubit} without knowing its state. Measuring the state, however, would inevitably modify it, so in general we cannot duplicate a \emph{qubit}. This is an important theoretical result and is known as the \emph{non-cloning theorem}:
+It is not possible, however, to construct a quantum analogue of the \smallcaps{fanout} gate; therefore we cannot obtain a copy of a qubit without knowing its state. Measuring the state, however, would inevitably modify it, so in general we cannot duplicate a qubit. This is an important theoretical result and is known as the \emph{non-cloning theorem}:
 \begin{theorem}\marginpar{\\ Non-cloning \\theorem}
 	It is impossible to make a copy of an unknown quantum state. Qubits cannot be copied.
 \end{theorem}
@@ -465,14 +465,14 @@ The concept of a universal set of gates in quantum computing is different from w
 	Any universal gate set can approximate a quantum gate on $n$ qubits to precision $\epsilon$ using $\Theta(2^n\log^c(\frac{1}{\epsilon}))$ gates for some constant $c$.
 \end{theorem} 
 
-The term $2^n$ should not be surprising because a unitary operator acting on $n$ \emph{qubits} (that is, the gate we are trying to approximate) is a matrix of dimension $2^n \times 2^n$. What is really relevant is the term $\log^c(\frac{1}{\epsilon})$, which tells us that we can reduce the approximation error at a cost that grows as a polynomial of a logarithm \textemdash{}this function is often called \emph{polylog}\textemdash{} which is efficient.
+The term $2^n$ should not be surprising because a unitary operator acting on $n$ qubits (that is, the gate we are trying to approximate) is a matrix of dimension $2^n \times 2^n$. What is really relevant is the term $\log^c(\frac{1}{\epsilon})$, which tells us that we can reduce the approximation error at a cost that grows as a polynomial of a logarithm \textemdash{}this function is often called \emph{polylog}\textemdash{} which is efficient.
 
 \subsection{Algorithms}
 \label{sec:qa_algo}
 We have discussed what quantum gates are and how they can be assembled to build a quantum circuit. We now see how this circuit must be constructed in order to be useful for solving a computational problem. In this section we introduce quantum oracle-based circuits and present the simplest oracle-based algorithm.
 
 \subsubsection*{Quantum Oracles}
-An oracle is a Boolean function, that is, a function that acts on \emph{qubits} and that can be composed with gates. In order to be translated into quantum gates we must ensure that the resulting gate is reversible. In general, it is possible to make a circuit reversible by using an \emph{extra qubit} and applying the \smallcaps{xor} gate between the output of the circuit and the extra \emph{qubit}. 
+An oracle is a Boolean function, that is, a function that acts on qubits and that can be composed with gates. In order to be translated into quantum gates we must ensure that the resulting gate is reversible. In general, it is possible to make a circuit reversible by using an \emph{extra qubit} and applying the \smallcaps{xor} gate between the output of the circuit and the extra qubit. 
 
 \begin{wrapfigure}{r}{.45\linewidth}
 	\centering
@@ -489,13 +489,13 @@ An oracle is a Boolean function, that is, a function that acts on \emph{qubits} 
 	\caption{Quantum oracle gate}
 	\label{fig:oracle}
 \end{wrapfigure}
-For\marginpar{\\Single qubit\\oracle} example, if the function $f(x)$ acts on a single \emph{qubit} we can construct a reversible gate $\mathbf{U}_f$ as shown in Figure~\ref{fig:oracle}. It is easy to see that regardless of the action of $f(x)$, which may or may not be reversible, knowing the outputs of the gate it is possible to reconstruct the inputs. We can rewrite the application of $\mathbf{U}_f$ to the \emph{qubits} as:
+For\marginpar{\\Single qubit\\oracle} example, if the function $f(x)$ acts on a single qubit we can construct a reversible gate $\mathbf{U}_f$ as shown in Figure~\ref{fig:oracle}. It is easy to see that regardless of the action of $f(x)$, which may or may not be reversible, knowing the outputs of the gate it is possible to reconstruct the inputs. We can rewrite the application of $\mathbf{U}_f$ to the qubits as:
 \[
 \Ket{x}\Ket{y} \xrightarrow{\mathbf{U}_f} \Ket{x}\Ket{y \oplus f(x)}
 \]
-The extra \emph{qubit} \textemdash{}the  one we used to make $\mathbf{U}_f$ reversible\textemdash{}  is called the \emph{answer qubit} or \emph{target qubit}, while $\Ket{x}$ is called the \emph{input qubit}. When we set $\Ket{y} = \Ket{0}$ we can read the result of $f(x)$ applied to $\Ket{x}$ in the target \emph{qubit}.
+The extra qubit \textemdash{}the  one we used to make $\mathbf{U}_f$ reversible\textemdash{}  is called the \emph{answer qubit} or \emph{target qubit}, while $\Ket{x}$ is called the \emph{input qubit}. When we set $\Ket{y} = \Ket{0}$ we can read the result of $f(x)$ applied to $\Ket{x}$ in the target qubit.
 
-In reality, this is not the standard way of using a quantum oracle. What is done instead is to prepare the target \emph{qubit} in the state $\Ket{-}$ and then apply the gate $\mathbf{U}_f$. Quantum gates can, indeed, also be applied to superposed states, and in this case the result is a phase change of the \emph{qubit} $\Ket{x}$ while the target \emph{qubit} remains unchanged. We can write the application of this gate as:
+In reality, this is not the standard way of using a quantum oracle. What is done instead is to prepare the target qubit in the state $\Ket{-}$ and then apply the gate $\mathbf{U}_f$. Quantum gates can, indeed, also be applied to superposed states, and in this case the result is a phase change of the qubit $\Ket{x}$ while the target qubit remains unchanged. We can write the application of this gate as:
 \[
 \Ket{x} \Ket{-}\xrightarrow{\mathbf{U}_f} 
 \begin{cases}
@@ -504,14 +504,14 @@ In reality, this is not the standard way of using a quantum oracle. What is done
 \end{cases} = 
 (-1)^{f(x)}\Ket{x} \Ket{-} = (-1)^{f(x)}\Ket{x},
 \]
-where, in the last step, we omit the value of the target \emph{qubit} because it is not modified by the gate.
+where, in the last step, we omit the value of the target qubit because it is not modified by the gate.
 
 \begin{wrapfigure}[5]{l}{.5\linewidth}
 	\centering
 	\vspace{.2cm}
 	\begin{tikzpicture}
 		\begin{yquant}[operator/separation=3mm]
-			qubit {$\Ket{\reg}$} y;
+			qubit {$\Ket{0}$} y;
 			qubit {$\Ket{\reg}$} x;
 			h y;
 			z y;
@@ -523,7 +523,7 @@ where, in the last step, we omit the value of the target \emph{qubit} because it
 	\caption{Phase oracle}
 	\label{fig:phase_oracle}
 \end{wrapfigure}
-Since\marginpar{Phase oracle}, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{y}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Pauli gate $X$ and then the Hadamard gate $H$.}.
+Since\marginpar{Phase oracle}, used in this way, the oracle applies a phase change to $\Ket{x}$, it is called a \emph{phase oracle}. Figure~\ref{fig:phase_oracle} shows the application of the phase oracle; in particular, it can be seen how it is possible to prepare $\Ket{0}$ in the state $\Ket{-}$ in order to then use $\mathbf{U}_f$ as a phase oracle\footnote{It is possible to obtain the same result by first applying the Pauli gate $X$ and then the Hadamard gate $H$.}.
 
 \subsubsection*{Deutsch' algorithm}
 The Deutsch algorithm shows how to use the phase oracle to solve a computational problem. We will see that already with this first algorithm we obtain better performances compared to what we could achieve with a classical architecture. In this case, however, the performance gain is polynomial; therefore this is not one of those algorithms that suggest that quantum computers can efficiently solve a broader class of problems than classical computers\footnote{Showing these algorithms, including Shor's algorithm, is beyond the scope of this work.}.
@@ -585,14 +585,14 @@ Deutsch's algorithm allows us to halve the number of oracle queries, and it can 
 \label{sec:qac_model}
 Adiabatic Quantum Computing (AQC) is a paradigm of quantum computation alternative to the gate-based quantum model. The two models are computationally equivalent, but deeply different in the nature of computation. AQC has an analog nature that contrasts with the digital one of the gate-based paradigm. When we adopt AQC, we study the evolution of a physical system over time. 
 
-Before describing this approach to quantum computation in more detail, it is necessary to give some definitions that will be useful in the following discussion. We call a \emph{quantum dynamical system} a system formed by $n$ \emph{qubits} that evolves over time according to certain forces. The time evolution is determined by the Hamiltonian $\mathbf{H}(t)$\footnote{We write it in this way to emphasize that, in general, $\mathbf{H}$ also depends on time.} of the system and described by the Schrödinger equation (Equation~\ref{eqn:shro}). As we observed in Section~\ref{sec:hamiltonian}, $\mathbf{H}(t)$ is a Hermitian operator, and the observable associated with it is the energy of the system. The eigenvalues of $\mathbf{H}(t)$ at a given instant represent all the possible energy levels of the system that we can measure. We call this set of values the \emph{energy spectrum} of the system. We are interested in two particular energy levels: the lowest energy one, called the \emph{ground state}, and the \emph{ﬁrst excited state}, the energy level immediately above the ground state.
+Before describing this approach to quantum computation in more detail, it is necessary to give some definitions that will be useful in the following discussion. We call a \emph{quantum dynamical system} a system formed by $n$ qubits that evolves over time according to certain forces. The time evolution is determined by the Hamiltonian $\mathbf{H}(t)$\footnote{We write it in this way to emphasize that, in general, $\mathbf{H}$ also depends on time.} of the system and described by the Schrödinger equation (Equation~\ref{eqn:shro}). As we observed in Section~\ref{sec:hamiltonian}, $\mathbf{H}(t)$ is a Hermitian operator, and the observable associated with it is the energy of the system. The eigenvalues of $\mathbf{H}(t)$ at a given instant represent all the possible energy levels of the system that we can measure. We call this set of values the \emph{energy spectrum} of the system. We are interested in two particular energy levels: the lowest energy one, called the \emph{ground state}, and the \emph{ﬁrst excited state}, the energy level immediately above the ground state.
 
 \subsection{AQC algorithm}
 \label{sec:qac}
 AQC algorithms are designed to solve optimization problems formulated as follows: given an objective function $f: \mathbb{D}^n\rightarrow\mathbb{R}$ deﬁned on $n$ variables $x = x_1, \dots x_n$ from some discrete domain
 $\mathbb{D}$ , ﬁnd an assignment of values to x that minimizes $f(x)$.
 
-An AQC algorithm to solve optimization problem $P$ with objective function $f(x)$ is described by a time-varying Hamiltonian $\mathbf{H}(t)$ that defines the evolution\marginpar{Components of AQC} of the system $Q$ composed of $n$ \emph{qubits}. $\mathbf{H}(t)$ is specified by three components:
+An AQC algorithm to solve optimization problem $P$ with objective function $f(x)$ is described by a time-varying Hamiltonian $\mathbf{H}(t)$ that defines the evolution\marginpar{Components of AQC} of the system $Q$ composed of $n$ qubits. $\mathbf{H}(t)$ is specified by three components:
 \begin{itemize}
 	\item an \emph{initial Hamiltonian} $\mathbf{H}_i$ chosen so that its ground state is easy to find;
 	\item a \emph{final} or \emph{problem Hamiltonian} $\mathbf{H}_f$ that encodes the objective function so that the
@@ -605,15 +605,15 @@ The AQC algorithm is defined by $\mathbf{H}(t)$ which creates a gradual (adiabat
 	\mathbf{H}(t) = s(t) \cdot \mathbf{H}_i +(1-s(t)) \cdot \mathbf{H}_f.
 \end{equation}
 
-To create the initial Hamiltonian we apply to all \emph{qubits} the Pauli operator $X$ ($\sigma_x$ in Equation~\ref{eqn:pauli_op}) \textemdash{}this operator describes the observable spin parallel to the $x$ axis, consequently\textemdash{} the associated eigenvectors are $\Ket{+}$ and $\Ket{-}$. In particular, $\mathbf{H}_i$ is defined as
+To create the initial Hamiltonian we apply to all qubits the Pauli operator $X$ ($\sigma_x$ in Equation~\ref{eqn:pauli_op}) \textemdash{}this operator describes the observable spin parallel to the $x$ axis, consequently\textemdash{} the associated eigenvectors are $\Ket{+}$ and $\Ket{-}$. In particular, $\mathbf{H}_i$ is defined as
 \[
 \mathbf{H}_i = \sum_{i = 1}^{n} \frac{1}{2} (1 - X\,q_i)
 \]
-where $X\,q_i$ indicates the application of the Pauli gate $X$ to the \emph{qubit} $i$. Then the ground state is formed by all $n$ \emph{qubits} in the state $\Ket{+}$. This means that a state has been created in which the eigenstates in the standard basis ($\Set{\Ket{0}, \Ket{1}}$) are equiprobably observable.
+where $X\,q_i$ indicates the application of the Pauli gate $X$ to the qubit $i$. Then the ground state is formed by all $n$ qubits in the state $\Ket{+}$. This means that a state has been created in which the eigenstates in the standard basis ($\Set{\Ket{0}, \Ket{1}}$) are equiprobably observable.
 
 In\marginpar{Initial state as\\maximum superposition} general, $\mathbf{H}_i$ is specified in a basis orthogonal to that of the final Hamiltonian in order to create a state of maximum superposition.
 
-Starting from the known ground state of $\mathbf{H}_i$ and evolving thanks to $s(t)$ up to $\mathbf{H}_f$, the \emph{adiabatic theorem} ensures that, under certain conditions, $Q$ will always remain in the ground state of $\mathbf{H}(t)$, and at time $t_s$ we will be able to read in the configuration of the \emph{qubits} the solution of problem $P$.
+Starting from the known ground state of $\mathbf{H}_i$ and evolving thanks to $s(t)$ up to $\mathbf{H}_f$, the \emph{adiabatic theorem} ensures that, under certain conditions, $Q$ will always remain in the ground state of $\mathbf{H}(t)$, and at time $t_s$ we will be able to read in the configuration of the qubits the solution of problem $P$.
 
 At first glance it might seem that this formulation limits the capabilities of AQC; in reality, we can naturally rewrite many problems in \textbf{NP} as optimization problems. In Section~\ref{sec:clas_rel} we mentioned the problem of prime factorization as a candidate to demonstrate the superiority of quantum computing. This problem can be translated into an optimization problem in which, given an integer $N$, one must find two integers $x, y > 1$ such that they minimize $f(x,y) = (N - x\cdot y)^2$.
 \subsection{Theoretical results}
@@ -706,11 +706,11 @@ The energy of a given configuration is defined by
 	\label{eqn:ising}
 \end{equation}
 
-Let us see how to encode this energy function in a quantum annealer. Considering a collection of $n$ \emph{qubits} $Q = q_1,\dots, q_n$ arranged in the grid defined by the graph $G = (V, E)$, the state of $Q$ is $\Ket{\Phi} = \Ket{\phi_1, \dots, \phi_n}$. We can translate this energy into the problem Hamiltonian $H_f$:
+Let us see how to encode this energy function in a quantum annealer. Considering a collection of $n$ qubits $Q = q_1,\dots, q_n$ arranged in the grid defined by the graph $G = (V, E)$, the state of $Q$ is $\Ket{\Phi} = \Ket{\phi_1, \dots, \phi_n}$. We can translate this energy into the problem Hamiltonian $H_f$:
 \begin{equation}
 	\mathbf{H}_f =  \sum_{i\in V}h_i\cdot Z\,q_i + \sum_{(i,j) \in E} J_{ij}\cdot Z\,q_i\ Z\,q_j.
 \end{equation}
-Where $Z\,q_i$ indicates the application of the Pauli gate $Z$ to the \emph{qubit} $i$. This is a valid Hamiltonian for a QA algorithm and a quantum annealer is able to retrieve the solution at minimum energy.
+Where $Z\,q_i$ indicates the application of the Pauli gate $Z$ to the qubit $i$. This is a valid Hamiltonian for a QA algorithm and a quantum annealer is able to retrieve the solution at minimum energy.
 
 \paragraph{QUBO Problem:} The Ising Model is defined on spins $s_1 \in \Set{+1. -1}$. An equivalent formulation, but closer to the usual one in computer science, is the \emph{Quadratic Unconstrained Binary Optimization} problem (QUBO form). In this formulation we consider $n$ Boolean variables $x_i \in \Set{0,1}$ and, considering an upper triangular matrix $Q_{ij}$ of weights of dimension $n\times n$, we want to minimize the function
 \begin{equation}
@@ -718,7 +718,7 @@ Where $Z\,q_i$ indicates the application of the Pauli gate $Z$ to the \emph{qubi
 	\label{eqn:qubo}
 \end{equation}
 
-It \marginpar{from QUBO form to Ising\\form and vice-versa}is possible to show that a problem in QUBO form always has a corresponding version in Ising model form, and to move from one formulation to the other one imposes $s_i = 1 - 2 x_i$ \cite{bian2010ising}. It is also possible to show that the ground state of the problem in QUBO form is the same as that of the problem in Ising form up to a finite offset $\delta_e$
+It \marginpar{From QUBO form to \\Ising form and \\vice-versa}is possible to show that a problem in QUBO form always has a corresponding version in Ising model form, and to move from one formulation to the other one imposes $s_i = 1 - 2 x_i$ \cite{bian2010ising}. It is also possible to show that the ground state of the problem in QUBO form is the same as that of the problem in Ising form up to a finite offset $\delta_e$
 \begin{equation}
 	\min_{s\in\Set{-1, +1}}  \sum_{i}h_i\cdot s_i + \sum_{j < i} J_{ij}\cdot s_i s_j = \min_{x\in\Set{0, 1}} \sum_{i, j}Q_{ij}\cdot x_ix_j + \delta_e\ .
 	\label{eqn:ising_qubo}
@@ -731,7 +731,7 @@ We started by defining theoretical models that describe classical computation su
 
 We then introduced quantum computation theoretically (through quantum circuits) and showed how the classes of computational problems change when considering this new paradigm. In particular, we observed that proving the computational advantages of the quantum paradigm would lead to significant results also in classical computation, making it possible to prove that $\textbf{P} \neq \textbf{PSACE}$.
 
-The chapter then continues by defining the quantum computation paradigm based on gates, this time in a less theoretical way, observing how a \emph{qubit} is defined in a computational model and what it means to apply a quantum gate to a system of \emph{qubits} to modify its state. The section on quantum gates concludes with the Deutsch algorithm, which shows a first speedup (even if only polynomial) of quantum computers compared to classical architectures.
+The chapter then continues by defining the quantum computation paradigm based on gates, this time in a less theoretical way, observing how a qubit is defined in a computational model and what it means to apply a quantum gate to a system of qubits to modify its state. The section on quantum gates concludes with the Deutsch algorithm, which shows a first speedup (even if only polynomial) of quantum computers compared to classical architectures.
 
 We concluded the chapter by examining another approach to quantum computation, this time an analog approach: AQC. We described what an AQC algorithm consists of and which conditions must be satisfied for this algorithm to allow us to obtain the solution to our problem. Finally, we moved from the universal AQC model to QA algorithms, losing generality but relaxing the constraints imposed on computation. We derived two forms for formulating a problem suitable for QA (QUBO form and Ising form) and highlighted their equivalence.
 

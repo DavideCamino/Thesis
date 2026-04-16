@@ -1,4 +1,0 @@
-// Define hates(atom, atom).
-module \hates/2 (A, B, Valid);
-  ...
-endmodule

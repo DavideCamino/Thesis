@@ -1,5 +1,0 @@
-qubo = qubovert.utils.matrix_to_qubo(qubo_mat)
-ising = qubovert.utils.qubo_to_quso(qubo)
-ising_dict = dict(ising)
-ising_dict.pop(())
-ising_mat = qubovert.utils.qubo_to_matrix(ising_dict)

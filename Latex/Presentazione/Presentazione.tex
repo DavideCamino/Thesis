@@ -1,0 +1,54 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{hyperref}
+\hypersetup{
+	pdfstartpage=1 ,
+	pdfpagemode=FullScreen % Start in full-screen mode
+	% Ensure it starts from page 1
+}
+\usetheme{CambridgeUS}
+\usecolortheme{beaver}
+\useoutertheme[subsection=false]{smoothbars}
+\usepackage{graphicx}
+\usepackage{dirtytalk}
+\usepackage{pgf}
+\graphicspath{{img}}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{multimedia}
+\usepackage{minted}
+\usepackage{subcaption}
+\usepackage{braket}
+\setcounter{MaxMatrixCols}{11}
+\setbeamertemplate{navigation symbols}{}
+
+\setminted{fontsize=\scriptsize, tabsize=2}
+
+\captionsetup{font=footnotesize}
+
+\newcounter{framenumberbeforeappendix}
+
+\input{package/beamercolorthemebeaver.sty}
+
+\title[Quantum Inference]{Logic Programming for Inference on\\Quantum Computer}
+\author{Davide Camino}
+\date{\texttt{davide.camino@edu.unito.it}}
+\institute[UniTO]{\includegraphics[width=.15\linewidth]{logo_col}}
+
+\begin{document}
+	\begin{frame}[plain]
+		\transfade[duration=0.5]
+		\maketitle
+	\end{frame}
+	\part{Main}
+	\input{chapter/intro}
+	\input{chapter/qa_prolog}
+	\input{chapter/ontology}
+	\input{chapter/QAOA}
+	\input{chapter/future}
+	\part{Ringraziamenti}
+	\input{chapter/grazie}
+	\setcounter{framenumberbeforeappendix}{\value{framenumber}}
+	\part{Materiale aggiuntivo}
+	\input{chapter/appendix}
+	\setcounter{framenumber}{\value{framenumberbeforeappendix}}
+\end{document}

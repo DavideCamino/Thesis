@@ -28,7 +28,7 @@ Even worse is the situation on quantum gate-based computers. The\marginpar{Quant
 		\midrule
 		\begin{tabular}[c]{@{}c@{}}programmable routing that \\ connects logic functions\end{tabular}        & & \begin{tabular}[c]{@{}c@{}}possibility to define \\ order of gates\end{tabular}                              \\
 		\midrule
-		I/O blocks connected to logic                                                                        & & \begin{tabular}[c]{@{}c@{}}input \emph{qubits} and output \\ \emph{qubits} that can be measured\end{tabular} \\
+		I/O blocks connected to logic                                                                        & & \begin{tabular}[c]{@{}c@{}}input qubits and output \\ qubits that can be measured\end{tabular} \\
 		\bottomrule
 	\end{tabular}
 	\caption{Parallelism between FPGA and quantum gate}
@@ -85,7 +85,7 @@ QA-Prolog does not support all the features of Prolog, but enough to make basic 
 
 QA-Prolog supports atoms and positive integers but not floating-point numbers, strings, or lists. It supports arithmetic and relational operations, and rules can reference other rules but not recursively. QA-Prolog supports unification, backtracking, and predicates comprising multiple clauses~\cite{pakin2018performing}.
 
-QA-Prolog also supports some features not present in the basic version of Prolog. In particular, operations can be performed on variables even before they are ground~\cite{pakin2018performing}; this means that QA-Prolog is more powerful in manipulating free variables.  We can understand this feature looking back to Paragraph~\ref{par:arithmetic} where we have shown that aritmetica expression can have a free variable at most (\mintinline{text}|is| predicate) on the left operand. 
+QA-Prolog also supports some features not present in the basic version of Prolog. In particular, operations can be performed on variables even before they are ground~\cite{pakin2018performing}; this means that QA-Prolog is more powerful in manipulating free variables.  We can understand this feature looking back to Paragraph~\ref{par:arithmetic} where we have shown that aritmetica expression can have a free variable at most \textemdash{}\mintinline{text}|is| predicate\textemdash{} on the left operand. 
 
 In\marginpar{Hints of reversible\\computation} QA-Prolog we can have variables on the left and on the right of predicate\footnote{In Prolog is possible to obtain the same result with library like CLP(FD)~\cite{triska2012finite, triska_clpfd_github} and CLP($\mathbb{Z}$)~\cite{triska_clpz_github}}, that way we can pass the input to the formula to obtain the result, but also assign a value to the result to retreive the input. We can already see that QA-Prolog allows a reversible computation: from input to output but also from output to input.
 
@@ -132,11 +132,11 @@ This software can be considered an assembler in the sense that it maps a symboli
 
 Some of the most useful and interesting features of QMASM are:
 \begin{itemize}
-	\item \emph{qubits} are referenced symbolically, not numerically, both in the source code and when QMASM reports execution results;
-	\item \emph{qubits} can be pinned to \mintinline{text}|true| or \mintinline{text}|false|;
-	\item \emph{qubit} patterns can be encapsulated into macros and instantiated repeatedly;
+	\item qubits are referenced symbolically, not numerically, both in the source code and when QMASM reports execution results;
+	\item qubits can be pinned to \mintinline{text}|true| or \mintinline{text}|false|;
+	\item qubit patterns can be encapsulated into macros and instantiated repeatedly;
 	\item groups of macros can be encapsulated into libraries and reused across multiple programs;
-	\item QMASM can automatically exclude from the results the solutions known to be incorrect and shows only \say{interesting} \emph{qubits}.
+	\item QMASM can automatically exclude from the results the solutions known to be incorrect and shows only \say{interesting} qubits.
 \end{itemize}
 
 Thanks to thiings set of features, QMASM is already a useful abstraction layer that simplifies the development of programs that target an annealer, classical or quantum.
@@ -148,12 +148,12 @@ Thanks to thiings set of features, QMASM is already a useful abstraction layer t
 	\label{eqn:simple_logic}
 \end{equation}
 
-QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings~\ref{lst:macros} we call \mintinline{text}|A| and \mintinline{text}|B| the input \emph{qubits} and \mintinline{text}|Y| the output \emph{qubit}. Weights are specified as an Insing problem (Section~\ref{sec:annealing_form}), which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}.}.
+QMASM allows us to define a macro for every logical operator needed to represent the formula and then assemble the final formula by calling these macros. In Listings~\ref{lst:macros} we call \mintinline{text}|A| and \mintinline{text}|B| the input qubits and \mintinline{text}|Y| the output qubit. Weights are specified as an Insing problem (Section~\ref{sec:annealing_form}), which is the default format for QMASM source files\footnote{as specified in \url{https://github.com/lanl/qmasm/wiki/File-format}.}.
 
 There are multiple interesting details about these macros:
 \begin{itemize}
 	\item the symbol \mintinline{text}|#| identifies a comment line not processed;
-	\item the symbol \mintinline{text}|$| is used to tag a \emph{qubit} as ancillary: unless explicitly requested by the programmer, the intermediate results are not reported in the solutions;
+	\item the symbol \mintinline{text}|$| is used to tag a qubit as ancillary: unless explicitly requested by the programmer, the intermediate results are not reported in the solutions;
 	\item thanks to the directive \mintinline{text}|!assert| we can inform QMASM about constraints on the solution. This directive does not change the weights, but allows the programmer to exclude from the solutions those that are surely incorrect.
 \end{itemize}
 
@@ -182,7 +182,7 @@ There are multiple interesting details about these macros:
 
 Compared with what we have done in Listing~\ref{lst:ising_ex}, defining weights in QMASM is much easier and the result is more readable;
 
-It is possible to verify, for each macro in Listings~\ref{lst:macros}, that given a configuration of the input \emph{qubits}, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling. For\marginpar{Macro interpretation\\ as a polynomial} example, the explicit polynomial that describe \smallcaps{and} operator (where we have removed the $\$$ symbol for simplicity of reading) is:
+It is possible to verify, for each macro in Listings~\ref{lst:macros}, that given a configuration of the input qubits, the value of \mintinline{text}|Y| that minimizes the energy corresponds to the output of the logic gate we are modeling. For\marginpar{Macro's interpretation\\ as a polynomial} example, the explicit polynomial that describe \smallcaps{and} operator (where we have removed the $\$$ symbol for simplicity of reading) is:
 \[
 	\mathbf{H} = -\frac{1}{2}\cdot(A + B) + Y + \frac{1}{2}\cdot(AB) - (AY + BY)
 \]
@@ -198,7 +198,7 @@ We\marginpar{Assemble macros} can save these macros in a file named \mintinline{
 	\label{lst:circ_sat_qmasm}
 \end{listingenv}
 
-The QMASM code implementing this procedure is reported in Listing~\ref{lst:circ_sat_qmasm}. This example shows how to use macros: we instantiate a macro and give it a name with \mintinline[escapeinside=@@]{text}|!use_macro @\textit{<macro\_name> <instance\_name>}@| (e.g. line $5$), and then instantiate the \emph{qubits} defined in the macro with our actual \emph{qubits}. For example, considering the \mintinline{text}|!use_macro OR| at line $5$, we can see that we use $x_2$ and $x_3$ as input and an ancillary \emph{qubit} $\$x_4$ as output. Another detail to point out is the directive \mintinline{text}|!include| (line $3$), which imports all gates used in this source file.
+The QMASM code implementing this procedure is reported in Listing~\ref{lst:circ_sat_qmasm}. This example shows how to use macros: we instantiate a macro and give it a name with \mintinline[escapeinside=@@]{text}|!use_macro @\textit{<macro\_name> <instance\_name>}@| (e.g. line $5$), and then instantiate the qubits defined in the macro with our actual qubits. For example, considering the \mintinline{text}|!use_macro OR| at line $5$, we can see that we use $x_2$ and $x_3$ as input and an ancillary qubit $\$x_4$ as output. Another detail to point out is the directive \mintinline{text}|!include| (line $3$), which imports all gates used in this source file.
 
 Finally\marginpar{Run a QMASM\\\say{program}}, we can query the quantum annealer (or in this case a classical solver) to find a solution for our satisfiability problem. To do so we pin the output variable $y$ to be sure that in the solution its value will be \mintinline{text}|true|. We can query the solver with:
 
@@ -222,7 +222,7 @@ Results are reported in Listing~\ref{lst:qmasm_res}. Here we can see that the so
 	\label{lst:qmasm_res}
 \end{listingenv}
 
-QMASM already offers some powerful abstractions to work with quantum annealers. Now we add two additional layers that allow a programming style more similar to the paradigms computer scientists are used to, while preserving strong control over variable dimensions and therefore over the number of \emph{qubits} used.
+QMASM already offers some powerful abstractions to work with quantum annealers. Now we add two additional layers that allow a programming style more similar to the paradigms computer scientists are used to, while preserving strong control over variable dimensions and therefore over the number of qubits used.
 
 \subsection{Yosys and edif2qmasm}
 \label{sec:yosys_edif2qmasm}
@@ -234,7 +234,7 @@ Verilog\marginpar{Verilog} is a hardware description language that offers differ
 
 Hardware description languages are not something that the majority of programmers are familiar with, but they offer some advantages when targeting a quantum annealer~\cite{pakin2019targeting}:
 \begin{itemize}
-	\item they provide precise control over bit widths in order not to waste any \emph{qubit};
+	\item they provide precise control over bit widths in order not to waste any qubit;
 	\item they can be compiled to a small set of primitives: the gates we can define with QMASM.
 \end{itemize}
 
@@ -290,7 +290,7 @@ Comparing the automatically generated Listing~\ref{lst:circ_sat_yosys} and the m
 	\item the generated code is a little less readable but more compact. We do not need to generate new ancillary variables, but instead use directly as input for macros the output of other macros.
 \end{itemize}
 
-Even if it is less readable, we can comment on the code in Listing~\ref{lst:circ_sat_yosys}. At lines $4$, $5$, and $6$ we declare that we need the macros \mintinline{text}|AND|, \mintinline{text}|NOT|, and \mintinline{text}|OR|, giving to each macro a name like \mintinline[escapeinside=@@]{text}|$id@\textit{<number>}@|\footnote{The symbol \mintinline{text}|$| tells QMASM that we are not interested in the value of \emph{qubits} inside the macro.}. At line $7$ we assign as input \mintinline{text}|A| of the macro \mintinline{text}|NOT| the output \mintinline{text}|Y| of the macro \mintinline{text}|OR|. Given these hints, the rest of the code should be clear.
+Even if it is less readable, we can comment on the code in Listing~\ref{lst:circ_sat_yosys}. At lines $4$, $5$, and $6$ we declare that we need the macros \mintinline{text}|AND|, \mintinline{text}|NOT|, and \mintinline{text}|OR|, giving to each macro a name like \mintinline[escapeinside=@@]{text}|$id@\textit{<number>}@|\footnote{The symbol \mintinline{text}|$| tells QMASM that we are not interested in the value of qubits inside the macro.}. At line $7$ we assign as input \mintinline{text}|A| of the macro \mintinline{text}|NOT| the output \mintinline{text}|Y| of the macro \mintinline{text}|OR|. Given these hints, the rest of the code should be clear.
 
 \subsection{QA-Prolog}
 \label{sec:qa_p_query}
