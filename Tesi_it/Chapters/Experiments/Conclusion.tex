@@ -1,0 +1,46 @@
+\chapter{Conclusione}
+\label{ch:conclusion}
+In questo capitolo esaminiamo brevemente i risultati raggiunti in questo lavoro e proponiamo alcune direzioni per lavori futuri e approfondimenti.
+
+\section{Risultati raggiunti}
+\subsection{Aggiornamento di QA-Prolog}
+Lo stack software di QA-Prolog era rimasto senza manutenzione mentre i framework su cui si basava venivano aggiornati. Di conseguenza, la pipeline inizialmente non funzionava e non si interfacciava correttamente con il framework D-Wave Ocean.
+
+Parte del lavoro di questa tesi è consistita nel ripristinare la compatibilità tra il software scritto \textit{ad hoc} per la pipeline di QA-Prolog e gli altri software utilizzati per completare l'intero processo di traduzione.
+
+Al momento, la versione aggiornata di QMASM è disponibile\footnote{su \url{https://github.com/DavideCamino/qmasm}.} e consente l'utilizzo dell'intera pipeline di QA-Prolog, ovvero, partendo da un programma Prolog, ottenere un problema equivalente in forma QUBO e recuperare i risultati in formato leggibile dopo aver risolto il problema QUBO.
+
+\subsection{Ontologia in Prolog}
+Il lavoro di questa tesi è proseguito con la traduzione di un'ontologia espressa in OWL (Sezione~\ref{sec:owl}) in una base di conoscenza equivalente espressa in Prolog. Siamo partiti seguendo la letteratura e implementando in Prolog i principali concetti offerti da OWL. Ci siamo concentrati sui concetti di classe e sottoclasse, le relazioni tra individui e l'identificazione delle inconsistenze nella KB. Abbiamo anche menzionato che in letteratura esistono lavori che mostrano come tradurre concetti più avanzati come la open world assumption e le classi enumerabili.
+
+QA-Prolog non implementa tutte le funzionalità di Prolog; la principale limitazione è che non consente la definizione di regole ricorsive. Il contributo di questa tesi è stato quindi proporre soluzioni per superare le restrizioni imposte da QA-Prolog, riuscendo a ottenere una KB equivalente all'ontologia originale e compatibile con la pipeline di QA-Prolog.
+
+La soluzione proposta per affrontare il problema delle chiamate ricorsive è stata eseguire l'unfolding della ricorsione. Ci siamo poi concentrati sugli svantaggi di questa tecnica. Abbiamo osservato che sviluppare molti livelli di ricorsione attraverso l'unfolding porta a un aumento significativo della dimensione del problema, e quindi del numero di qubit necessari per rappresentarlo. Abbiamo stimato e discusso l'aumento quadratico della dimensione del problema in funzione del numero di livelli di ricorsione svolti e osservato che questo può essere problematico considerando lo stato attuale delle macchine quantistiche, sia basate su porte che quantum annealer.
+
+\subsection{Algoritmo QAOA}
+L'ultimo capitolo della tesi presenta un algoritmo alternativo all'annealing per risolvere un problema di ottimizzazione in forma QUBO come quello ottenuto al termine della pipeline di QA-Prolog.
+
+Abbiamo presentato l'algoritmo QAOA, discutendone brevemente le caratteristiche da un punto di vista teorico. Ci siamo poi concentrati sull'automazione della riscrittura dalla matrice dei pesi QUBO (Sezione~\ref{sec:annealing_form}) in un formato compatibile con il framework Qiskit di IBM.
+
+Ottenuta la traduzione, abbiamo eseguito alcuni test partendo dall'output di QA-Prolog e tentando di trovare la soluzione attraverso QAOA. Abbiamo effettuato vari test e commentato i risultati ottenuti, osservando che QAOA non è sempre in grado di restituire la soluzione corretta.
+
+\subsection{Un processo di riscrittura}
+Questo lavoro può essere riassunto come una lunga catena di riscritture di problemi in problemi equivalenti. L'obiettivo è passare da un formato a un altro, da un linguaggio a un altro, preservando determinate proprietà di interesse; la più importante, naturalmente, è che la soluzione del problema non deve mai cambiare.
+
+Questo processo di riscrittura permette di avere diverse versioni dello stesso problema, di osservarlo da prospettive diverse e di scegliere il formato più conveniente per manipolarlo a seconda dell'obiettivo. Ad esempio, vorremmo descrivere il problema nel modo più conveniente possibile, usando un linguaggio di alto livello; d'altra parte, vorremmo risolverlo il più rapidamente possibile, e se questo significa usare una macchina quantistica, vorremmo poter passare facilmente da una rappresentazione all'altra. Anche tutti i passi intermedi sono importanti perché offrono diverse viste del problema e ci danno la possibilità di estrarre proprietà non evidenti ad altri livelli di astrazione e, di conseguenza, di ottimizzare il problema o identificare la migliore strategia di soluzione.
+
+\section{Lavori futuri}
+Presentiamo alcune direzioni per ricerche future che possono beneficiare degli strumenti sviluppati in questo lavoro e dai risultati raggiunti.
+\subsection{Test su hardware quantistico}
+In questa tesi ci siamo limitati a testare gli algoritmi e le soluzioni proposte sui simulatori forniti da D-Wave e IBM. Le ragioni di questa scelta sono principalmente legate a problemi di licenza. D-Wave non consente l'uso delle sue piattaforme senza un abbonamento; IBM invece offre una certa quantità di tempo computazionale sulle sue macchine quantistiche, ma senza un piano a pagamento la priorità assegnata ai task è minima, e a causa di vincoli temporali non è stato possibile effettuare test soddisfacenti sui computer quantistici.
+
+Una possibile direzione futura sarebbe verificare i risultati sperimentali raggiunti in questa tesi anche su hardware quantistico. Da un lato, possiamo aspettarci un miglioramento delle prestazioni dovuto allo sfruttamento delle proprietà quantistiche piuttosto che alla loro simulazione su hardware classico. Dall'altro, un miglioramento della precisione delle soluzioni ottenute non è certo, a causa dei problemi di rumore ancora significativi nelle macchine attuali.
+
+\subsection{Aumento della compatibilità di QMASM}
+QMASM (Sezione~\ref{sec:qmasm}) è l'ultima fase della pipeline di QA-Prolog ed è stato sviluppato per interfacciarsi con il framework D-Wave Ocean. Grazie a QMASM è quindi possibile inviare un problema in forma QUBO direttamente ai quantum annealer D-Wave o risolverlo usando uno dei simulatori forniti all'interno del framework Ocean. Questi simulatori sono progettati per testare il codice su istanze di piccole dimensioni al fine di avere maggiore fiducia nell'esecuzione corretta quando si passa all'hardware quantistico. Nei nostri esperimenti abbiamo incontrato i limiti di questi simulatori nella Sezione~\ref{sec:qa_p_query}.
+
+Rendere QMASM compatibile con altri framework e librerie per la risoluzione di problemi QUBO consentirebbe una maggiore flessibilità nella scelta dello strumento di risoluzione, potenzialmente abilitando sia approcci classici che quantistici. Questo aprirebbe la possibilità di usare il simulated annealing, il simulated quantum annealing o l'algoritmo QAOA, in aggiunta al quantum annealing. Eliminerebbe anche la dipendenza dal framework D-Wave.
+
+Interfacciare QMASM con altri strumenti è un approccio fondamentalmente diverso da quello adottato nel Capitolo~\ref{ch:qaoa}. Lì, siamo partiti dalla rappresentazione matriciale del problema QUBO e lo abbiamo tradotto in un formato compatibile con Qiskit, terminando così tutte le interazioni con QMASM. Se QMASM stesso fosse in grado di interfacciarsi con altri solver, potremmo anche beneficiare del percorso inverso della pipeline, ovvero, una volta ottenuti i risultati, tradurli nuovamente in un linguaggio di alto livello per facilitarne l'interpretazione.
+
+Nel Capitolo~\ref{ch:qaoa} abbiamo scelto di implementare l'algoritmo QAOA in Qiskit per risolvere il problema di soddisfacibilità, poiché potevamo leggere direttamente la soluzione dalla configurazione finale dei qubit. Codificare una KB e una query sarebbe stato possibile, ma interpretare i risultati in formato binario sarebbe stato estremamente complesso. Se QMASM si interfacciasse con Qiskit nello stesso modo in cui lo fa con Ocean, sarebbe possibile ottenere risultati in un formato leggibile dall'uomo.

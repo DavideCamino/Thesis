@@ -1,0 +1,786 @@
+\chapter{Meccanica Quantistica}
+\label{ch:physics}
+In questo capitolo esploreremo le basi della meccanica quantistica al fine di comprendere cosa possiamo o non possiamo fare con un computer quantistico. L'architettura di riferimento per questo lavoro è il computer quantistico basato su porte quantistiche. Nelle prossime pagine cercheremo di giustificare perché gli algoritmi che vengono eseguiti su questo hardware devono essere reversibili.
+
+Il capitolo inizia con la definizione di sistema quantistico e presenta le basi per comprendere l'evoluzione di un sistema quantistico, cercando di giustificare perché ogni evoluzione deve essere reversibile e cosa significa esattamente la reversibilità. Alla fine del capitolo metteremo insieme tutte le nostre nuove conoscenze per derivare la famosa equazione di Schrödinger.
+
+Grazie ai concetti illustrati saremo in grado di immaginare il funzionamento di una porta quantistica e comprendere i limiti che vengono imposti quando sviluppiamo un algoritmo per un computer quantistico.
+
+Questo capitolo è ispirato a~\cite{susskind2014quantum}, in particolare ai capitoli $1$, $2$, $3$ e $4$ del libro originale. Per questo motivo, nel testo non compariranno citazioni in quanto risulterebbero ridondanti.
+
+
+\section{Esperimenti}
+Iniziamo la nostra introduzione alla meccanica quantistica con un esperimento. Gli esperimenti non sono solo un pretesto per introdurre l'argomento, ma la chiave essenziale della fisica, sia classica che moderna.
+
+La teoria e i modelli devono adattarsi agli esperimenti, e quando i risultati sperimentali sono in contraddizione con il modello attuale significa che il modello deve essere modificato per rispettare il comportamento del mondo.
+
+\subsection{Spin}\label{sec:spin}
+\begin{wrapfigure}[11]{r}{.4\linewidth}
+	\centering
+	\vspace{-.25cm}
+	\includegraphics[width=.85\linewidth]{quantum_phisics/spin_experiment}
+	\caption{Schema dell'esperimento}
+\end{wrapfigure}
+Analizziamo l'esperimento di un elettrone in un campo magnetico. Un elettrone è una particella elettricamente carica; quando alcuni elettroni vengono sparati in un campo elettrico tutti sono influenzati dalla legge di Coulomb; se tutti gli elettroni hanno la stessa velocità iniziale il fascio di elettroni rimane intatto.
+
+Cosa succede allo stesso fascio in un campo magnetico? Anche in questo caso gli elettroni vengono deflessi da una forza, ma questa volta il fascio si divide. Se la velocità iniziale era parallela all'asse $x$ e il campo magnetico è orientato lungo l'asse $z$, alcuni elettroni vengono deflessi verso l'alto, altri verso il basso, ma l'intensità della deflessione è la stessa per tutti gli elettroni. Ciò significa che nessun elettrone viene deflesso meno o più degli altri e il fascio si divide esattamente in due parti.
+
+Partendo da questo esperimento possiamo costruire uno strumento di misura: questo apparato $\mathcal{A}$ può essere orientato lungo un asse arbitrario, e nella configurazione precedente $\mathcal{A}$ visualizza $+1$ se l'elettrone viene deflesso verso l'alto, $-1$ altrimenti. Chiamiamo questo numero lo spin dell'elettrone.
+
+Se \marginpar{Ripetibilità della misura} misuriamo lo spin di un elettrone e $\mathcal{A}$ visualizza $+1$, possiamo confermare i risultati dell'esperimento misurando nuovamente lo spin e otteniamo spin $+1$ ogni volta. Ciò significa che le misurazioni sono ripetibili (una proprietà essenziale per costruire modelli e fare previsioni). Possiamo pensare, e sarà chiaro più avanti perché è utile, che il primo esperimento prepara lo spin $+1$ e gli altri confermano questo risultato.
+
+Lo spin è una proprietà quantistica e tutte le rappresentazioni visive come la rotazione dell'elettrone attorno al proprio asse porterebbero a una rappresentazione errata. Spin e rotazione, tuttavia, hanno alcune somiglianze. Analizziamo cosa accadrebbe se considerassimo una sfera carica in un campo magnetico con le leggi della fisica classica. Consideriamo una sfera che ruota attorno al proprio asse, e questo asse è parallelo all'asse $z$. La componente $x$ o $y$ del momento angolare è zero. Misurando la componente lungo un asse generico, orientato come il versore $\hat{n}$\footnote{Un versore è un vettore di modulo $1$ (vettore unitario), è normalmente usato per specificare una direzione.}, otterremmo un risultato proporzionale alla proiezione di $\hat{z}$ su $\hat{n}$. Questa proiezione può essere trovata con il prodotto scalare $\hat{z}\cdot\hat{n} = \cos{\theta}$\footnote{Possiamo usare direttamente l'angolo perché stiamo considerando versori.}, dove $\theta$ è l'angolo tra gli assi.
+
+Consideriamo ora la versione quantistica di questo fenomeno. Iniziamo misurando la componente $z$ dello spin e assumiamo che il risultato sia $\sigma_z = +1$; se ruotiamo l'apparato $\mathcal{A}$ lungo, ad esempio, all'asse $x$, possiamo misurare $\sigma_x$. In quiesto caso non otteniamo zero come nel caso classico, ma $\mathcal{A}$ continua a visualizzare solo $+1$ o $-1$. Il singolo risultato non ci aiuta a capire il fenomeno, ma possiamo ripetere l'esperimento più volte, ovvero:
+\begin{enumerate}
+	\item orientare $\mathcal{A}$ lungo l'asse $z$ e preparare uno spin $\sigma_z = +1$
+	\item ruotare $\mathcal{A}$ lungo l'asse $x$
+	\item misurare la componente $x$ dello spin
+\end{enumerate}
+statisticamente osserveremmo lo stesso numero di $\sigma_x = +1$ e $\sigma_x = -1$, cioè il valore medio di $\sigma_x$ è zero.
+
+Se iniziamo gli esperimenti con uno spin preparato come $\sigma_z = +1$ e poi orientiamo $\mathcal{A}$ lungo un asse generico $\hat{n}$, ogni misura sarebbe binaria e imprevedibile, ma la media delle misure tende a $\hat{z}\cdot\hat{n}=\cos\theta$ dove $\theta$ è l'angolo tra $\hat{z}$ e $\hat{n}$. Nel caso più generale possiamo iniziare con l'apparato orientato come $\hat{m}$ e preparare lo spin $\sigma_m = +1$, poi ruotiamo $\mathcal{A}$ in modo che sia parallelo a $\hat{n}$ senza interferire con lo spin e misuriamo di nuovo; otterremmo il risultato statistico $\Braket{\sigma_n} = \hat{m}\cdot\hat{n}$\footnote{La parentesi di Dirac $\braket{\ }$ denota la media statistica di una quantità. La chiamiamo valore di aspettazione.}.
+
+Il risultato di una singola misura è non deterministico, ma possiamo fare previsioni sui valori medi delle misure: i valori attesi si comportano come i singoli risultati dell'esperimento classico.
+
+Considerando\marginpar{Esperimento invasivo} ora una sequenza di tre misure: partendo con $\mathcal{A}$ orientato lungo $z$ prepariamo lo spin $\sigma_z=+1$, poi ruotiamo $\mathcal{A}$ per misurare $\sigma_x$ ottenendo, diciamo, $+1$ (il ragionamento è lo stesso se otteniamo $-1$); infine riportando $\mathcal{A}$ parallelo a $z$, non possiamo fare alcuna previsione sul singolo risultato, la configurazione iniziale (con $\sigma_z=+1$) è perduta per sempre, l'unico risultato che possiamo prevedere è che $\Braket{\sigma_z} = 0$.
+
+\subsection{Qubit}
+Abbiamo introdotto lo spin riferendoci agli elettroni in un campo magnetico. Tuttavia, possiamo studiare lo spin senza esaminare l'elettrone associato; abbiamo isolato un semplice sistema fisico, il più semplice che possiamo studiare.
+
+Lo spin appartiene a una classe di semplici sistemi fisici chiamati \emph{qubit}; in tutti questi sistemi il risultato di una misura è binario. Vedremo che, anche se il risultato di una misura è uguale al \emph{bit} classico, il sistema qubit è descritto in modo molto diverso rispetto al suo alter ego classico.
+
+\subsection{Logica Booleana}
+In questo paragrafo cerchiamo di capire perché abbiamo bisogno di due modi diversi per descrivere lo spazio degli stati: uno classico e uno quantistico. Per farlo analizziamo i risultati di alcune proposizioni logiche, sia elementari che composte tramite connettivi logici.
+
+Partendo dal caso classico consideriamo un sacchetto di palline colorate e numerate. Possiamo costruire lo spazio degli stati enumerando tutti gli stati, ovvero estraendo ogni pallina dal sacchetto e annotando la coppia numero–colore. Le proposizioni elementari che analizziamo sono:
+\begin{itemize}
+	\item La pallina estratta è rossa.
+	\item Il numero sulla pallina estratta è pari.
+\end{itemize}
+
+Se consideriamo uno stato particolare possiamo dire se una proposizione è vera o falsa; possiamo anche definire due sottoinsiemi di palline, il primo con tutte le palline rosse (per questo sottoinsieme la prima proposizione è vera), il secondo con le palline che mostrano un numero pari (sottoinsieme che rende vera la seconda proposizione). Considerando ora disgiunzione e congiunzione:
+\begin{itemize}
+	\item La pallina estratta è rossa \smallcaps{or} pari.
+	\item La pallina estratta è rossa \smallcaps{and} pari.
+\end{itemize}
+Anche in questo caso è semplice associare un valore di verità a queste proposizioni se consideriamo un singolo stato; possiamo anche costruire due sottoinsiemi che soddisfano le proposizioni a partire dai sottoinsiemi definiti in precedenza: i nuovi sottoinsiemi sono rispettivamente l'unione e l'intersezione di quelli precedenti.
+
+Nel mondo quantistico la situazione è molto diversa. Partiamo da proposizioni che possono essere verificate con un semplice esperimento:
+\begin{itemize}
+	\item La componente $z$ dello spin è $+1$.
+	\item La componente $x$ dello spin è $+1$.
+\end{itemize}
+Se vogliamo verificare la prima proposizione possiamo orientare l'apparato $\mathcal{A}$ lungo $z$ ed effettuare una misura; la stessa procedura può essere seguita per la seconda proposizione. La disgiunzione e la congiunzione di queste proposizioni sono:
+\begin{itemize}
+	\item La componente $z$ dello spin è $+1$ \smallcaps{or} la componente $x$ è $+1$.
+	\item La componente $z$ dello spin è $+1$ \smallcaps{and} la componente $x$ è $+1$.
+\end{itemize}
+
+Iniziamo con la disgiunzione. Consideriamo uno stato preparato, a nostra insaputa, con $\sigma_z = +1$. Se la nostra prima misura è lungo l'asse $z$, $\mathcal{A}$ visualizzerà sempre $+1$ e possiamo concludere immediatamente che la proposizione è vera. Se iniziamo misurando la componente $x$, abbiamo il $50\%$ di probabilità che $\mathcal{A}$ visualizzi $+1$ o $-1$; inoltre questa misura distrugge lo stato iniziale e la misura di $\sigma_z$ diventa non prevedibile. In questo scenario abbiamo il $25\%$ di probabilità di dedurre che la proposizione è falsa; la Figura~\ref{fig:tree_dis} mostra tutti i possibili risultati di misura in questo caso. Il\marginpar{La disgiunzione non è commutativa} valore logico della proposizione dipende dall'ordine in cui eseguiamo le misure.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.7\linewidth]{quantum_phisics/tree_or}
+	\caption[Albero della disgiunzione]{L'apparato $\mathcal{A}$ è rappresentato come un riquadro, la freccia rappresenta la direzione lungo cui l'apparato è orientato, il display (ellisse) mostra il risultato della misura. Abbiamo evidenziato in verde i casi in cui possiamo concludere immediatamente che la disgiunzione delle proposizioni è vera}
+	\label{fig:tree_dis}
+\end{figure}
+
+La congiunzione è ancora peggio: indipendentemente dall'ordine delle misure, la seconda distrugge il risultato della prima. La disgiunzione è vera se almeno una delle sotto-proposizioni è vera, e se troviamo una componente dello spin che vale $+1$ possiamo sempre confermare questo risultato con un'altra misura. Nella\marginpar{La congiunzione perde il suo significato} congiunzione le due sotto-proposizioni devono essere vere \emph{allo stesso tempo}, ma con la seconda misura perdiamo tutta la conoscenza della prima. Non possiamo mai concludere che la congiunzione è vera.
+
+\section{Stati quantistici}
+Nella sezione precedente abbiamo compreso che uno spazio degli stati di un sistema quantistico non può essere rappresentato nello stesso modo di uno spazio degli stati classico. Presentiamo ora un modello matematico formale per descrivere lo spazio degli stati dello spin.
+
+\begin{axiom} 
+	Lo spazio degli stati per un sistema quantistico è uno spazio vettoriale complesso.
+\end{axiom}
+
+Questo è un assioma fisico, il che significa che è vero perché ci sono molti esperimenti che confermano questo modello e nessuno che mostri una contraddizione.
+
+\subsection{Spazi Vettoriali}
+Uno spazio vettoriale è una costruzione matematica e astratta che può avere più dimensioni (anche infinite) e ha, come componenti, numeri interi, reali o complessi, o altri elementi. possiamo capire quanto possa essere astratto uno spazio vettoriale considerando le funzione continue a valori complessi della variabile $x$; l'insieme di queste funzioni genera uno spazio vettoriale.
+
+In\marginpar{Spazio di Hilbert} meccanica quantistica lo spazio degli stati è descritto da uno spazio vettoriale avente come elementi  i \emph{ket} indicati con $\Ket{A}$. Le proprietà di questo spazio sono:
+
+\begin{itemize}
+	\item la somma di due ket è un ket;
+	\item l'addizione è commutativa;
+	\item l'addizione è associativa;
+	\item esiste l'elemento neutro per l'addizione;
+	\item esiste l'elementi inverso per l'addizione;
+	\item esistenza l'elemento neutro per la moltiplicazione scalare;
+	\item vale la proprietà di linearità.
+\end{itemize}
+
+\subsection{Bra e Ket}
+Un esempio di ket che incontreremo spesso è il vettore colonna di due dimensioni:
+\[
+\Ket{A} = 
+\begin{pmatrix}
+	\alpha_1 \\
+	\alpha_2
+\end{pmatrix}
+\]
+dove $\alpha_1$ e $\alpha_2$ sono numeri complessi. Con questo semplice esempio di ket è facile verificare la validità di tutte le proprietà descritte in precedenza.
+
+Se, per i numeri complessi, esiste il complesso coniugato, per ogni ket esiste un \emph{bra}. L'insieme dei bra genera uno spazio duale coniugato rispetto allo spazio degli stati dei ket. Denotiamo un bra come $\Bra{A}$. Se $\Ket{A}$ è il ket dell'esempio precedente, il bra corrispondente è un vettore riga avente come elementi i complessi coniugati di $\Ket{A}$:
+\[
+\Bra{A}= \left(\alpha_1^*, \alpha_2^*\right).
+\]
+
+Il\marginpar{Prodotto interno} nome e il simbolo associati agli elementi degli spazi di Hilbert diventano chiari quando definiamo il prodotto \emph{bra-ket}, che l'operazione corrispondente al prodotto scalare di un vettore ordinario ed è chiamato \emph{prodotto interno}. Considerando bra e ket di due dimensioni possiamo calcolare il prodotto interno sommando i prodotti delle componenti corrispondenti:
+\[
+\Braket{A|B}=\left(\alpha_1^*, \alpha_2^*\right)\cdot 
+\begin{pmatrix}
+	\beta_1 \\
+	\beta_2
+\end{pmatrix}
+= \alpha_1^*\beta_1 + \alpha_2^*\beta_2.
+\]
+
+Avendo introdotto il prodotto interno possiamo definire:
+\begin{description}
+	\item [Versori] vettori normalizzati: $\Ket{A}$ in cui $\Braket{A|A} = 1$;
+	\item[Vettori ortogonali] vettori il cui prodotto interno è nullo: $\Braket{A|B} = 0$.
+\end{description}
+
+Abbiamo familiarità con questi concetti in due e tre dimensioni, i versori sono vettori di lunghezza $1$, vettori ortogonali sono vettori che formano un angolo di $90^\circ$. Questa rappresentazione è fuorviante nel nostro caso, non possiamo immaginare un ket come una freccia e lo spazio degli stati è completamente astratto anche se vi sono proprietà e operazioni in comune tra questo spazio e lo spazio 3D a cui siamo abituati.
+
+Abbiamo perso l'interpretazione geometrica, e sembra che abbiamo definito due concetti completamente astratti e poco utili; vedremo in seguito che questi sono concetti chiave nella descrizione dei sistemi quantistici e hanno un significato fisico preciso e importante.
+
+Avendo\marginpar{Base ortonormale} uno spazio vettoriale è possibile costruire un insieme di versori ortogonali che genera tutti i vettori nello spazio dato. Questo insieme è chiamato base ortonormale e la cardinalità dell'insieme è uguale alla dimensione dello spazio.
+
+Formalmente, avendo una base $\mathscr{B} = \Set{\Ket{i_1}, \Ket{i_2}, \dots, \Ket{i_N}}$ di uno spazio con $N$ dimensioni, possiamo scrivere un vettore generico in quello spazio come
+\begin{equation}
+	\Ket{A}=\sum_{n=1}^{N} \alpha_n \Ket{i_n} = \sum_{n=1}^{N} \Ket{i_n} \Braket{i_n|A}
+\end{equation}
+questa è la combinazione lineare dei versori della base; dove i ket $\Ket{i_n}$ sono i versori della base e $\alpha_n$ sono le componenti del vettore. Possiamo ottenere queste componenti con il prodotto interno tra il vettore $\Ket{A}$ e i versori della base:
+\begin{equation}
+	\label{eqn:decomp}
+	\alpha_i = \Braket{i|A}.
+\end{equation}
+
+\subsection{Variabili nascoste}
+In fisica classica possiamo misurare tutte le variabili associate a un sistema fisico e poi fare una previsione deterministica dell'evoluzione di quel sistema. Dagli esperimenti descritti nella prima sezione abbiamo appreso che un sistema quantistico non è completamente prevedibile anche se possiamo effettuare tutte le misure che vogliamo\footnote{Ricordiamo che una misura lungo un asse distrugge la nostra conoscenza del risultato lungo un altro asse.}. Possiamo perciò chiederci se le nostre misurazioni siano davvero sufficienti, se non esistano invece altre variabili che possano rendere la previsione completamente deterministica. Su questo argomento non abbiamo alcuna prova sperimentale, l'opinione dei fisici è divisa in due visioni principali:
+\begin{description}
+	\item[Opinione Uno]: esistono variabili nascoste che una volta misurate rendono la previsione dei risultati deterministica. Queste variabili possono essere
+	\begin{itemize}
+		\item molto difficili da misurare;
+		\item inconoscibili per noi perché anche noi siamo costituiti da materia quantistica.
+	\end{itemize}
+	\item[Opinione Due]: le variabili nascoste non esistono, conosciamo già tutte le informazioni su un dato sistema e la meccanica quantistica è intrinsecamente non deterministica.
+\end{description}
+
+Probabilmente\marginpar{Nessuna variabile nascosta} nessun esperimento potrà mai determinare quale visione sia corretta, ma questo dubbio non peggiora la nostra comprensione del mondo fisico. Possiamo semplicemente scegliere una visione e costruire il nostro modello coerentemente. Scegliamo quella più semplice: senza variabili nascoste. Tutto ciò che dobbiamo modellare sono le grandezze che possiamo misurare e le misurazioni ci permettono di conoscere tutte le informazioni su un dato sistema.
+
+Anche se abbiamo perso il determinismo completo, conoscere lo stato di un sistema ci fornisce alcune informazioni sul sistema e sulle misure successive. Nella prossima sezione vedremo cosa possiamo dedurre sullo spin.
+
+\subsection{Stati di spin}
+Iniziamo enumerando tutti i possibili stati di spin lungo gli assi coordinati. Se ruotiamo l'apparato $\mathcal{A}$ attorno a $z$, possiamo ottenere $\sigma_z = \pm 1$; chiamiamo questi stati \emph{up} e \emph{down} e li etichettiamo con i ket $\Ket{u}$ e $\Ket{d}$. Orientando $\mathcal{A}$ lungo $x$, otteniamo \emph{left} $\Ket{l}$ e \emph{right} $\Ket{r}$. Infine, lungo l'asse $y$, misuriamo gli stati \emph{in} $\Ket{i}$ e \emph{out} $\Ket{o}$.
+
+L'ipotesi\marginpar{Lo spazio degli stati di spin ha due dimensioni} che non esistano variabili nascoste ci permette di rappresentare lo spazio degli stati in modo semplice: ogni stato di spin può essere rappresentato come un ket in uno spazio vettoriale complesso bidimensionale.
+
+Per esprimere un vettore abbiamo bisogno di una base; scegliamo $\mathscr{B}=\Set{\Ket{u}, \Ket{d}}$\footnote{Mostreremo che questi vettori sono effettivamente ortogonali e perché devono esserlo.} e cerchiamo di ottenere tutti gli stati come combinazione lineare (\emph{sovrapposizione}) dei vettori della base. Un generico stato $\Ket{A}$ può essere espresso come:
+\[
+\Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}
+\]
+dove $\alpha_u$ e $\alpha_d$ sono le componenti di $\Ket{A}$ lungo $\Ket{u}$ e $\Ket{d}$, e possono essere ottenute per proiezione: $\alpha_u = \Braket{u|A}$ e $\alpha_d = \Braket{d|A}$ (come nell'Equazione~\ref{eqn:decomp}).
+
+Le\marginpar{Ampiezze di probabilità} componenti di $\Ket{A}$ sono numeri complessi e il loro significato fisico è: avendo uno spin preparato nello stato $\Ket{A} = \alpha_u \Ket{u} + \alpha_d\Ket{d}$\footnote{D'ora in poi usiamo \say{preparato} o \say{misurato} come sinonimi: ogni misura è invasiva e può cambiare lo stato di spin, quindi indipendentemente da quale fosse lo stato precedente, dopo una misura lo stato è quello che abbiamo misurato.}; $\alpha_u^*\alpha_u$ è la probabilità di misurare $\sigma_z = +1$, mentre $\alpha_d^*\alpha_d$ è la probabilità che una misura di $\sigma_z$ dia $-1$. Formalmente possiamo denotare la probabilità di misurare $+1$ e $-1$ rispettivamente come $P_u$ e $P_d$ e scrivere:
+\begin{align}
+	\label{eqn:prob_state}
+	P_u &= \Braket{A|u}\Braket{u|A} \notag\\ 
+	P_d &= \Braket{A|d}\Braket{d|A}.
+\end{align}
+
+Le componenti $\alpha_u$ e $\alpha_d$ sono chiamate ampiezze di probabilità, e il loro significato fisico è dato dal quadrato del modulo. Questa è la probabilità effettiva, e vogliamo che la somma di tutte le probabilità sia uno. Ciò equivale a richiedere che $\Ket{A}$ sia normalizzato: $\Braket{A|A} = 1$.
+
+Mostreremo ora perché $\Ket{u}$ e $\Ket{d}$ devono essere ortogonali:
+\begin{align*}
+	\Braket{u|d}&= 0\\
+	\Braket{d|u}&= 0.
+\end{align*}
+Cerchiamo di dare un'idea con una \textit{reductio ad absurdum}: se $\Ket{u}$ e $\Ket{d}$ non fossero ortogonali, la proiezione dell'uno sull'altro non sarebbe nulla. Ciò significa che se orientiamo $\mathcal{A}$ lungo $z$ e misuriamo $\sigma_z = +1 = \Ket{u}$, avremmo $\alpha_d = \Braket{d|u} \neq 0$, il che è in contraddizione con i risultati sperimentali. Se $\alpha_d \neq 0$, allora $\alpha_d^*\alpha_d > 0$; abbiamo iniziato con uno stato preparato come $\sigma_z = +1$ e siamo finiti con una probabilità non nulla di misurare $\sigma_z = -1$: questo è assurdo.
+
+Possiamo \marginpar{Gli stati ortogonali sono mutualmente esclusivi} estendere il ragionamento a un concetto generale e fondamentale della meccanica quantistica: due stati ortogonali sono distinti e mutualmente esclusivi. Se il sistema si trova nel primo stato, la probabilità di trovarlo nel secondo è zero.
+
+Siamo ora pronti ad esprimere gli stati di spin come combinazioni lineari dei vettori della base $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$. La rappresentazione degli stessi vettori della base è naturalmente semplice:
+\begin{align}
+	\Ket{u} &= \begin{pmatrix}
+		1 \\
+		0
+	\end{pmatrix}
+	\label{eqn:ket_u}\\
+	\Ket{d} &= \begin{pmatrix}
+		0 \\
+		1
+	\end{pmatrix}.
+	\label{eqn:ket_d}
+\end{align}
+
+Per costruire il vettore \emph{right}, consideriamo uno spin preparato nello stato $\Ket{r}$. Se misuriamo $\sigma_z$, abbiamo il $50\%$ di probabilità di ottenere $+1$ (e il $50\%$ per $-1$); ciò significa che per $\Ket{r}$ abbiamo $\alpha_u^*\alpha_u = \alpha_d^*\alpha_d = \sfrac{1}{2}$. Un vettore che soddisfa questo vincolo è:
+\begin{equation}
+	\Ket{r} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_r}
+\end{equation}
+
+Il ragionamento è lo stesso per lo stato \emph{left}; aggiungiamo anche il vincolo che uno stato \emph{left} non può essere \emph{right} e viceversa: $\Braket{r|l} = \Braket{l|r} = 0$. Possiamo esprimere \emph{left} come:
+
+\begin{equation}
+	\Ket{l} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		-\frac{1}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_l}
+\end{equation}
+
+Infine, i vincoli per trovare le forme esplicite di \emph{in} e \emph{out} sono:
+\begin{itemize}
+	\item gli stati devono essere ortogonali: $\Braket{i|o} = \Braket{o|i} = 0$;
+	\item se abbiamo uno spin preparato come \emph{in} o \emph{out}:
+	\begin{itemize}
+		\item equiprobabilità di misurare $\sigma_z = +1$ e $\sigma_z = -1$;
+		\item equiprobabilità di misurare $\sigma_x = +1$ e $\sigma_x = -1$.
+	\end{itemize}
+\end{itemize}
+
+Due vettori che soddisfano questi vincoli sono:
+\begin{gather}
+	\Ket{i} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		\frac{i}{\sqrt{2}}
+	\end{pmatrix}
+	\label{eqn:ket_i}\\
+	\Ket{o} = \begin{pmatrix}
+		\frac{1}{\sqrt{2}} \\
+		-\frac{i}{\sqrt{2}}
+	\end{pmatrix}.
+	\label{eqn:ket_o}
+\end{gather}
+Quest'ultima derivazione mostra perché è importante che lo spazio degli stati sia complesso: se accettassimo solo componenti reali per i nostri vettori, il sistema di equazioni che abbiamo implicitamente definito non avrebbe alcuna soluzione\footnote{Per evitare confusione, precisiamo che $\Ket{i}$ è il ket dello stato \emph{dentro}. $i$, invece, è l'unità immaginaria.}.
+
+\section{Osservabili}
+Nella nostra esperienza quotidiana abbiamo imparato che in meccanica classica possiamo fidarci della nostra intuizione, e possiamo effettuare una o più misure per conoscere esattamente lo stato di un sistema: una misura non perturba lo stato, che è lo stesso prima, durante e dopo la misura.
+
+In meccanica quantistica la situazione è più complessa; la nostra intuizione è fuorviante, e abbiamo bisogno di strumenti matematici per descrivere ciò che possiamo misurare: le \emph{osservabili}. Questi strumenti sono operatori matematici chiamati \emph{macchine} ($\mathbf{M}$) e hanno come input e output vettori di stato.
+
+\begin{axiom}
+	Le macchine associate alle osservabili sono descritte da operatori lineari.
+\end{axiom}
+
+Mostreremo che le macchine sono operatori hermitiani, quindi iniziamo definendo questi operatori e descrivendo le loro proprietà\footnote{La ragione per cui abbiamo bisogno di questo tipo di operatore sarà chiara nella Sezione~\ref{sec:principles}.}.
+
+\subsection{Operatore hermitiano}
+\noindent Formalmente, le macchine modificano un vettore di stato in questo modo:
+\[
+\mathbf{M} \Ket{A} = \Ket{B}
+\]
+La linearità delle macchine implica che:
+\[
+\mathbf{M} \Ket{A} = \Ket{B} \Rightarrow \mathbf{M} z\Ket{A} = z\Ket{B}
+\]
+e:
+\[
+\mathbf{M}(\Ket{A}+\Ket{B}) = \mathbf{M}\Ket{A} + \mathbf{M}\Ket{B}.
+\]
+
+Se scegliamo una base per rappresentare le macchine e i vettori di stato, possiamo scrivere esplicitamente l'operatore lineare come una matrice $N\times N$, dove $N$ è la dimensione dello spazio vettoriale dei vettori di stato. Una macchina generica che trasforma gli spin può essere espressa come:
+\[
+\mathbf{M} = \begin{pmatrix}
+	m_{11} &  m_{12}\\
+	m_{21} &  m_{22}
+\end{pmatrix}.
+\]
+
+Quando fissiamo una base, siamo costretti ad esprimere tutti i vettori di stato e gli operatori in quella base, ma ora abbiamo un insieme di regole per definire l'applicazione dell'operatore a un vettore di stato, ovvero la moltiplicazione matriciale:
+
+\[
+\mathbf{M} \Ket{A} = 
+\begin{pmatrix}
+	m_{11} &  m_{12}\\
+	m_{21} &  m_{22}
+\end{pmatrix}
+\times
+\begin{pmatrix}
+	\alpha_{1}\\
+	\alpha_{2}
+\end{pmatrix}
+=
+\begin{pmatrix}
+	\beta_{1}\\
+	\beta_{2}
+\end{pmatrix}
+=\Ket{B}
+\]
+
+Quando\marginpar{Autovalori e\\ autovettori} consideriamo un operatore lineare, possiamo cercare autovalori e autovettori (se esistono). Gli autovettori sono vettori che non cambiano direzione quando vengono moltiplicati per l'operatore; la loro ampiezza viene scalata da un fattore costante chiamato autovalore. Formalmente:
+\[
+\mathbf{M}\Ket{\lambda} = \lambda\Ket{\lambda}
+\]
+dove $\Ket{\lambda}$ è l'autovettore e $\lambda$ l'autovalore corrispondente.
+
+Considerando la trasformazione dal ket $\Ket{A}$ a $\Ket{B}$: $\mathbf{M} \Ket{A} = \Ket{B}$, tenendo conto dello spazio duale dei bra e cercando una macchina che trasformi il bra $\Bra{A}$ in $\Bra{B}$, non possiamo semplicemente usare la matrice avente come elementi ii complesso coniugati di $\mathbf{M}$; l'operatore corretto è il \emph{coniugato hermitiano} di $\mathbf{M}$, che è la trasposta della matrice avente come elementi i complessi coniugati di $\mathbf{M}$. Denotiamo il coniugato hermitiano con la daga $\dagger$:
+\[
+\mathbf{M}^\dagger =  [\mathbf{M}^*]^T = [\mathbf{M}^T]^*.
+\]
+
+Possiamo ora scrivere:
+\[
+\mathbf{M}\Ket{A} = \Ket{B} \Rightarrow \Bra{A}\mathbf{M}^\dagger = \Bra{B}.
+\]
+
+Un operatore uguale al proprio coniugato hermitiano è chiamato \emph{operatore hermitiano}. Formalmente, $\mathbf{M}$ è hermitiano se e solo se
+\[
+\mathbf{M} = \mathbf{M}^\dagger.
+\]
+\newpage
+Gli operatori hermitiani hanno alcune proprietà importanti:
+\begin{itemize}
+	\item tutti gli autovalori sono reali;
+	\item gli autovettori formano un \emph{insieme completo}: tutti i vettori ottenuti con l'applicazione dell'operatore possono essere espressi come combinazione lineare degli autovettori;
+	\item se $\lambda_1$ e $\lambda_2$ sono autovalori distinti, gli autovettori associati sono ortogonali;
+	\item se due autovalori sono uguali (\emph{degenerazione}), è sempre possibile trovare due autovettori associati che siano ortogonali.
+\end{itemize}
+
+Le\marginpar{Teorema fondamentale} ultime tre proprietà possono essere riassunte nel modo seguente:
+\begin{theorem}
+	Gli autovettori di un operatore hermitiano formano una base ortonormale.
+\end{theorem} 
+
+\subsection{Principi della meccanica quantistica}\label{sec:principles}
+Introduciamo i primi quattro principi della meccanica quantistica, quelli riguardanti le osservabili\footnote{Il quinto, e ultimo principio, riguarda l'evoluzione temporale. Verrà discusso più avanti (Sezione~\ref{sec:temp_evol}).}.
+\begin{principles}
+	Le osservabili in meccanica quantistica sono descritte da operatori lineari $\mathbf{L}$.
+\end{principles}
+$\mathbf{L}$ deve essere anche un operatore hermitiano: possiamo considerare questa proposizione un assioma a sé stante oppure dedurla dagli altri principi.
+
+\begin{principles}
+	I risultati di una misura possono essere solo gli autovalori associati all'operatore osservabile.
+\end{principles}                                                                                                         
+Chiamando $\lambda_i$ un autovalore generico e $\Ket{\lambda_i}$ l'autovettore associato, se il sistema si trova nell'\emph{autostato} $\Ket{\lambda_i}$, la misura restituisce sempre $\lambda_i$. Poiché tutti i $\lambda_i$ devono essere grandezze fisiche devono essere reali, proprietà soddisfatta degli operatori hermitiani.
+
+\begin{principles}
+	Stati inequivocabilmente distinguibili sono rappresentati da vettori ortogonali.
+\end{principles}
+Gli stati distinguibili possono essere separati senza ambiguità da una misura. Ad esempio, se vogliamo distinguere tra $\Ket{u}$ e $\Ket{d}$, misuriamo $\sigma_z$: \emph{up} e \emph{down} sono distinti. Non possiamo invece dire se un certo sistema si trova nello stato \emph{up} o \emph{right}, perché anche se il sistema è nello stato $\Ket{u}$ possiamo comunque misurare $\sigma_x$ e trovare (con il $50\%$ di probabilità) che il sistema si trova nello stato $\Ket{r}$.
+
+Il \marginpar{Sovrapposizione} prodotto interno è una misura di quanto due stati siano indistinguibili; per questo motivo è anche chiamato sovrapposizione. Due stati sono fisicamente distinti se la sovrapposizione è zero.
+\begin{align*}
+	\Braket{u|d} &= 0\\
+	\Braket{u|r} &\neq 0
+\end{align*}
+
+\begin{principles}
+	Se il sistema si trova nello stato $\Ket{A}$ e misuriamo l'osservabile $\mathbf{L}$, la probabilità di ottenere $\lambda_i$ è:
+	\[
+	P(\lambda_i) = \Braket{A|\lambda_i}\Braket{\lambda_i|A}.
+	\]
+	\emph{dove $\lambda_i$ è un autovalore generico di $\mathbf{L}$ e $\Bra{\lambda_i}$, $\Ket{\lambda_i}$ sono il bra e il ket associati a quell'autovalore (autovettore di $\lambda_i$).}
+\end{principles}
+
+\subsection{Operatore di Spin}
+I principi ci dicono quali proprietà deve avere una macchina per rappresentare un'osservabile. Costruiamo l'operatore di spin $\sigma$.
+
+Finora abbiamo misurato gli spin con l'apparato $\mathcal{A}$, orientando $\mathcal{A}$ lungo la componente di nostro interesse. $\sigma$ è uno strumento matematico che ci permette di fare previsioni sul risultato di una misura con $\mathcal{A}$ (quarto principio). Poiché possiamo ruotare $\mathcal{A}$, dobbiamo anche ruotare (matematicamente) $\sigma$. Per questa proprietà spaziale, $\sigma$ è chiamato \emph{operatore trivettoriale}.
+
+\paragraph{Operatore $\boldsymbol{\sigma_z}$:} Iniziamo con l'operatore più semplice\footnote{Questo perché abbiamo scelto $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$ come base.}. Il secondo principio dice che tutti gli autovettori di $\sigma_z$ sono $\Ket{u}$ e $\Ket{d}$, con autovalori associati $+1$ e $-1$. Possiamo scrivere questa affermazione come equazioni:
+\begin{gather*}
+	\sigma_z \Ket{u} = \Ket{u}  \\
+	\sigma_z \Ket{d} = -\Ket{d}.
+\end{gather*}
+In forma matriciale:
+\begin{align*}
+	\begin{pmatrix}
+		(\sigma_z)_{11} &  (\sigma_z)_{12}\\
+		(\sigma_z)_{21} &  (\sigma_z)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		1\\
+		0
+	\end{pmatrix} &= 
+	\begin{pmatrix}
+		1\\
+		0
+	\end{pmatrix}\\
+	\begin{pmatrix}
+		(\sigma_z)_{11} &  (\sigma_z)_{12}\\
+		(\sigma_z)_{21} &  (\sigma_z)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		0\\
+		1
+	\end{pmatrix} &= -
+	\begin{pmatrix}
+		0\\
+		1
+	\end{pmatrix}.
+\end{align*}
+La soluzione di questo sistema è\footnote{È facile verificare che anche questo operatore è lineare.}:
+\[
+\sigma_z = 
+\begin{pmatrix}
+	1 & 0\\
+	0 & -1
+\end{pmatrix}.
+\label{eqn:obs_z}
+\]
+
+\paragraph{Operatore $\boldsymbol{\sigma_x}$:} Con lo stesso ragionamento, possiamo costruire l'operatore lungo l'asse $x$. Abbiamo già dedotto le rappresentazioni di \emph{right} e \emph{left} nelle Equazioni~\ref{eqn:ket_r}~e~\ref{eqn:ket_l}. Le equazioni che ci permettono di costruire $\sigma_x$ sono:
+\begin{align*}
+	\begin{pmatrix}
+		(\sigma_x)_{11} &(\sigma_x)_{12}\\
+		(\sigma_x)_{21} &  (\sigma_x)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix} &= 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{1}{\sqrt{2}}
+	\end{pmatrix} \\
+	\begin{pmatrix}
+		(\sigma_x)_{11} &  (\sigma_x)_{12}\\
+		(\sigma_x)_{21} &  (\sigma_x)_{22}
+	\end{pmatrix} 
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{-1}{\sqrt{2}}
+	\end{pmatrix} &= -
+	\begin{pmatrix}
+		\frac{1}{\sqrt{2}}\\
+		\frac{-1}{\sqrt{2}}
+	\end{pmatrix}.
+\end{align*}
+La soluzione di questo sistema è:
+\[
+\sigma_x = 
+\begin{pmatrix}
+	0 & 1\\
+	1 & 0
+\end{pmatrix}.
+\label{eqn:obs_x}
+\]
+
+\paragraph{Operatore $\boldsymbol{\sigma_y}$:} L'ultima direzione è lungo l'asse $y$. Considerando le espressioni per \emph{in} e \emph{out} fornite nelle Equazioni~\ref{eqn:ket_i}~e~\ref{eqn:ket_o}, e seguendo il secondo principio, possiamo scrivere:
+\begin{gather*}
+	\sigma_y \Ket{i} = \Ket{i}\\
+	\sigma_y \Ket{o} = -\Ket{o}.
+\end{gather*}
+Possiamo riscrivere questo sistema di equazioni in forma matriciale, e la soluzione che otterremmo è:
+\[
+\sigma_y = 
+\begin{pmatrix}
+	0 & -i\\
+	i & 0
+\end{pmatrix}.
+\label{eqn:obs_y}
+\]
+
+Abbiamo\marginpar{Matrici di Pauli} ottenuto una rappresentazione matriciale dei tre operatori di spin $\sigma_z$, $\sigma_x$ e $\sigma_y$:
+\begin{equation}
+	\sigma_z = 
+	\begin{pmatrix}
+		1 & 0\\
+		0 & -1
+	\end{pmatrix} \quad\quad
+	\sigma_x = 
+	\begin{pmatrix}
+		0 & 1\\
+		1 & 0
+	\end{pmatrix} \quad\quad
+	\sigma_y = 
+	\begin{pmatrix}
+		0 & -i\\
+		i & 0
+	\end{pmatrix}.
+	\label{eqn:pauli_op}
+\end{equation}
+Queste famose e importanti matrici (unite alla matrice identità) prendono il nome dal loro inventore, Wolfgang Ernst Pauli.
+
+\subsection{Teoria ed esperimenti}
+Grazie agli operatori $\sigma_z$, $\sigma_x$ e $\sigma_y$, se conosciamo il vettore di stato, possiamo prevedere statisticamente il risultato di una misura dello spin lungo uno dei tre assi coordinati. Cosa possiamo dire di una misura effettuata orientando l'apparato $\mathcal{A}$ lungo una direzione generica?
+
+Considerando $\mathcal{A}$ orientato lungo il versore $\hat{n}$, se $\sigma$ si comporta come un trivettore, per ottenere $\sigma_n$ è sufficiente il prodotto interno:
+\[
+\sigma_n = \vec{\sigma} \cdot \hat{n}
+\]
+Espandendo le componenti:
+\[
+\sigma_n = \sigma_xn_x+\sigma_yn_y+\sigma_zn_z.
+\]
+
+Se scegliamo la base $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$, possiamo usare le matrici di Pauli per esprimere in forma matriciale l'espressione per $\sigma_n$:
+\begin{equation*}
+	\sigma_n = n_x
+	\begin{pmatrix}
+		0 & 1\\
+		1 & 0
+	\end{pmatrix}
+	+ n_y
+	\begin{pmatrix}
+		0 & -i\\
+		i & 0
+	\end{pmatrix}
+	+ n_z
+	\begin{pmatrix}
+		1 & 0\\
+		0 & -1
+	\end{pmatrix} 	
+	= 
+	\begin{pmatrix}
+		n_z & n_x - in_y\\
+		n_x + in_y & -n_z
+	\end{pmatrix}.
+\end{equation*}
+
+Data una direzione (espressa dal versore $\hat{n}$), possiamo costruire la matrice che abbiamo ora reso esplicita, e poi, dopo aver trovato autovalori e autovettori, possiamo conoscere tutti i possibili risultati di una misura e ottenere la probabilità associata a ciascun risultato. Ad esempio, considerando una direzione nel piano $x\textendash z$, l'operatore $\sigma_n$ diventa:
+\[
+\sigma_n = 
+\begin{pmatrix}
+	\cos\theta & \sin\theta\\
+	\sin\theta & -\cos\theta
+\end{pmatrix} 	
+\]
+dove $\theta$ è l'angolo tra $\hat{n}$ e $z$. Per questa matrice, gli autovalori e gli autovettori sono:
+\[
+\lambda_1 = 1 \quad\quad\ \  \Ket{\lambda_1}=
+\begin{pmatrix}
+	\cos\frac{\theta}{2}\\
+	\sin\frac{\theta}{2}
+\end{pmatrix} \quad
+\]
+e
+\[
+\lambda_2 = -1 \quad\quad \Ket{\lambda_2}=
+\begin{pmatrix}
+	-\sin\frac{\theta}{2}\\
+	\cos\frac{\theta}{2}
+\end{pmatrix}.
+\]
+
+È opportuno sottolineare che la teoria è in accordo con i risultati sperimentali\footnote{In caso contrario, dovremmo abbandonare questo modello e costruirne un altro.}. Gli autovalori sono $+1$ e $-1$, esattamente i soli risultati che l'apparato $\mathcal{A}$ può restituire. La probabilità di ottenere un determinato risultato può essere valutata come:
+\begin{gather*}
+	P(+1) = |\Braket{u|\lambda_1}|^2 = \cos^2\frac{\theta}{2}\\
+	P(-1) = |\Braket{u|\lambda_2}|^2 = \sin^2\frac{\theta}{2}
+\end{gather*}
+
+Infine,\marginpar{Valore di aspettazione} calcoliamo il valore medio per la misura $\sigma_n$. Dal primo esperimento che abbiamo visto nella Sezione~\ref{sec:spin}, sappiamo già che il risultato di misure ripetute con $\mathcal{A}$ è $\cos\theta$. Verifichiamo se il nostro modello è coerente con il mondo fisico.
+
+I valori di aspettazione si ottengono come:
+\[
+\Braket{L} = \sum_{i}\lambda_iP(\lambda_i)
+\]
+Nello specifico:
+\[
+\Braket{\sigma_n} = (+1)\cos^2\frac{\theta}{2} + (-1)\sin^2\frac{\theta}{2} = \cos\theta.
+\]
+Questo è in completo accordo con i risultati sperimentali.
+
+Prima di proseguire, presentiamo, senza dimostrazione, un teorema utile sui valori di aspettazione:
+\begin{theorem}
+	Per conoscere il valore di aspettazione di un'osservabile, possiamo semplicemente collocare l'operatore associato all'osservabile tra il bra e il ket del vettore di stato:
+	\begin{equation}
+		\label{eqn:exp}
+		\Braket{\mathbf{L}} = \Braket{A|\mathbf{L}|A}
+	\end{equation}
+	\emph{dove $\mathbf{L}$ è un'osservabile, $\Ket{A}$ è un vettore di stato e $\Bra{A}$ è il bra corrispondente.}
+\end{theorem}
+
+%\paragraph{Interpretazione geometrica:} Se conosciamo il vettore di stato espresso nella base $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$ siamo immediatamente in grado di ricavare la probabilità di ottenere un certo risultato misurando $\sigma_z$, lo stesso potremmo dire se abbiamo un vettore di stato espresso nella base $\mathscr{B} = \Set{\Ket{r}, \Ket{l}}$ e vogliamo conoscere $\sigma_x$.
+%
+%Gli operatori $\sigma$ ci consentono di partire da un vettore di stato in ua certa base (nella nostra costruzione $\mathscr{B} = \Set{\Ket{u}, \Ket{d}}$) e di conoscere i valori di aspettazione $\Braket{\sigma_n}$ dato un $\hat{n}$ arbitrario. 
+%
+%Potremmo\marginpar{cambiamenti di base e rotazioni} dire che gli operatori $\sigma$ ci permettono di effettuare un cambio di base del vettore di stato, per descriverlo nella base della componente che ci interessa misurare\footnote{Non è esattamente un cambiamento di base, infatti il nuovo vettore è espresso ancora nella base di partenza}. Si può vedere il cambiamento di base anche come una rotazione del vettore di stato, in effetti le matrici di Pauli unite alla matrice identità sono dette \emph{quaternioni}, strutture matematiche che si usano, a esempio, in computer grafica proprio per effettuare rotazioni di oggetti.
+\subsection{Operatori e Misure}
+Gli operatori ci permettono di conoscere la probabilità di misurare un certo spin data la direzione della misura e il vettore di stato. Questa probabilità è espressa dal vettore di stato che otteniamo quando applichiamo l'operatore $\sigma$ allo stato iniziale.
+
+È importante non confondere l'atto di misura con l'applicazione di una macchina che rappresenta le osservabili. Lo stato di spin dopo la misura non è lo stesso che otteniamo dopo l'applicazione dell'operatore. L'operatore è solo un costrutto matematico astratto che ci permette di fare previsioni statistiche sui risultati, ma non ha implicazioni fisiche.
+
+Consideriamo un esempio per chiarire l'affermazione precedente. Avendo uno spin preparato nello stato \emph{up}, il suo vettore di stato è $\Ket{u} = \left(\begin{smallmatrix}1\\0\end{smallmatrix}\right)$. Se applichiamo l'operatore $\sigma_z$, otterremmo di nuovo $\left(\begin{smallmatrix}1\\0\end{smallmatrix}\right)$, e se misuriamo lo spin con $\mathcal{A}$ orientato lungo $z$, visualizzerà sempre $+1$, e concludiamo che lo stato dopo la misura è $\Ket{u}$.
+
+Consideriamo ora uno spin preparato \emph{right}, ovvero $\Ket{r}= {1}/{\sqrt{2}}\Ket{u} + {1}/{\sqrt{2}}\Ket{d}$. Applicando nuovamente l'operatore $\sigma_z$, il nuovo vettore di stato è ${1}/{\sqrt{2}}\Ket{u} - {1}/{\sqrt{2}}\Ket{d}$. Questo vettore ci dice la probabilità di misurare $\sigma_z = +1$ ($50\%$), ma non è lo stato di spin dopo la misura. Usando l'apparato $\mathcal{A}$, potremmo misurare:
+\begin{itemize}
+	\item $+1$: lo stato finale sarà \emph{up};
+	\item $-1$: lo stato finale sarà \emph{down}.
+\end{itemize} 
+Indipendentemente dal risultato della misura, lo stato finale sarà diverso da quello ottenuto applicando l'operatore.
+
+\section{Evoluzione Temporale}\label{sec:temp_evol}
+Esploriamo le leggi che descrivono l'evoluzione temporale di un sistema quantistico. In particolare, vedremo come il vettore di stato può evolvere nel tempo.
+
+\subsection{Unitarietà}
+In meccanica classica siamo abituati ad avere una legge del moto che collega deterministicamente i diversi stati del nostro sistema; ciò significa poter conoscere con precisione lo stato successivo dato quello precedente. Una buona legge, tuttavia, non ci permette solo di conoscere il futuro, ma anche gli stati passati che hanno portato il sistema allo stato attuale\footnote{Ad esempio, se osserviamo una palla in caduta libera che tocca il suolo con una certa velocità e in un certo momento, possiamo sapere esattamente quando e da quale altezza la palla ha iniziato la sua caduta.}. 
+
+In\marginpar{Reversibilità} altre parole, vogliamo che le trasformazioni fisiche siano reversibili. Questo requisito è così importante che chiamiamo questa proprietà la \emph{legge meno uno}, perché è alla base di tutto il resto. Se pensiamo agli stati del sistema come nodi in un grafo orientato, la reversibilità impone che ogni nodo abbia esattamente un arco entrante e uno uscente. Questa legge fondamentale vale anche in meccanica quantistica ed è chiamata \emph{unitarietà}\footnote{Vedremo nel prossimo paragrafo la ragione di questo nome}, e ci assicura che nessuna informazione venga persa. La legge di unitarietà può essere espressa come:
+
+\begin{axiom}
+	Se due sistemi isolati identici si trovano in stati diversi, rimangono in stati diversi, ed erano in stati diversi nel passato.
+\end{axiom}
+
+\subsection{Operatore di Evoluzione Temporale}
+\label{sec:unitary_operator}
+Considerando un sistema nello stato $\Ket{\Psi(t)}$, dove la $t$ indica che il vettore di stato evolve nel tempo, le equazioni del moto quantistiche ci permettono di ottenere lo stato al tempo $t$ dato lo stato iniziale:
+\begin{equation}
+	\label{eqn:evol}
+	\Ket{\Psi(t)} = \mathbf{U}(t)\Ket{\Psi(0)}.
+\end{equation}
+
+Grazie\marginpar{Determinismo} all'operatore $\mathbf{U}(t)$ possiamo conoscere esattamente il vettore di stato $\Ket{\Psi(t)}$ al tempo $t$, dato $\Ket{\Psi(0)}$. Questa affermazione può essere riformulata come:
+
+\begin{axiom}
+	L'evoluzione temporale del vettore di stato è deterministica.
+\end{axiom}
+
+La meccanica quantistica è ancora non deterministica, perché conoscere il vettore di stato non significa conoscere il risultato di una misura.
+
+Affinché $\mathbf{U}(t)$ si comporti come vogliamo, deve:
+\begin{itemize}
+	\item essere un operatore lineare;
+	\item rispettare la reversibilità.
+\end{itemize}
+
+Il secondo vincolo ci permette di definire le proprietà matematiche di $\mathbf{U}(t)$. Considerando due stati inizialmente diversi $\Ket{\Psi(0)}$ e $\Ket{\Phi(0)}$, poiché esiste un esperimento capace di distinguere con certezza gli stati, $\Ket{\Psi(0)}$ e $\Ket{\Phi(0)}$ devono essere ortogonali:
+\[
+\Braket{\Psi(0)|\Phi(0)} = 0.
+\]
+La\marginpar{Conservazione delle distinzioni} legge meno uno assicura che durante l'intera evoluzione temporale dei due sistemi, i vettori di stato $\Ket{\Psi(t)}$ e $\Ket{\Phi(t)}$ continueranno ad essere distinguibili (ortogonali):
+\[
+\Braket{\Psi(t)|\Phi(t)} = 0 \qquad\qquad\forall t \geq 0.
+\]
+Se riscriviamo questa equazione usando la Formula~\ref{eqn:evol}, otteniamo:
+\[
+\Bra{\Psi(0)}\mathbf{U}^\dagger(t) \mathbf{U}(t)\Ket{\Phi(0)} = 0.
+\]
+Da questo possiamo vedere che $\mathbf{U}^\dagger(t) \mathbf{U}(t)$ deve comportarsi come l'operatore identità, ovvero:
+\begin{equation}
+	\label{eqn:unit}
+	\mathbf{U}^\dagger(t) \mathbf{U}(t) = \mathbf{I}.
+\end{equation}
+
+Un operatore che si comporta come $\mathbf{U}$ è detto \emph{unitario}.
+\begin{principles}
+	L'evoluzione temporale dei vettori di stato è unitaria. 
+\end{principles}
+
+Dall'unitarietà di $\mathbf{U}$ discende la \emph{conservazione delle sovrapposizioni}: la sovrapposizione tra due stati (il loro prodotto interno), soggetti allo stesso operatore di evoluzione temporale, è preservata nel tempo.
+
+\subsection{L'Hamiltoniano}
+\label{sec:hamiltonian}
+Spesso, in fisica classica, una legge del moto è il risultato di un'equazione differenziale in cui abbiamo sostituito un intervallo di tempo finito con un numero infinito di intervalli infinitesimi. 
+
+In\marginpar{Continuità} meccanica quantistica possiamo seguire lo stesso percorso e considerare intervalli di tempo $\epsilon$ prossimi a zero. In questo scenario, dopo un intervallo di tempo $\epsilon$, il vettore di stato cambierà leggermente e in modo \say{continuo}, e l'operatore $\mathbf{U}(\epsilon)$ sarà molto simile all'identità. Possiamo riscrivere $\mathbf{U}(\epsilon)$ in modo da evidenziare la differenza con l'identità $\mathbf{I}$ come:
+\begin{equation}
+	\label{eqn:u_eps}
+	\mathbf{U}(\epsilon) = \mathbf{I} - i\epsilon \mathbf{H}.
+\end{equation}
+Per ora, $i$ è un semplice fattore di scala che in seguito ci aiuterà a riconoscere in $\mathbf{H}$ la versione quantistica dell'Hamiltoniano classico.
+
+Possiamo ora esprimere l'evoluzione infinitesima di un sistema quantistico combinando le Equazioni~\ref{eqn:evol}~e~\ref{eqn:u_eps}:
+\[
+\Ket{\Psi(\epsilon)} = \Ket{\Psi(0)} - i \epsilon\mathbf{H}\Ket{\Psi(0)}.
+\]
+Portando a sinistra l'intervallo di tempo:
+\[
+\frac{\Ket{\Psi(\epsilon)} - \Ket{\Psi(0)}}{\epsilon} =  - i\mathbf{H}\Ket{\Psi(0)}.
+\]
+Considerando ora il limite per $\epsilon \to 0$, possiamo riconoscere nel membro sinistro la derivata temporale del vettore di stato:
+\[
+\frac{\partial\Ket{\Psi(t)}}{\partial t} = - i \mathbf{H}\Ket{\Psi(0)}.
+\]
+
+Prima di usare $\mathbf{H}$ come Hamiltoniano quantistico, dobbiamo verificare la correttezza dimensionale. Come in meccanica classica, l'Hamiltoniano è il costrutto matematico che rappresenta l'energia. Nella nostra formula, tuttavia, trascurando il vettore di stato, abbiamo l'inverso del tempo a sinistra e l'energia a destra. Per risolvere questo problema, introduciamo un'importante costante fisica: la costante di Planck ridotta, $\hbar$.
+L'equazione diventa:\marginpar{\\Equazione di Schrödinger \\ dipendente dal tempo}
+\begin{equation}
+	\label{eqn:shro}
+	\hbar\frac{\partial\Ket{\Psi}}{\partial t} = - i \mathbf{H}\Ket{\Psi}
+	\qquad \text{oppure} \qquad
+	\frac{\partial\Ket{\Psi}}{\partial t} = \frac{- i \mathbf{H}\Ket{\Psi}}{\hbar}.
+\end{equation}
+La costante $\hbar$ ha unità di misura $\sfrac{kg\cdot m^2}{s}$ e risolve l'incompatibilità tra i due membri. Questa equazione è fondamentale ed è chiamata \emph{equazione di Schrödinger generalizzata}, o equazione di Schrödinger dipendente dal tempo. Se conosciamo l'Hamiltoniano di un sistema indisturbato, possiamo conoscere l'evoluzione del vettore di stato.
+
+Se $\mathbf{H}$ rappresenta l'energia del sistema, dovremmo essere in grado di misurarla, quindi $\mathbf{H}$ deve essere un'osservabile. Se $\mathbf{H}$ è un'osservabile, deve essere un operatore hermitiano; verifichiamolo. Partendo dall'Equazione~\ref{eqn:unit} e sostituendo $\mathbf{U}$ con l'Espressione~\ref{eqn:u_eps}, otteniamo:
+\[
+(\mathbf{I} + i\epsilon\mathbf{H}^\dagger) (\mathbf{I} - i\epsilon\mathbf{H}) = \mathbf{I}.
+\]
+Espandendo al primo ordine in $\epsilon$, troviamo:
+\[
+\mathbf{H}^\dagger - \mathbf{H} = 0 \Rightarrow \mathbf{H}^\dagger = \mathbf{H}.
+\]
+
+Abbiamo concluso che $\mathbf{H}$\marginpar{Hamiltoniano quantistico} è un operatore hermitiano che rappresenta un'osservabile: l'energia del sistema. Gli autovalori di $\mathbf{H}$ sono i risultati di tutte le possibili misure dirette dell'energia del sistema. 
+
+\subsection{Commutatori}
+In un sistema che evolve nel tempo, ci aspettiamo che anche i valori di aspettazione per una certa osservabile $\mathbf{L}$ cambino. Grazie all'equazione \ref{eqn:exp}, possiamo scrivere esplicitamente la dipendenza temporale dei valori di aspettazione:
+\[
+\Braket{\mathbf{L}} = \Braket{\Psi(t)|\mathbf{L}|\Psi(t)}.
+\]
+La derivata temporale\footnote{Derivata di un prodotto: $\mathbf{L}$ non dipende dal tempo e il punto denota la derivata temporale (notazione di Newton).} è:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \Braket{\dot{\Psi}(t)|\mathbf{L}|\Psi(t)} + \Braket{\Psi(t)|\mathbf{L}|\dot{\Psi}(t)}.
+\]
+
+Sostituendo bra e ket con l'equazione di Schrödinger dipendente dal tempo~\ref{eqn:shro} (ovvero $\Ket{\dot{\Psi}(t)} = \frac{- i}{\hbar}\mathbf{H}\Ket{\Psi(t)}$), otteniamo:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \frac{i}{\hbar}\Braket{\Psi(t)|\mathbf{H}\mathbf{L}|\Psi(t)} - \frac{i}{\hbar} \Braket{\Psi(t)|\mathbf{L}\mathbf{H}|\Psi(t)}.
+\]
+Che può essere riscritta come:
+\[
+\frac{d}{dt}\Braket{\Psi(t)|\mathbf{L}|\Psi(t)} = \frac{i}{\hbar}\Braket{\Psi(t)|[\mathbf{H}, \mathbf{L}]|\Psi(t)}.
+\]
+
+La quantità $\mathbf{H}\mathbf{L} - \mathbf{L}\mathbf{H}$ è chiamata \emph{commutatore}, e poiché, in generale, il prodotto tra operatori (matrici) non è commutativo, il commutatore non è zero (quando è zero, diciamo che $\mathbf{H}$ e $\mathbf{L}$ commutano). I commutatori sono importanti in fisica, e il commutatore tra due operatori, in questo caso $\mathbf{H}$ e $\mathbf{L}$, è denotato da:
+\[
+\mathbf{H}\mathbf{L} - \mathbf{L}\mathbf{H} = [\mathbf{H},\mathbf{L}].
+\]
+
+Con il commutatore possiamo esprimere in modo conciso la derivata del valore di aspettazione per l'osservabile $\mathbf{L}$:
+\begin{equation}
+	\frac{d}{dt} \Braket{\mathbf{L}} = \frac{i}{\hbar}\Braket{[\mathbf{H},\mathbf{L}]}
+\end{equation}
+o equivalentemente:
+\begin{equation}
+	\label{eqn:d_exp}
+	\frac{d}{dt} \Braket{\mathbf{L}} = -\frac{i}{\hbar}\Braket{[\mathbf{L},\mathbf{H}]}.
+\end{equation}
+
+Questa equazione collega le variazioni dei valori di aspettazione di un'osservabile ($\mathbf{L}$) ai valori di aspettazione di un'altra osservabile fisica ($-\frac{i}{\hbar}[\mathbf{L},\mathbf{H}]$)\footnote{È possibile dimostrare che se $\mathbf{L}$ e $\mathbf{H}$ sono hermitiani, allora $[\mathbf{L}, \mathbf{H}]$ è anch'esso hermitiano.}.
+
+\subsection{Conservazione dell'Energia}
+In meccanica quantistica, quando diciamo che una grandezza è conservata, intendiamo che il valore di aspettazione di quella grandezza non cambia. Se guardiamo all'Equazione~\ref{eqn:d_exp}, la condizione affinché il valore di aspettazione non cambi è che il commutatore tra questa grandezza e l'Hamiltoniano sia zero. È possibile dimostrare che:
+\begin{theorem}
+	Data un'osservabile $\mathbf{Q}$, se $[\mathbf{Q},\mathbf{H}]=0$, allora ogni potenza soddisfa $[\mathbf{Q}^n,\mathbf{H}] = 0$. Ciò significa che il valore di aspettazione $\Braket{Q}$ è conservato, e qualsiasi potenza del valore di aspettazione $\Braket{Q^n}$ non cambia nel tempo.
+\end{theorem}
+
+La grandezza più ovvia che è conservata è l'Hamiltoniano $\mathbf{H}$ e, poiché ogni operatore commuta con sé stesso, abbiamo sempre:
+\[
+[\mathbf{H},\mathbf{H}] = 0.
+\]
+
+Possiamo concludere che, in condizioni molto generali, l'energia si conserva in meccanica quantistica.
+
+\section{Conclusioni}
+Concludiamo questo capitolo con un riepilogo di ciò che abbiamo scoperto in queste pagine, cercando di mettere tutto insieme per rispondere alla domanda che ha aperto questo capitolo: quali sono i limiti fisici del calcolo quantistico, e perché i nostri algoritmi devono essere reversibili?
+
+Abbiamo iniziato il capitolo con un esperimento che mostra che la meccanica quantistica non è deterministica. Possiamo tuttavia fare alcune previsioni se consideriamo il valore di aspettazione di una misura invece del singolo risultato.
+
+Abbiamo costruito i vettori di stato e compreso il loro significato matematico, concentrandoci sul fatto che conoscere il vettore di stato non ci permette di conoscere il risultato di una misura. Abbiamo definito il prodotto interno tra vettori di stato, osservato che è una misura della sovrapposizione tra stati, e concluso che due stati distinguibili devono essere ortogonali.
+
+Abbiamo collegato un vettore di stato al risultato di una misura \textendash{}per essere precisi, alla media dei risultati di misure multiple\textendash{} tramite le macchine, operatori hermitiani che rappresentano le osservabili. Abbiamo costruito l'operatore di spin e lo abbiamo usato per prevedere il risultato di un semplice esperimento, mostrando come la teoria che abbiamo costruito finora sia in accordo con i risultati sperimentali.
+
+La nostra introduzione prosegue con l'analisi dell'evoluzione temporale di un sistema quantistico. Abbiamo descritto l'evoluzione di un vettore di stato con un operatore unitario; l'applicazione di questo operatore a un vettore di stato produce il nuovo stato in cui si troverà il sistema. Abbiamo compreso che l'evoluzione temporale del vettore di stato è deterministica e che l'indeterminazione è causata solo dall'atto di misura.
+
+Considerare intervalli di tempo infinitesimi ci ha permesso di dedurre l'equazione di Schrödinger dipendente dal tempo e, grazie a questa equazione, abbiamo mostrato come descrivere l'evoluzione temporale dei valori di aspettazione per una certa osservabile. Durante questa analisi, abbiamo anche introdotto l'Hamiltoniano del sistema, un operatore hermitiano che descrive l'energia del sistema. 
+
+La discussione si conclude con un risultato confortante: come in fisica classica, l'energia di un sistema chiuso è conservata. Abbiamo ottenuto questo risultato presentando il commutatore e collegando l'evoluzione temporale di un'osservabile con il commutatore tra l'osservabile e l'Hamiltoniano (energia) del sistema. Il commutatore dell'Hamiltoniano con sé stesso è banalmente zero, quindi il valore di aspettazione dell'energia non cambia.
+
+Tutte le informazioni che abbiamo appreso ci permettono di comprendere il vincolo di scrivere solo algoritmi reversibili per i computer quantistici basati su porte quantistiche. Le porte quantistiche operano sui qubit tramite trasformazioni fisiche\footnote{Come dipende fortemente dalla particolare implementazione fisica.}. Queste trasformazioni, come tutte le trasformazioni in meccanica quantistica, sono descritte da operatori unitari che sono intrinsecamente reversibili. Ciò significa che tutte le porte quantistiche sono reversibili.
+
+In altre parole, possiamo costruire solo porte quantistiche che, avendo come input stati diversi (distinguibili), restituiscono stati ortogonali; inoltre, grazie alla conservazione delle sovrapposizioni, il prodotto interno tra gli stati di input è conservato durante la trasformazione della porta quantistica.
+
+La reversibilità non significa che possiamo andare avanti e indietro nel tempo a nostro piacimento, ma che tutte le porte quantistiche esprimono funzioni iniettive: se conosciamo l'output, possiamo conoscere l'input, o in termini più fisici, se conosciamo lo stato finale dei qubit\footnote{Questo è un sistema complesso (composto da più di un qubit); per comprendere appieno questi sistemi, dovremmo tener conto dell'entanglement. Poiché la nostra discussione è già abbastanza lunga, e l'evoluzione temporale di un sistema entangled è ancora unitaria (reversibile), escludiamo l'entanglement dalla nostra introduzione.} e le trasformazioni applicate a questo sistema (ovvero quelle implementate dalle porte quantistiche), possiamo determinare lo stato iniziale.
+
+Poiché ogni algoritmo quantistico deve essere implementato come un percorso attraverso porte quantistiche, e ogni porta quantistica è reversibile, gli algoritmi nel loro insieme devono essere anch'essi reversibili.

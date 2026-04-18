@@ -1,0 +1,11 @@
+# Y = A AND B
+!begin_macro AND
+    !assert $Y=$A&$B
+    $A -0.5
+    $B -0.5
+    $Y  1
+
+    $A $B  0.5
+    $A $Y -1
+    $B $Y -1
+!end_macro AND

@@ -1,0 +1,13 @@
+class(animal).
+class(mammal).
+class(polar_bear).
+class(seal).
+class(reindeer).
+class(fish).
+class(sardine).
+class(bird).
+class(penguin).
+class(herbivore).
+class(carnivore).
+class(prey).
+class(predator).

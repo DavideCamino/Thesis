@@ -1,0 +1,23 @@
+\newgeometry{
+	left=4.5cm,
+	right=4.5cm
+}
+
+\chapter{Abstract}
+In questa tesi rivisitiamo ed estendiamo il lavoro di Scott Pakin presentato in~\cite{pakin2018performing}. Questo lavoro presenta una pipeline di riscrittura per passare da un linguaggio di alto livello, Prolog, a una formulazione compatibile con la risoluzione su quantum annealers, un particolare tipo di computazione quantistica adiabatica quantistico adiabatico, ovvero hardware quantistico specializzato nella risoluzione di problemi di ottimizzazione.
+
+In questa tesi partiamo dal lavoro di Pakin rendendolo nuovamente compatibile con i framework utilizzati per interfacciarsi con i quantum annealers. Una volta ripristinata la compatibilità della pipeline, la estendiamo sia a monte che a valle.
+
+A monte: riscriviamo un'ontologia, un particolare tipo di base di conoscenza, in Prolog. Presentiamo quindi alcune soluzioni per rendere questa traduzione compatibile con la pipeline di Pakin, che non implementa l'intero insieme delle funzionalità di Prolog. Infine, studiamo la dimensione del problema ottenuto in funzione dell'ontologia che traduciamo e della query utilizzata per interrogare la base di conoscenza.
+
+A valle: mostriamo che l'output della pipeline non è limitato alla risoluzione tramite annealing, ma che una formulazione come problema di ottimizzazione consente anche l'applicazione di algoritmi sviluppati per l'altro tipo di architettura quantistica (quella basata su porte quantistiche). Mostriamo come passare da una formulazione all'altra e come eseguire alcuni esperimenti per studiare il comportamento di questo approccio.
+
+Vediamo brevemente come è organizzato il lavoro. I primi tre capitoli forniscono un'introduzione teorica. Nel Capitolo~\ref{ch:physics} forniamo alcune basi di meccanica quantistica; l'obiettivo di questo capitolo è mostrare che le trasformazioni fisiche, e quindi le porte quantistiche, devono essere reversibili. Nel Capitolo~\ref{ch:qc} introduciamo l'analisi computazionale, definendo le classi di complessità computazionale e mostrando dove i computer quantistici si collocano in questa analisi. Il capitolo si conclude con la presentazione dei due paradigmi del calcolo quantistico: il calcolo basato su porte quantistiche e la computazione quantistica adiabatica. Il Capitolo~\ref{ch:ont} presenta le ontologie, mostrando le principali caratteristiche di queste basi di conoscenza e discutendo la complessità di estrarre informazioni da esse. 
+
+Passiamo quindi a due capitoli in cui presentiamo gli strumenti utilizzati nel resto del lavoro. Nel Capitolo~\ref{ch:env} mostriamo come configurare un ambiente di sviluppo con tutto il software e le librerie necessarie per condurre i nostri esperimenti. Il Capitolo~\ref{ch:qa_p} presenta la pipeline di Pakin per la traduzione da Prolog a un problema di ottimizzazione. Esaminiamo le caratteristiche di ciascuna fase della pipeline e presentiamo il nostro contributo per ripristinare la compatibilità tra la pipeline e gli altri software con cui si interfaccia.
+
+Gli ultimi due capitoli riguardano gli esperimenti condotti in questo lavoro. Il Capitolo~\ref{ch:qa_ont} mostra la traduzione di un'ontologia in Prolog e da Prolog a un problema di ottimizzazione. Il Capitolo~\ref{ch:qaoa} tratta la versione discretizzata del quantum annealing implementabile su sistemi basati su porte quantistiche. Mostriamo come partire dal risultato della pipeline di Pakin e come ottenere una formulazione adatta a questo paradigma.
+
+Nelle conclusioni (Capitolo~\ref{ch:conclusion}) rivediamo i risultati ottenuti e forniamo alcuni spunti per lavori futuri.
+
+\restoregeometry

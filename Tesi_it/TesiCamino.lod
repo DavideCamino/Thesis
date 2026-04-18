@@ -1,0 +1,41 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {listingenv}{\numberline {3.1}{\ignorespaces Definition of parents}}{54}{listingenv.caption.32}%
+\contentsline {listingenv}{\numberline {4.1}{\ignorespaces Costruzione dello stato di Bell}}{62}{listingenv.caption.40}%
+\contentsline {listingenv}{\numberline {4.2}{\ignorespaces Transpilazione}}{63}{listingenv.caption.41}%
+\contentsline {listingenv}{\numberline {4.3}{\ignorespaces Esecuzione simulata}}{63}{listingenv.caption.43}%
+\contentsline {listingenv}{\numberline {4.4}{\ignorespaces Esempio Ising}}{65}{listingenv.caption.46}%
+\contentsline {listingenv}{\numberline {4.5}{\ignorespaces Riscrittura del MVC con pyQUBO}}{66}{listingenv.caption.47}%
+\contentsline {listingenv}{\numberline {4.6}{\ignorespaces Riscrittura del MVC con qubovert}}{67}{listingenv.caption.48}%
+\contentsline {listingenv}{\numberline {5.1}{\ignorespaces KB di base}}{71}{listingenv.caption.52}%
+\contentsline {listingenv}{\numberline {5.2}{\ignorespaces Definizione della T-Box}}{75}{listingenv.caption.56}%
+\contentsline {listingenv}{\numberline {5.3}{\ignorespaces Soddisfacibilità del circuito}}{76}{listingenv.caption.57}%
+\contentsline {listingenv}{\numberline {5.4}{\ignorespaces Risultati della soddisfacibilità del circuito}}{77}{listingenv.caption.58}%
+\contentsline {listingenv}{\numberline {5.5}{\ignorespaces Hamiltoniano simbolico}}{78}{listingenv.caption.61}%
+\contentsline {listingenv}{\numberline {5.6}{\ignorespaces KB il nemico del mio nemico è mio amico}}{79}{listingenv.caption.63}%
+\contentsline {listingenv}{\numberline {5.7}{\ignorespaces Soddisfacibilità in Prolog}}{81}{listingenv.caption.65}%
+\contentsline {listingenv}{\numberline {5.8}{\ignorespaces Errore di macro non definite}}{82}{listingenv.caption.66}%
+\contentsline {listingenv}{\numberline {5.9}{\ignorespaces Nucleo del preprocessore}}{83}{listingenv.caption.67}%
+\contentsline {listingenv}{\numberline {6.1}{\ignorespaces Definizione della T-Box}}{90}{listingenv.caption.71}%
+\contentsline {listingenv}{\numberline {6.2}{\ignorespaces Definizione ricorsiva del predicato sottoclasse}}{91}{listingenv.caption.72}%
+\contentsline {listingenv}{\numberline {6.3}{\ignorespaces Definizione della A-Box}}{91}{listingenv.caption.73}%
+\contentsline {listingenv}{\numberline {6.4}{\ignorespaces Predicato isA}}{92}{listingenv.caption.74}%
+\contentsline {listingenv}{\numberline {6.5}{\ignorespaces Regole di attribuzione delle classi}}{92}{listingenv.caption.76}%
+\contentsline {listingenv}{\numberline {6.6}{\ignorespaces Definizione di antenato}}{93}{listingenv.caption.78}%
+\contentsline {listingenv}{\numberline {6.7}{\ignorespaces Classi disgiunte}}{93}{listingenv.caption.80}%
+\contentsline {listingenv}{\numberline {6.8}{\ignorespaces Regola di errore}}{94}{listingenv.caption.81}%
+\contentsline {listingenv}{\numberline {6.9}{\ignorespaces Rimozione di liste e termini complessi}}{95}{listingenv.caption.82}%
+\contentsline {listingenv}{\numberline {6.10}{\ignorespaces Unfolding delle sottoclassi}}{96}{listingenv.caption.84}%
+\contentsline {listingenv}{\numberline {6.11}{\ignorespaces Unfolding degli antenati}}{97}{listingenv.caption.86}%
+\contentsline {listingenv}{\numberline {6.12}{\ignorespaces Risultati delle query}}{98}{listingenv.caption.89}%
+\contentsline {listingenv}{\numberline {6.13}{\ignorespaces Input unfolding}}{101}{listingenv.caption.91}%
+\contentsline {listingenv}{\numberline {6.14}{\ignorespaces Nucleo dello script di unfolding}}{101}{listingenv.caption.92}%
+\contentsline {listingenv}{\numberline {7.1}{\ignorespaces Dalla forma QUBO alla forma Ising}}{108}{listingenv.caption.99}%
+\contentsline {listingenv}{\numberline {7.2}{\ignorespaces Generazione dell'operatore di Pauli}}{109}{listingenv.caption.100}%
+\contentsline {listingenv}{\numberline {7.3}{\ignorespaces Definizione della funzione di costo}}{109}{listingenv.caption.101}%
+\contentsline {listingenv}{\numberline {7.4}{\ignorespaces Costruzione del circuito}}{110}{listingenv.caption.102}%
+\contentsline {listingenv}{\numberline {7.5}{\ignorespaces Stima di $F(\vec {\gamma }, \vec {\beta })$}}{111}{listingenv.caption.105}%
+\contentsline {listingenv}{\numberline {7.6}{\ignorespaces Ottimizzazione di $\vec {\gamma }$ e $\vec {\beta }$}}{111}{listingenv.caption.106}%
+\contentsline {listingenv}{\numberline {7.7}{\ignorespaces Campionamento del circuito}}{112}{listingenv.caption.107}%
+\contentsline {listingenv}{\numberline {A.1}{\ignorespaces QA-Prolog compilation result}}{124}{listingenv.Alph1.1}%
+\contentsline {listingenv}{\numberline {A.2}{\ignorespaces Ancestor definition extended to family relation}}{124}{listingenv.Alph1.2}%

@@ -1,0 +1,440 @@
+\chapter{QA-Prolog}
+\label{ch:qa_p}
+QA-Prolog è uno strumento che consente di scrivere un programma in un linguaggio di programmazione logica ed eseguirlo su un quantum annealer. QA-Prolog recupera anche i risultati restituiti dal quantum annealer e li presenta in modo naturale e comprensibile.
+
+In questo capitolo introduciamo il progetto e forniamo alcuni riferimenti ad altri lavori correlati. Descriviamo in modo esteso la pipeline di trasformazioni che parte da un codice Prolog e termina con un Hamiltoniano $\mathbf{H}_f$, come abbiamo descritto nella Sezione~\ref{sec:annealing_form}. Presentiamo poi il nostro contributo al progetto, discutendo le modifiche apportate al codice originale di QA-Prolog per ripristinare la compatibilità con il framework moderno usato per interfacciarsi con il quantum annealer D-Wave e per supportare l'ultima versione della libreria utilizzata nel progetto.
+
+Il capitolo si conclude con una guida all'installazione che garantisce un ambiente funzionante e riproducibile per eseguire esperimenti, sia per questo capitolo che per i successivi.
+
+\section{Il progetto}
+QA-Prolog è un progetto sviluppato da Scott Pakin\footnote{Los Alamos National Laboratory: \mail{pakin@lanl.gov}.} nel periodo $2017-2019$. Parte dalla domanda: \say{È possibile esprimere la programmazione logica con vincoli nella forma accettata dall'hardware di quantum annealing?}~\cite{pakin2018performing}. 
+
+La speranza è che, anche se oggi viviamo nell'era \emph{NISQ}\footnote{Noisy intermediate-scale quantum computing.} del calcolo quantistico, i quantum annealer siano più facilmente scalabili rispetto ai computer quantistici basati su porte~\cite{kaminsky2004scalable}, e QA-Prolog potrebbe migliorare l'esecuzione dei programmi Prolog sostituendo il backtracking con un annealing completamente parallelo verso uno stato soluzione~\cite{lanl_QA_Prolog}.
+
+\subsection{Motivazione}
+Come abbiamo mostrato nel Capitolo~\ref{ch:qc}, programmare un computer quantistico non è un compito semplice. Esprimiamo il nostro algoritmo in modo molto vicino al basso livello.
+
+Su un quantum annealer dobbiamo definire una funzione di costo, senza vincoli (che devono essere trasformati in una funzione di penalità). Anche se esistono librerie che ci permettono di esprimere queste funzioni in modo più semplice, dobbiamo almeno trovare una rappresentazione QUBO del nostro problema.
+
+Ancora più difficile è la situazione sui computer quantistici basati su porte. Il\marginpar{Porte quantistiche\\ e FPGA} programmatore deve costruire un circuito quantistico porta per porta, un approccio simile a quello adottato con le FPGA (Field Programmable Gate Arrays)~\cite{farooq2012fpga}. Possiamo infatti vedere una forte analogia riassunta nella Tabella~\ref{tab:fpga}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{cp{.05\linewidth}c}
+		\toprule
+		\textbf{FPGA}                                                                                       & & \textbf{Computer a porte quantistiche}                                                                              \\
+		\midrule
+		\begin{tabular}[c]{@{}c@{}}blocchi logici programmabili\\  che implementano funzioni logiche\end{tabular} & & porte quantistiche                                                                                                \\
+		\midrule
+		\begin{tabular}[c]{@{}c@{}}routing programmabile che \\ collega le funzioni logiche\end{tabular}        & & \begin{tabular}[c]{@{}c@{}}possibilità di definire \\ l'ordine delle porte\end{tabular}                              \\
+		\midrule
+		blocchi I/O collegati alla logica                                                                        & & \begin{tabular}[c]{@{}c@{}}qubit di input e qubit di output \\ che possono essere misurati\end{tabular} \\
+		\bottomrule
+	\end{tabular}
+	\caption{Parallelismo tra FPGA e porte quantistiche}
+	\label{tab:fpga}
+\end{table}
+
+Le FPGA sono componenti a cui la maggior parte degli informatici non è abituata e probabilmente al di fuori dell'interesse di un programmatore. Allo stesso modo, la difficoltà di programmare un computer quantistico potrebbe essere un significativo deterrente nell'attrarre nuovi ricercatori nel campo.
+
+Oggi sono disponibili alcune \say{porte ad alto livello} che racchiudono più porte di basso livello in schemi utili. Esistono anche, sia per i computer quantistici basati su porte che per i quantum annealer, alcuni template di problemi noti che necessitano solo di una messa a punto per essere utili per un problema specifico. 
+
+Nonostante questi tipi di astrazioni, programmare un computer quantistico è difficile e molto vicino al linguaggio macchina.
+
+\subsection{Prolog}
+Possiamo vedere QA-Prolog come un compilatore da Prolog a $\mathbf{H}_f$, dove lo stato fondamentale di $\mathbf{H}_f$ è la soluzione del nostro programma Prolog. Prima di iniziare con il processo di compilazione, è utile comprendere le caratteristiche principali di Prolog, perché non è un linguaggio di programmazione imperativo come C o Java, ma \emph{dichiarativo} come SQL; inoltre, Prolog\marginpar{Linguaggio di\\programmazione logica} è un \emph{linguaggio di programmazione logica}. Ciò significa che il nucleo della programmazione non è dire al computer cosa fare, ma dirgli cosa è vero e chiedergli di cercare di trarre conclusioni~\cite{clocksin2003programming}. 
+
+Discutere in dettaglio le caratteristiche di Prolog e dei linguaggi di programmazione logica va oltre lo scopo di questo lavoro. Ulteriori informazioni su Prolog possono essere trovate in \emph{Programming in PROLOG}~\cite{clocksin2003programming} e \emph{Learn Prolog Now!}~\cite{learn_prolog_now_online}. Per chi fosse interessato ai linguaggi di programmazione logica, si consigliano \emph{Logic for problem solving}~\cite{kowalski1982logic} e \emph{Introduction to logic programming}~\cite{hogger1984introduction}.
+
+In Prolog non specifichiamo passo per passo un algoritmo che risolve il nostro problema, descriviamo invece la relazione formale tra gli oggetti del nostro problema e quali relazioni devono essere vere nella nostra soluzione~\cite{clocksin2003programming}.
+
+Programmare\marginpar{Elementi di un\\programma Prolog} in Prolog consiste in:
+\begin{itemize}
+	\item elencare \emph{fatti} sugli oggetti e le relazioni tra gli oggetti;
+	\item specificare \emph{regole} per derivare nuovi fatti da quelli già asseriti;
+	\item porre domande (\emph{query}) sugli oggetti e le loro relazioni.
+\end{itemize}
+
+Da queste caratteristiche possiamo capire cosa significa \say{dichiarativo}: il programma è un elenco di affermazioni sul nostro problema (il nostro dominio di interesse); la relazione tra un programma Prolog e un'ontologia è molto stretta. In Prolog codifichiamo una KB\footnote{Base di Conoscenza} fatta di fatti e regole; nel Capitolo~\ref{ch:qa_ont} possiamo vedere un esempio completo di riscrittura da un'ontologia OWL a una KB Prolog.
+
+\paragraph{Predicati aritmetici:}\label{par:arithmetic} Per comprendere meglio alcune caratteristiche di QA-Prolog che differiscono dal Prolog di base, spieghiamo qui come asserire l'uguaglianza tra argomenti quando si fa riferimento a interi. I predicati offerti da Prolog sono:
+\begin{itemize}
+	\item \mintinline{text}|+Expr1 =:= +Expr2|: vero se l'espressione \mintinline{text}|Expr1| valuta a un numero uguale a \mintinline{text}|Expr2|;
+	\item \mintinline{text}|-Number is +Expr|: vero quando \mintinline{text}|Number| è il valore a cui \mintinline{text}|Expr| valuta.
+\end{itemize}
+I\marginpar{Indicatori di\\modalità degli argomenti} segni prima degli argomenti sono \emph{indicatori di modalità degli argomenti}. Il segno \mintinline{text}|+| specifica che l'argomento seguente deve essere istanziato, \mintinline{text}|-| indica che l'argomento è un output~\cite{SWI2026PrologManual}. Ciò significa che non possiamo avere variabili quando si usa il predicato \mintinline{text}|=:=| perché tutto deve essere noto al momento della valutazione. Usando \mintinline{text}|is| l'unica variabile può essere il valore di \mintinline{text}|Number|; \mintinline{text}|Expr|, d'altra parte, deve essere noto.
+
+\paragraph{Esempio:} Presentiamo ora un programma Prolog di base per mostrare la sintassi e l'utilizzo delle query. Codifichiamo una KB su una festa, descriviamo due persone, Yolanda e Mia, asserendo cosa stanno facendo, e fornendo alcune regole per derivare altre informazioni sul nostro piccolo scenario.
+\begin{listingenv}[h]
+	\mylisting{.6}{prolog}{code/qa_prolog/prolog_kb1.pl}
+	\caption{KB di base}
+	\label{lst:prolog_kb1}
+\end{listingenv}
+
+Nel\marginpar{Interpretazione delle\\righe Prolog} Listato~\ref{lst:prolog_kb1}, adattato da \cite{learn_prolog_now_online}, le righe da $1$ a $3$ sono fatti: stiamo asserendo che Yolanda sta ascoltando musica, Mia sta cantando e c'è una festa. Le altre righe sono regole: possiamo identificare le regole dal segno \mintinline{prolog}|:-| che divide la \emph{testa} della regola a sinistra dal \emph{corpo} a destra. La testa di una regola è vera se il corpo è vero.
+
+Ad esempio, la regola alla riga $5$ può essere letta come: \say{Se Yolanda sta ascoltando musica, allora Yolanda sta ballando}. La riga $9$ mostra l'uso di una variabile: le variabili iniziano con una lettera maiuscola e sono segnaposto per le informazioni. Possiamo leggere questa regola come \say{Se qualcuno è felice, sorride}.
+
+Possiamo interrogare la nostra KB, chiedendo ad esempio se Yolanda è felice. In SWI-Prolog~\cite{wielemaker2011tplp} possiamo interagire con l'interprete, e la query che valutiamo è \mintinline{text}|?- happy(yolanda).| (il punto fermo fa parte della sintassi e indica all'interprete che la query è completa). Prolog risponderà \mintinline{text}|yes.|; questo perché Yolanda sta ascoltando musica, e se sta ascoltando musica balla, e se balla è felice.
+
+Per ragionamento analogo dovrebbe essere chiaro perché il risultato di \mintinline{text}|?- smile(X).| è \mintinline{text}|X = mia; X = yolanda.|, dove \mintinline{text}|;| significa disgiunzione logica: \emph{o}.
+
+\subsection{Caratteristiche di QA-Prolog}
+\label{sec:feature_qa_p}
+QA-Prolog non supporta tutte le funzionalità di Prolog, ma abbastanza da rendere possibile la programmazione logica di base~\cite{pakin2018performing}.
+
+QA-Prolog supporta atomi e interi positivi ma non numeri in virgola mobile, stringhe o liste. Supporta operazioni aritmetiche e relazionali, e le regole possono fare riferimento ad altre regole ma non in modo ricorsivo. QA-Prolog supporta l'unificazione, il backtracking e i predicati composti da più clausole~\cite{pakin2018performing}.
+
+QA-Prolog supporta anche alcune funzionalità non presenti nella versione base di Prolog. In particolare, è possibile eseguire operazioni su variabili anche prima che siano istanziate~\cite{pakin2018performing}; ciò significa che QA-Prolog è più potente nella manipolazione di variabili libere. Possiamo comprendere questa caratteristica guardando al Paragrafo~\ref{par:arithmetic} dove abbiamo mostrato che le espressioni aritmetiche possono avere al massimo una variabile libera \textemdash{}predicato \mintinline{text}|is|\textemdash{} nell'operando sinistro. 
+
+In\marginpar{Cenni di computazione\\reversibile} QA-Prolog possiamo avere variabili sia a sinistra che a destra del predicato\footnote{In Prolog è possibile ottenere lo stesso risultato con librerie come CLP(FD)~\cite{triska2012finite, triska_clpfd_github} e CLP($\mathbb{Z}$)~\cite{triska_clpz_github}}, in questo modo possiamo passare l'input alla formula per ottenere il risultato, ma anche assegnare un valore al risultato per ricavare l'input. Possiamo già vedere che QA-Prolog consente una computazione reversibile: dall'input all'output ma anche dall'output all'input.
+
+\subsection{Lavori correlati}
+Esistono altri tentativi di sviluppare un linguaggio di programmazione ad alto livello per computer quantistici, sia per il modello a porte quantistiche che per i quantum annealer. 
+
+\emph{Quantum Prolog}~\cite{james2011quantum} dimostra che è possibile esprimere l'equivalente di una versione pura di Prolog su relazioni finite in termini di un modello di calcolo quantistico discreto. Questo lavoro si rivolge ai computer quantistici a porte e si concentra sull'equivalenza matematica della programmazione relazionale e del calcolo quantistico discreto sul campo dei booleani~\cite{pakin2018performing}. Quantum Prolog, tuttavia, rimane un lavoro teorico con l'obiettivo di dimostrare alcune proprietà matematiche, non esiste un'implementazione e quindi non è adatto per eseguire esperimenti.
+
+\emph{C to D-Wave}~\cite{hassan2019c} riutilizza la pipeline che discuteremo, sostituendo il passo iniziale. L'articolo affronta la difficoltà di programmare i quantum annealer presentando un framework di compilazione che compila un sottoinsieme di codice C in istruzioni macchina quantistiche da eseguire su un quantum annealer.
+
+
+\section{Pipeline}
+Siamo ora pronti a descrivere la pipeline di trasformazioni che ci porta da un programma Prolog a un Hamiltoniano $\mathbf{H}_f$.
+
+La catena di trasformazioni è mostrata nella Figura~\ref{fig:pipeline}, dove l'ultimo passo (in arancione) è il quantum annealer capace di trovare lo stato fondamentale di $\mathbf{H}_f$. In viola possiamo vedere i vari formati di file lungo la pipeline, e in giallo il software che esegue la riscrittura. La maggior parte di questo software è realizzata ad hoc per la pipeline di QA-Prolog; vedremo invece che Yosys è uno strumento utilizzato nella progettazione di circuiti digitali.
+
+\begin{wrapfigure}[14]{r}{.6\linewidth}
+	\centering
+	\vspace{-.4cm}
+	\includegraphics[width=.85\linewidth]{qa_prolog/pipeline}
+	\caption{Pipeline di QA-Prolog}
+	\label{fig:pipeline}
+\end{wrapfigure}
+
+Da un punto di vista ad alto livello, la pipeline riscrive una KB iniziale espressa in Prolog in oggetti diversi. Il significato logico delle entità che costruiamo durante la pipeline è:
+\begin{enumerate}
+	\item Programma Prolog (KB); 
+	\item Circuito digitale ad alto livello in Verilog;
+	\item Circuito digitale a basso livello in formato EDIF;
+	\item Hamiltoniano simbolico nel formalismo qmasm;
+	\item Hamiltoniano fisico.
+	\item Esecuzione su un'\emph{unità di elaborazione quantistica}
+\end{enumerate}
+\vspace{.2cm}
+Iniziamo ad analizzare la pipeline dall'ultimo passo, quello più vicino alla QPU.
+
+\subsection{QMASM}
+\label{sec:qmasm}
+QMASM è un \emph{quantum macro assembler}~\cite{pakin2016quantum}; elabora un Hamiltoniano simbolico e assembla un Hamiltoniano fisico che può essere incorporato su un quantum annealer D-Wave. È stato sviluppato in Python da Scott Pakin con l'obiettivo di colmare una lacuna negli strumenti per la creazione di programmi D-Wave. QMASM è un livello di astrazione che consente al programmatore di non doversi preoccupare di impostare manualmente i pesi dei punti specifici e le intensità degli accoppiatori sulla topologia fisica. 
+
+Questo software può essere considerato un assembler nel senso che mappa una rappresentazione simbolica delle operazioni (linguaggio assembly) nel linguaggio macchina. QMASM\marginpar{QMASM come macro\\assembler} non è solo un assembler, ma estende le sue funzionalità includendo le macro: blocchi di linguaggio assembly parametrizzati e nominati che un programma può istanziare più volte~\cite{pakin2016quantum}.
+
+\paragraph{Caratteristiche:} QMASM fornisce una serie di funzionalità per semplificare la programmazione D-Wave a basso livello~\cite{pakin2016quantum}. Inoltre, possiamo anche utilizzare QMASM per assemblare un Hamiltoniano fisico che possiamo in seguito manipolare o risolvere usando metodi classici o altri sistemi quantistici.
+
+Alcune delle funzionalità più utili e interessanti di QMASM sono:
+\begin{itemize}
+	\item i qubit sono referenziati simbolicamente, non numericamente, sia nel codice sorgente che quando QMASM riporta i risultati dell'esecuzione;
+	\item i qubit possono essere fissati a \mintinline{text}|true| o \mintinline{text}|false|;
+	\item i pattern di qubit possono essere incapsulati in macro e istanziati ripetutamente;
+	\item gruppi di macro possono essere incapsulati in librerie e riutilizzati in più programmi;
+	\item QMASM può escludere automaticamente dai risultati le soluzioni note come errate e mostra solo i qubit \say{interessanti}.
+\end{itemize}
+
+Grazie a questo insieme di funzionalità, QMASM è già un utile livello di astrazione che semplifica lo sviluppo di programmi destinati a un annealer, classico o quantistico.
+
+\paragraph{Esempio:}\marginpar{\\ Esempio di\\ problema di soddisfacibilità} Consideriamo un esempio che mostra il potenziale di QMASM e che è utile anche per i passi successivi della pipeline. Il problema della soddisfacibilità è ben noto come problema NP-completo~\cite{garey2002computers}, quindi è un buon candidato per il nostro esempio. Prendiamo in considerazione la semplice formula:
+
+\begin{equation}
+	y = x_1 \land \neg(x_2 \lor x_3)
+	\label{eqn:simple_logic}
+\end{equation}
+
+QMASM ci permette di definire una macro per ogni operatore logico necessario a rappresentare la formula e poi assemblare la formula finale chiamando queste macro. Nei Listati~\ref{lst:macros} chiamiamo \mintinline{text}|A| e \mintinline{text}|B| i qubit di input e \mintinline{text}|Y| il qubit di output. I pesi sono specificati come problema Ising (Sezione~\ref{sec:annealing_form}), che è il formato predefinito per i file sorgente QMASM\footnote{come specificato in \url{https://github.com/lanl/qmasm/wiki/File-format}.}.
+
+Ci sono diversi dettagli interessanti su queste macro:
+\begin{itemize}
+	\item il simbolo \mintinline{text}|#| identifica una riga di commento non elaborata;
+	\item il simbolo \mintinline{text}|$| è usato per contrassegnare un qubit come ausiliario: a meno che non sia esplicitamente richiesto dal programmatore, i risultati intermedi non vengono riportati nelle soluzioni;
+	\item grazie alla direttiva \mintinline{text}|!assert| possiamo informare QMASM sui vincoli della soluzione. Questa direttiva non modifica i pesi, ma consente al programmatore di escludere dalle soluzioni quelle sicuramente errate.
+\end{itemize}
+
+\begin{listingenv}[h]
+	\centering
+	\begin{sublisting}[c]{0.28\linewidth}
+		\sublistingnumber{text}{code/qa_prolog/and.qmasm}
+		\caption{Porta \smallcaps{and}}
+		\label{lst:and_gate}
+	\end{sublisting}
+	\quad
+	\begin{sublisting}[c]{0.28\linewidth}
+		\sublistingnumber{text}{code/qa_prolog/not.qmasm}
+		\caption{Porta \smallcaps{not}}
+		\label{lst:not_gate}
+	\end{sublisting}
+	\quad
+	\begin{sublisting}[c]{0.28\linewidth}
+		\sublistingnumber{text}{code/qa_prolog/or.qmasm}
+		\caption{Porta \smallcaps{or}}
+		\label{lst:or_gate}
+	\end{sublisting}
+	\caption{Definizione della T-Box}
+	\label{lst:macros}
+\end{listingenv}
+
+Rispetto a quanto fatto nel Listato~\ref{lst:ising_ex}, definire i pesi in QMASM è molto più semplice e il risultato è più leggibile.
+
+È possibile verificare, per ogni macro nei Listati~\ref{lst:macros}, che data una configurazione dei qubit di input, il valore di \mintinline{text}|Y| che minimizza l'energia corrisponde all'output della porta logica che stiamo modellando. Ad\marginpar{Interpretazione della\\macro come polinomio} esempio, il polinomio esplicito che descrive l'operatore \smallcaps{and} (dove abbiamo rimosso il simbolo $\$$ per semplicità di lettura) è:
+\[
+\mathbf{H} = -\frac{1}{2}\cdot(A + B) + Y + \frac{1}{2}\cdot(AB) - (AY + BY)
+\]
+Dove $A, B, Y \in \set{-1, 1}$ perché stiamo descrivendo un problema Ising.
+
+I Listati~\ref{lst:macros} mostrano anche l'uso della direttiva \mintinline{text}|!assert| (riga $3$ di ogni listato): considerando la porta \smallcaps{or}, imponiamo che in una soluzione valida $Y = A \lor B$, le soluzioni che non verificano questo vincolo vengono automaticamente scartate da QMASM.
+
+Possiamo\marginpar{Assemblare le macro} salvare queste macro in un file denominato \mintinline{text}|gates.qmasm| e usarlo per risolvere il nostro problema. Per calcolare la formula $y = x_1 \land \neg(x_2 \lor x_3)$ utilizzeremo alcuni risultati intermedi: iniziamo con $x_4 = (x_2 \lor x_3)$, poi applichiamo la negazione $x_5 = \neg x_4$, e infine calcoliamo il risultato come $y = x_1 \land x_5$. 
+
+\begin{listingenv}[h]
+	\mylisting{.6}{text}{code/qa_prolog/circ_sat.qmasm}
+	\caption{Soddisfacibilità del circuito}
+	\label{lst:circ_sat_qmasm}
+\end{listingenv}
+
+Il codice QMASM che implementa questa procedura è riportato nel Listato~\ref{lst:circ_sat_qmasm}. Questo esempio mostra come usare le macro: istanziamo una macro e le diamo un nome con \mintinline[escapeinside=@@]{text}|!use_macro @\textit{<nome\_macro> <nome\_istanza>}@| (ad esempio riga $5$), e poi istanziamo i qubit definiti nella macro con i nostri qubit effettivi. Ad esempio, considerando \mintinline{text}|!use_macro OR| alla riga $5$, possiamo vedere che usiamo $x_2$ e $x_3$ come input e un qubit ausiliario $\$x_4$ come output. Un altro dettaglio da sottolineare è la direttiva \mintinline{text}|!include| (riga $3$), che importa tutte le porte usate in questo file sorgente.
+
+Infine\marginpar{Eseguire un \say{programma}\\QMASM}, possiamo interrogare il quantum annealer (o in questo caso un solver classico) per trovare una soluzione al nostro problema di soddisfacibilità. Per farlo fissiamo la variabile di output $y$ per essere sicuri che nella soluzione il suo valore sarà \mintinline{text}|true|. Possiamo interrogare il solver con:
+
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.95\linewidth}
+		\begin{minted}[linenos=false]{text}
+qmasm --run --pin="y := true" --solver="sim_anneal" circ_sat.qmasm
+		\end{minted}
+	\end{minipage}
+\end{center}
+dove \mintinline{text}|circ_sat.qmasm| è il nome del file del nostro codice sorgente. 
+
+QMASM si interfaccia direttamente con il framework Ocean e può interrogare uno dei solver messi a disposizione da D-Wave. Il recupero delle soluzioni si traduce in una chiamata alle funzioni della libreria di Ocean molto simile a quella mostrata nel Listato~\ref{lst:ising_ex} alla riga~5. QMASM offre anche la possibilità di impostare il tempo di annealing e il numero di letture direttamente dalla riga di comando; in questo caso sono stati usati i valori predefiniti, che sono rispettivamente il tempo di annealing predefinito impostato da D-Wave per il solver specifico e $1000$ campioni.
+
+I risultati sono riportati nel Listato~\ref{lst:qmasm_res}. Qui possiamo vedere che il solver ha trovato correttamente la soluzione, ma solo $642$ volte su $1000$ campioni predefiniti. Questo è causato dalla natura stocastica dell'annealing, simulato o quantistico. QMASM ha rimosso automaticamente le soluzioni che non rispettano la direttiva \mintinline{text}|!assert| o che non hanno l'energia minima.
+
+\begin{listingenv}[h]
+	\mylistingnonumber{.7}{text}{code/qa_prolog/result.txt}
+	\caption{Risultati della soddisfacibilità del circuito}
+	\label{lst:qmasm_res}
+\end{listingenv}
+
+QMASM offre già alcune potenti astrazioni per lavorare con i quantum annealer. Aggiungiamo ora due livelli aggiuntivi che consentono uno stile di programmazione più simile ai paradigmi a cui gli informatici sono abituati, mantenendo al contempo un forte controllo sulle dimensioni delle variabili e quindi sul numero di qubit utilizzati.
+
+\subsection{Yosys e edif2qmasm}
+\label{sec:yosys_edif2qmasm}
+Questi passi della pipeline prendono come input un programma \emph{Verilog HDL} (Hardware Description Language) e lo trasformano in un Hamiltoniano simbolico. 
+
+Aggreghiamo due passi perché Yosys non è uno strumento sviluppato per questa pipeline ed è usato principalmente per ottimizzare i risultati intermedi delle trasformazioni. Inoltre, Yosys e edif2qmasm lavorano sulla stessa entità logica: un circuito digitale che, in questi passi della pipeline, viene convertito in un Hamiltoniano simbolico.
+
+Verilog\marginpar{Verilog} è un linguaggio di descrizione hardware che offre diversi livelli di astrazione progettuale. Il livello più alto è \emph{comportamentale} e utilizza costrutti di programmazione come assegnazioni, condizionali e cicli while. Il livello più basso è una connessione di porte (\emph{netlist})~\cite{gordon1995semantic}. 
+
+I linguaggi di descrizione hardware non sono qualcosa con cui la maggior parte dei programmatori ha familiarità, ma offrono alcuni vantaggi quando si mira a un quantum annealer~\cite{pakin2019targeting}:
+\begin{itemize}
+	\item forniscono un controllo preciso sulla larghezza dei bit per non sprecare alcun qubit;
+	\item possono essere compilati in un piccolo insieme di primitive: le porte che possiamo definire con QMASM.
+\end{itemize}
+
+In questi passi della pipeline iniziamo usando costrutti comportamentali, poi generiamo automaticamente una netlist come output dei \emph{sintetizzatori}. 
+
+Il sintetizzatore utilizzato è Yosys~\cite{wolf2013yosys}, un software libero e open source per la sintesi di Verilog HDL.
+
+Le due caratteristiche più utili di Yosys sono la possibilità di specificare una \emph{libreria di celle}, l'insieme di porte usate per sintetizzare la netlist, e l'uso dello strumento esterno \emph{Berkeley ABC}~\cite{brayton2010abc} (incorporato in Yosys), che fornisce ulteriori ottimizzazioni del codice.
+
+Yosys\marginpar{Selezione delle porte} riduce un programma Verilog a una netlist EDIF che usa solo un insieme specificato di porte; poi edif2qmasm riduce la netlist in un Hamiltoniano simbolico. Questo Hamiltoniano usa un insieme di macro che definiscono l'energia per ogni tipo di porta che Yosys può usare\footnote{L'insieme effettivo di porte estende le porte logiche \emph{and}, \emph{or} e \emph{not} ed è disponibile su: \url{https://github.com/lanl/edif2qmasm/blob/master/stdcell.qmasm}.}. Il risultato finale è un Hamiltoniano simbolico che può essere usato come input per QMASM.
+
+\paragraph{Esempio:}\label{ex:sat_verilog} Considerando di nuovo la semplice formula $y = x_1 \land \neg(x_2\lor x_3)$ (Equazione~\ref{eqn:simple_logic}).
+
+\begin{figure}[h]
+	\centering
+	\begin{sublisting}[c]{.45\linewidth}
+		\vspace{1.3cm}
+		\sublistingnumber{Verilog}{code/qa_prolog/sat.vl}
+		\caption{Codice Verilog}
+		\label{lst:yosys_verilog}
+	\end{sublisting}
+	\qquad
+	\begin{subfigure}[c]{.45\linewidth}
+		\vspace{-1.7cm}
+		\includegraphics[width=.9\linewidth]{qa_prolog/sat_net}
+		\caption{Netlist sintetizzata}
+		\label{fig:yosys_net}
+	\end{subfigure}
+	\\
+	\hspace{.45\linewidth} \qquad
+	\begin{subfigure}[c]{.45\linewidth}
+		\vspace{-1.7cm}
+		\includegraphics[width=.9\linewidth]{qa_prolog/sat_circ}
+		\caption{Circuito corrispondente}
+		\label{fig:yosys_circ}
+	\end{subfigure}
+	\caption{Elaborazione con Yosys}
+	\label{fig:yosys}
+\end{figure}
+
+La Figura~\ref{fig:yosys} mostra una possibile implementazione Verilog della formula~(\hyperref[lst:yosys_verilog]{a}), la netlist che Yosys ha prodotto dal codice Verilog~(\hyperref[fig:yosys_net]{b}), e, solo a scopo illustrativo, il corrispondente circuito digitale implementato con porte logiche~(\hyperref[fig:yosys_circ]{c}).
+
+Ora possiamo passare la netlist ottenuta a edif2qmasm per ottenere il codice riportato nel Listato~\ref{lst:circ_sat_yosys}.
+\begin{listingenv}[h]
+	\mylisting{.7}{text}{code/qa_prolog/sat_yosis.qmasm}
+	\caption{Hamiltoniano simbolico}
+	\label{lst:circ_sat_yosys}
+\end{listingenv}
+
+Confrontando il Listato~\ref{lst:circ_sat_yosys} generato automaticamente e quello~\ref{lst:circ_sat_qmasm} scritto manualmente, possiamo osservare alcune differenze:
+\begin{itemize}
+	\item nel Listato~\ref{lst:circ_sat_yosys} definiamo la nuova macro \mintinline{text}|sat|: ogni modulo nel programma Prolog viene convertito in una macro;
+	\item il codice generato è leggermente meno leggibile ma più compatto. Non è necessario generare nuove variabili ausiliarie, ma si usano direttamente come input per le macro l'output di altre macro.
+\end{itemize}
+
+Anche se meno leggibile, possiamo commentare il codice nel Listato~\ref{lst:circ_sat_yosys}. Alle righe $4$, $5$ e $6$ dichiariamo di aver bisogno delle macro \mintinline{text}|AND|, \mintinline{text}|NOT| e \mintinline{text}|OR|, dando a ogni macro un nome come \mintinline[escapeinside=@@]{text}|$id@\textit{<numero>}@|\footnote{Il simbolo \mintinline{text}|$| dice a QMASM che non siamo interessati al valore dei qubit all'interno della macro.}. Alla riga $7$ assegniamo come input \mintinline{text}|A| della macro \mintinline{text}|NOT| l'output \mintinline{text}|Y| della macro \mintinline{text}|OR|. Dati questi indizi, il resto del codice dovrebbe essere chiaro.
+
+\subsection{QA-Prolog}
+\label{sec:qa_p_query}
+Questo è l'ultimo passo della pipeline, quello che fornisce il massimo livello di astrazione dall'hardware che trova la soluzione al nostro problema.
+
+QA-Prolog, come edif2qmasm, è scritto in GO~\cite{pakin2018performing, pakin2019targeting} e compila un programma Prolog in uno Verilog; ogni fatto o regola viene convertito in un modulo. Una volta che QA-Prolog ha compilato il codice sorgente Prolog, inclusa la query che può essere specificata dalla riga di comando, in Verilog, QA-Prolog invoca Yosys, edif2qmasm e QMASM, come illustrato nella Figura~\ref{fig:pipeline}~\cite{pakin2018performing}.
+
+QMASM\marginpar{Risultati in\\formato leggibile} esegue il programma dell'utente su un sistema D-Wave o su un simulatore e riporta il valore di ogni simbolo che appare nel file sorgente QMASM. QA-Prolog mappa questi elenchi di booleani in interi e atomi nominati, associa quei valori alle variabili nominate nella query dell'utente e riporta all'utente tutte le variabili e i loro valori esattamente come farebbe un tipico ambiente Prolog~\cite{pakin2018performing}.
+
+\paragraph{Esempio 1: } Il primo esempio che presentiamo mostra una piccola KB che può essere riassunta come \say{il nemico del mio nemico è mio amico}. 
+
+\begin{listingenv}[h]
+	\mylisting{.6}{prolog}{code/qa_prolog/enemy.pl}
+	\caption{KB il nemico del mio nemico è mio amico}
+	\label{lst:enemy}
+\end{listingenv}
+
+Il codice è riportato nel Listato~\ref{lst:enemy}. Grazie alla natura dichiarativa di Prolog possiamo comprendere immediatamente il significato della nostra KB: descriviamo le relazioni tra tre persone, assertiamo che se una persona odia un'altra sono nemici (righe $4$ e $5$), e che se due persone condividono un nemico sono amici (righe $7$, $8$ e $9$). 
+
+Possiamo ora interrogare la KB per trovare se ci sono due persone che sono amiche con:
+\begin{minted}[linenos=false]{text}
+	QA-Prolog --qmasm-args="--solver=tabu" --query='friends(P1, P2).' --work-dir="~/work" friends.pl
+\end{minted}
+
+In questo comando possiamo vedere che QA-Prolog ci permette di interrogare la KB con la stessa sintassi che useremmo per interagire con un interprete Prolog. Come previsto, QA-Prolog \emph{lega} le variabili \mintinline{text}|P1| e \mintinline{text}|P2| ad Alice e Charlie.
+
+Un altro dettaglio da sottolineare è il parametro \mintinline[escapeinside=@@]{text}|--work-dir="@\textit{<percorso>}@"|, che specifica la cartella in cui QA-Prolog produce tutti i file e il solver: utilizziamo un \emph{algoritmo di ricerca tabu} perché il simulated annealing implementato in Ocean non è in grado di trovare una soluzione nemmeno in questo piccolo scenario\footnote{Ulteriori considerazioni in merito nel Capitolo~\ref{ch:conclusion}.}. Diciamo piccolo perché, dallo studio riportato in \cite{zhang2010measuring}, possiamo osservare che le ontologie del mondo reale definiscono un numero di classi, individui e proprietà\footnote{Che trasformeremo in fatti e regole nel Capitolo~\ref{ch:qa_ont}.} che può essere dell'ordine delle centinaia di migliaia.
+
+Ispezionando la directory di lavoro, possiamo verificare l'output di ogni passo della pipeline. Nell'Appendice~\ref{lst:qa_prolog_compilation} è mostrata la riscrittura di una KB Prolog in un programma Verilog: è possibile osservare in dettaglio come ogni fatto o regola sia stato trasformato.
+Se ispezioniamo la directory di lavoro possiamo vedere l'output di ogni passo della pipeline; in particolare, per vedere esattamente come la KB viene riscritta in un programma Verilog, nell'Appendice~\ref{lst:qa_prolog_compilation} è presente il risultato della compilazione, ed è possibile osservare in dettaglio come ogni fatto o regola sia stato trasformato.
+
+\paragraph{Esempio 2: }\label{ex:sat_prolog}\marginpar{\\ Problema di\\soddisfacibilità\\in QA-Prolog} Il secondo esempio conclude la nostra trasformazione del problema di soddisfacibilità (Equazione~\ref{eqn:simple_logic}); purtroppo, questo non è molto didattico perché il programma Prolog adatto all'elaborazione con QA-Prolog introduce un overhead considerevole. Ciò è dovuto al fatto che in Prolog possiamo semplicemente importare \mintinline{text}|library(clpb)|~\cite{triska2018boolean} e poi formulare la query \mintinline{text}|?- sat(A * (~(B + C))).|; per usare QA-Prolog, invece, dobbiamo implementare gli operatori logici definendo le loro tavole di verità, per poi assemblare gli operatori nella nostra formula logica. Questo porta all'overhead. Il Listato~\ref{lst:sat_prolog} mostra l'implementazione che usiamo nel nostro test.
+\begin{listingenv}[h]
+	\mylisting{.6}{prolog}{code/qa_prolog/sat.pl}
+	\caption{Soddisfacibilità in Prolog}
+	\label{lst:sat_prolog}
+\end{listingenv}
+
+Possiamo ora eseguire QA-Prolog con la query \mintinline{text}|sat(A, B, C, true)| per trovare l'assegnazione corretta delle variabili booleane che soddisfa la nostra formula logica. Anche in questo caso siamo costretti a usare l'algoritmo di ricerca tabu. Se ora esploriamo la directory di lavoro di QA-Prolog possiamo vedere che la matrice simbolica generata dalla pipeline è molto più complessa di quella riportata nel Listato~\ref{lst:circ_sat_yosys}, possiamo interpretare questo come il costo dell'astrazione.
+
+\subsection{Panoramica}
+Abbiamo descritto una pipeline di riscritture che, strato dopo strato, permette di astrarre dall'hardware che effettivamente risolve il nostro problema, spostandosi verso un linguaggio, e quindi un modo di ragionare, a livello più alto. Parliamo\marginpar{Catena di riscritture} di riscritture perché l'oggetto che stiamo manipolando rimane logicamente invariato, proprio come è essenziale che le soluzioni che stiamo cercando rimangano invariate; il problema e le sue soluzioni sono semplicemente espressi in linguaggi diversi man mano che si scende nella pipeline.
+
+I vantaggi dell'astrazione sono essenzialmente gli stessi ottenuti passando dal linguaggio assembly a un linguaggio di alto livello: maggiore facilità di espressione, migliore leggibilità e la possibilità di lavorare con paradigmi già familiari. Gli svantaggi sono gli overhead che naturalmente emergono durante il processo di traduzione. QA-Prolog è ancora un prototipo, e se oggi i compilatori producono codice macchina migliore di quello che un programmatore potrebbe scrivere manualmente, è perché un notevole sforzo e molti anni di ricerca sono stati investiti per ottenere risultati eccellenti. La speranza è che QA-Prolog e i lavori correlati rappresentino un primo passo nella stessa direzione nell'ambito del calcolo quantistico.
+
+\section{Aggiornamento al progetto}
+In questa sezione descriviamo brevemente gli aggiornamenti apportati al progetto per ripristinare la compatibilità con il framework Ocean e con le altre librerie utilizzate. Forniamo anche una breve guida all'installazione degli strumenti per garantire che tutti i pacchetti funzionino correttamente e che i nostri esperimenti siano riproducibili.
+\subsection{Ripristino di QMASM}
+L'ultimo commit a QA-Prolog è stato effettuato nel $2019$, e l'ultimo a QMASM nel $2021$. Da allora, i pacchetti e le librerie sono cambiati e la compatibilità con la pipeline di QA-Prolog si è interrotta.
+
+Il\marginpar{Codice\\obsoleto} componente più fragile della pipeline è QMASM, perché è quello che interagisce con framework esterni che possono cambiare. In particolare, lo sviluppo di Ocean è molto attivo, e alcune funzioni usate in QMASM sono state rimosse, deprecate o spostate in altri pacchetti.
+
+Le incompatibilità riscontrate tra gli import usati in QMASM e le librerie esterne sono:
+\begin{itemize}
+	\item nelle librerie \mintinline{text}|dwave.cloud| e \mintinline{text}|hybrid|;
+	\item nelle librerie che definiscono i sampler D-Wave (solver classici);
+	\item nella libreria \mintinline{text}|scipy.stats|.
+\end{itemize}
+La documentazione disponibile per Ocean\footnote{Disponibile su \url{https://docs.dwavequantum.com/en/latest/index.html}.} e per scipy\footnote{Disponibile su \url{https://docs.scipy.org/doc//scipy/index.html}.} ci ha aiutato a risolvere queste incompatibilità: nella maggior parte dei casi la soluzione consisteva semplicemente nel correggere il nome della libreria.
+
+Un altro piccolo bug, causato da un nome diverso di un solver nell'helper della riga di comando e nel codice effettivo, è stato corretto ripristinando la corrispondenza.
+
+\subsection{Correzione dell'interazione edif2qmasm-QMASM}
+Durante l'esecuzione della pipeline completa abbiamo riscontrato un errore causato da macro non definite nel file sorgente QMASM.
+
+\begin{listingenv}[h]
+	\centering
+	\begin{sublisting}[c]{.45\linewidth}
+		\sublistingnumber{Verilog}{code/qa_prolog/verilog_macro.vl}
+		\caption{Codice Verilog}
+		\label{lst:error_verilog}
+	\end{sublisting}
+	\qquad
+	\begin{sublisting}[c]{.45\linewidth}
+		\sublistingnumber{text}{code/qa_prolog/qmasm_macro}
+		\caption{Definizioni delle macro}
+		\label{lst:error_def}
+	\end{sublisting}
+	\\\vspace{.5cm}
+	\begin{sublisting}[c]{.8\linewidth}
+		\sublistingnumber{text}{code/qa_prolog/qmasm_macro_use}
+		\caption{Utilizzo delle macro}
+		\label{lst:error_use}
+	\end{sublisting}
+	\caption{Errore di macro non definite}
+	\label{lst:qmasm_error}
+\end{listingenv}
+
+L'errore può essere visto nei Listati~\ref{lst:qmasm_error}: edif2qmasm riscrive la netlist generata da (\hyperref[lst:error_verilog]{a}) nella macro (\hyperref[lst:error_def]{b}); qui \mintinline{text}|hates/2| è solo un commento, il nome effettivo della macro è \mintinline{text}|id00011| (specificato alla riga $2$). In (\hyperref[lst:error_use]{c}), tuttavia, possiamo vedere che la macro precedentemente definita viene chiamata simbolicamente e non con il suo nome effettivo (riga $3$). Questo produce ovviamente un errore: il nome \mintinline{text}|hates/2| nel file QMASM non ha alcun significato, è solo un commento.
+
+\begin{listingenv}[h]
+	\mylisting{.95}{Python}{code/qa_prolog/preprocess.py}
+	\caption{Nucleo del preprocessore}
+	\label{lst:preprocessor}
+\end{listingenv}
+
+Per\marginpar{Correzione dei nomi\\delle macro} risolvere il problema abbiamo aggiunto un passo di preprocessamento prima del parsing con QMASM. Durante il preprocessamento tutti i nomi simbolici vengono sostituiti con il nome effettivo della macro corrispondente. 
+
+Il codice principale del preprocessore è riportato nel Listato~\ref{lst:preprocessor}. Il programma scansiona il file sorgente due volte: durante la prima lettura viene costruito un dizionario Python \emph{nome\_simbolico-nome\_effettivo}, poi, durante la seconda lettura, tutte le istanze del nome simbolico vengono sostituite con il nome effettivo.
+
+Ora tutti i componenti dovrebbero funzionare correttamente, e possiamo installare tutto il software necessario ed eseguire alcuni esperimenti.
+
+\subsection{Guida all'installazione}
+Per avere un ambiente funzionante in cui eseguire i nostri esperimenti, dobbiamo installare tutto il software richiesto dalla pipeline di QA-Prolog. Nel Capitolo~\ref{ch:env} abbiamo configurato un ambiente Python con tutti gli strumenti essenziali; per iniziare l'installazione della pipeline di QA-Prolog dobbiamo avere almeno Ocean SDK installato come descritto nella Sezione~\ref{sec:ocean}.
+
+Il primo componente di cui abbiamo bisogno è QMASM: possiamo installare la versione aggiornata e corretta da \url{https://github.com/DavideCamino/qmasm.git}. La procedura di installazione consiste nei seguenti tre comandi:
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.8\linewidth}
+		\begin{minted}[linenos=false]{text}
+			$ git clone https://github.com/DavideCamino/qmasm.git
+			$ cd qmasm
+			$ python setup.py install
+		\end{minted}
+	\end{minipage}
+\end{center}
+
+Successivamente abbiamo bisogno di Yosys e GO: Yosys fa parte della pipeline, e GO ci consente di compilare edif2qmasm e QA-Prolog. Sia Yosys che GO sono disponibili sui loro siti ufficiali \url{https://yosyshq.net/} e \url{https://go.dev/}, inoltre sulla maggior parte delle distribuzioni GNU/Linux Yosys e GO possono essere installati direttamente dal gestore di pacchetti della distribuzione.
+
+Il comando \mintinline{text}|go install| installa gli eseguibili Go nella directory predefinita \mintinline{text}|$HOME/go/bin|. È utile aggiungere la sottodirectory bin al \mintinline{text}|PATH|. Questo può essere fatto modificando il file \mintinline{text}|.bashrc| (o quello corrispondente per la shell specifica), aggiungendo:
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.5\linewidth}
+		\begin{minted}[linenos=false]{text}
+			PATH=$PATH:$HOME/go/bin
+			export PATH
+		\end{minted}
+	\end{minipage}
+\end{center}
+
+Infine possiamo installare edif2qmasm e QA-Prolog con:
+\begin{center}
+	\vspace{-.1cm}
+	\begin{minipage}{.7\linewidth}
+		\begin{minted}[linenos=false]{text}
+			$ go install github.com/lanl/edif2qmasm@latest
+			$ go install github.com/lanl/QA-Prolog@latest
+		\end{minted}
+	\end{minipage}
+\end{center}
+
+\section{Conclusione}
+In questo capitolo abbiamo presentato QA-Prolog, una pipeline di riscrittura che consente la trasformazione di un programma Verilog in un Hamiltoniano il cui stato fondamentale rappresenta la soluzione del programma originale. Abbiamo discusso in dettaglio i vari passi della pipeline, mostrando anche come alcune parti siano state modificate per renderle nuovamente compatibili con i framework attuali. Infine, abbiamo descritto come installare una versione funzionante della pipeline.
+
+Dalla nostra discussione emerge che QA-Prolog è uno stack software modulare in cui è possibile sostituire un componente della pipeline con un altro per modificare il risultato; ad esempio, abbiamo presentato un lavoro che parte da C invece che da Prolog. 
+
+Questo lavoro ha il potenziale di fornire una base per molti altri esperimenti, che possono fare affidamento su un'infrastruttura già implementata e funzionante, al fine di sviluppare nuove estensioni, sia a monte che a valle, della pipeline.

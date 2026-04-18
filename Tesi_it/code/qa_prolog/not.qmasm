@@ -1,0 +1,5 @@
+# Y = NOT A
+!begin_macro NOT
+    !assert $Y=!$A
+    $A $Y 1.0
+!end_macro NOT

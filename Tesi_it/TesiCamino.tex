@@ -1,0 +1,44 @@
+\documentclass[a4paper,twoside,openright,titlepage,
+               headinclude,footinclude,BCOR5mm,
+               numbers=noenddot,cleardoublepage=empty,
+               tablecaptionabove]{scrbook}
+               
+\input{package}
+\input{arsclassica-settings}
+
+\input{FrontMatter/Acronyms_definitions}
+               
+\begin{document}
+	\frontmatter
+%	\input{FrontMatter/Titlepage_unito2}
+%	\input{FrontMatter/Titlepage_unito}
+%	\input{FrontMatter/Titlepage_unito3}
+	\input{FrontMatter/Titlepage}
+%	\input{FrontMatter/Titlepage_2}
+	
+	
+	\input{FrontMatter/Titleback}
+	\input{FrontMatter/Dedication}
+	\input{FrontMatter/Abstract}
+	\input{FrontMatter/Aknowledgements}	
+	\tableofcontents
+	\input{FrontMatter/Acronyms}
+	\mainmatter
+	\part{Theoretical Bases}
+	\linenumbers
+	\input{Chapters/Basics/Quantum_phisics}
+	\input{Chapters/Basics/Qunatum_computing}
+	\input{Chapters/Basics/Ontology}
+	\part{Tools}
+	\input{Chapters/Tools/Environment_setup}
+	\input{Chapters/Tools/QA_prolog}
+	\part{Experiments}
+	\input{Chapters/Experiments/Quntum_ontology}
+	\input{Chapters/Experiments/QAOA}
+	\input{Chapters/Experiments/Conclusion}
+	\appendix
+	\part{Appendix}
+	\input{Chapters/Appendix/code}
+	\backmatter
+	\input{Backmatter/backmatter}
+\end{document}

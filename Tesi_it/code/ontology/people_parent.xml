@@ -1,0 +1,9 @@
+<owl:Class rdf:about="http://people#Parent">
+  <owl:equivalentClass>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://people#parent_of"/>
+      <owl:someValuesFrom rdf:resource="http://people#Person"/>
+    </owl:Restriction>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="http://people#Person"/>
+</owl:Class>

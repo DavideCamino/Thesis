@@ -1,0 +1,56 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\deactivateaddvspace 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Schema dell'esperimento}}{3}{figure.caption.4}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Albero della disgiunzione}}{6}{figure.caption.5}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Porte logiche}}{26}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Tavola di verità della porta \textsf {\spacedlowsmallcaps {Toffoli}}}}{33}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Esempio di circuito}}{34}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Sfera di Bloch~\blx@tocontentsinit {0}\cite {wong2022introduction}}}{35}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Porte come rotazioni~\blx@tocontentsinit {0}\cite {wong2022introduction}}}{37}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Porta \textsf {\spacedlowsmallcaps {cnot}}}}{38}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Porta oracolo quantistico}}{40}{figure.caption.23}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Oracolo di fase}}{40}{figure.caption.24}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Algoritmo di Deutsch}}{41}{figure.caption.25}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Simulated annealing e quantum annealing \blx@tocontentsinit {0}\cite {k2005transverse}}}{47}{figure.caption.28}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Graph for T-Box}}{54}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Simpson family tree}}{54}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces First layer of DOLCE taxonomy~\blx@tocontentsinit {0}\cite {borgo2022dolce}}}{55}{figure.caption.34}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Complexity classes}}{57}{figure.caption.38}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Stack software Qiskit}}{62}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Esempio di transpilazione}}{63}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Stack software Ocean}}{64}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Formulazione Ising}}{65}{figure.caption.45}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Pipeline di QA-Prolog}}{73}{figure.caption.53}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Elaborazione con Yosys}}{78}{figure.caption.60}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {6.1}{\ignorespaces T-Box dell'ontologia}}{88}{figure.caption.68}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Finestra di dialogo degli errori in Protégé}}{89}{figure.caption.70}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Dimensione del problema}}{99}{figure.caption.90}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Impatto dell'unfolding sulla dimensione}}{101}{figure.caption.94}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Dati adattati}}{103}{figure.caption.96}%
+\ttl@tocsep 
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Schema QAOA~\blx@tocontentsinit {0}\cite {blekos2024review}}}{106}{figure.caption.97}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Circuito QAOA}}{110}{figure.caption.104}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Hamiltoniano del problema}}{113}{figure.caption.108}%
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Minimizzazione del costo}}{113}{figure.caption.109}%
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Campionamento del circuito}}{114}{figure.caption.110}%
+\contentsline {figure}{\numberline {7.6}{\ignorespaces Risultato di esperimenti multipli}}{115}{figure.caption.111}%
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\ttl@tocsep 
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
