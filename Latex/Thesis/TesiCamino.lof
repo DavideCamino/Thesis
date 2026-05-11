@@ -45,7 +45,7 @@
 \contentsline {figure}{\numberline {7.5}{\ignorespaces Circuit sampling}}{112}{figure.caption.110}%
 \contentsline {figure}{\numberline {7.6}{\ignorespaces Multiple experiments' result}}{112}{figure.caption.111}%
 \ttl@tocsep 
-\ttl@tocsep 
+\def \@chapapp {\appendixname }
 \ttl@tocsep 
 \ttl@tocsep 
 \ttl@tocsep 

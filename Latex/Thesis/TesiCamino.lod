@@ -23,7 +23,7 @@
 \contentsline {listingenv}{\numberline {6.6}{\ignorespaces Ancestor definition}}{90}{listingenv.caption.78}%
 \contentsline {listingenv}{\numberline {6.7}{\ignorespaces Disjoint classes}}{91}{listingenv.caption.80}%
 \contentsline {listingenv}{\numberline {6.8}{\ignorespaces Error rule}}{91}{listingenv.caption.81}%
-\contentsline {listingenv}{\numberline {6.9}{\ignorespaces List and complex term removal}}{92}{listingenv.caption.82}%
+\contentsline {listingenv}{\numberline {6.9}{\ignorespaces List and complex term removal}}{93}{listingenv.caption.82}%
 \contentsline {listingenv}{\numberline {6.10}{\ignorespaces Subclasses unfolding}}{93}{listingenv.caption.84}%
 \contentsline {listingenv}{\numberline {6.11}{\ignorespaces Ancestor unfolding}}{94}{listingenv.caption.86}%
 \contentsline {listingenv}{\numberline {6.12}{\ignorespaces Query results}}{96}{listingenv.caption.89}%
@@ -36,5 +36,6 @@
 \contentsline {listingenv}{\numberline {7.5}{\ignorespaces $F(\vec {\gamma }, \vec {\beta })$ estimation}}{109}{listingenv.caption.105}%
 \contentsline {listingenv}{\numberline {7.6}{\ignorespaces $\vec {\gamma }$ and $\vec {\beta }$ optimization}}{109}{listingenv.caption.106}%
 \contentsline {listingenv}{\numberline {7.7}{\ignorespaces Circuit sampling}}{110}{listingenv.caption.107}%
-\contentsline {listingenv}{\numberline {A.1}{\ignorespaces QA-Prolog compilation result}}{122}{listingenv.A.1}%
-\contentsline {listingenv}{\numberline {A.2}{\ignorespaces Ancestor definition extended to family relation}}{122}{listingenv.A.2}%
+\def \@chapapp {\appendixname }
+\contentsline {listingenv}{\numberline {A.1}{\ignorespaces QA-Prolog compilation result}}{122}{listingenv.caption.112}%
+\contentsline {listingenv}{\numberline {A.2}{\ignorespaces Ancestor definition extended to family relation}}{122}{listingenv.caption.113}%
